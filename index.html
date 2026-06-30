@@ -191,3 +191,44 @@
             let naoAcatadas = 0;
             notas.forEach(n => {
                 valorTotal_local += (parseFloat(n.valor) || 0);
+                if(n.status === "ACATADA") acatadas++;
+                if(n.status === "NÃO ACATADA") naoAcatadas++;
+            });
+            document.getElementById('card-valor-total').innerText = `R$ ${valorTotal_local.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('card-acatadas').innerText = acatadas;
+            document.getElementById('card-nao-acatadas').innerText = naoAcatadas;
+        }
+
+        function removerNota(index) {
+            if(confirm("Tem certeza que deseja excluir esta nota?")) {
+                notas.splice(index, 1);
+                salvarDados();
+            }
+        }
+
+        function limparTudo() {
+            if(confirm("ATENÇÃO: Isso apagará todas as notas salvas neste computador. Continuar?")) {
+                notas = [];
+                salvarDados();
+            }
+        }
+
+        function exportarCSV() {
+            let csv = 'Data;Fornecedor;NF;Valor;Chegada;Saida;Temp;Conferente;Prevencao;Status;Observacao\n';
+            notas.forEach(n => {
+                csv += `${n.data};${n.fornecedor};${n.nf};${n.valor};${n.chegada};${n.saida};${n.temp};${n.conferente};${n.prevencao};${n.status};${n.observacao}\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute("download", "notas_fiscais.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Inicia a tabela
+        atualizarTela();
+    </script>
+</body>
+</html>
