@@ -8,38 +8,66 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background-color: #f8f9fa; color: #333; padding: 20px; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .title h1 { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-        .title p { color: #666; font-size: 14px; margin-top: 4px; }
-        .buttons { display: flex; gap: 10px; }
-        .btn { padding: 10px 16px; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; }
-        .btn-white { background: white; border: 1px solid #ddd; color: #333; display: flex; align-items: center; gap: 6px; }
-        .btn-blue { background: #3b82f6; color: white; }
         
+        /* Topo */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .title h1 { font-size: 22px; font-weight: 700; display: flex; align-items: center; gap: 8px; color: #111827; }
+        .title p { color: #6b7280; font-size: 14px; margin-top: 4px; }
+        .buttons { display: flex; gap: 10px; }
+        .btn { padding: 10px 16px; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-white { background: white; border: 1px solid #d1d5db; color: #374151; }
+        .btn-white:hover { background: #f9fafb; }
+        .btn-blue { background: #2563eb; color: white; }
+        .btn-blue:hover { background: #1d4ed8; }
+        
+        /* Dashboard Cards */
         .cards-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
-        .card { background: white; padding: 15px 20px; border-radius: 8px; border: 1px solid #e5e7eb; }
-        .card-title { font-size: 11px; text-transform: uppercase; color: #888; font-weight: 600; letter-spacing: 0.5px; }
-        .card-value { font-size: 22px; font-weight: 700; margin-top: 5px; }
+        .card { background: white; padding: 18px 20px; border-radius: 8px; border: 1px solid #e5e7eb; }
+        .card-title { font-size: 12px; text-transform: uppercase; color: #6b7280; font-weight: 600; letter-spacing: 0.5px; }
+        .card-value { font-size: 24px; font-weight: 700; margin-top: 6px; color: #111827; }
         .value-blue { color: #2563eb; }
         .value-red { color: #dc2626; }
         .value-green { color: #16a34a; }
+
+        /* Seção de Filtros */
+        .filters-container { background: white; border-radius: 8px; border: 1px solid #e5e7eb; padding: 15px 20px; margin-bottom: 20px; }
+        .filters-title { font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .filters-row { display: grid; grid-template-columns: 2fr 1.5fr 1.5fr 1.5fr 1.5fr auto; gap: 12px; align-items: center; }
+        .filter-input, .filter-select { width: 100%; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; color: #374151; background-color: #fff; }
+        .filter-input:focus, .filter-select:focus { outline: 2px solid #3b82f6; border-color: transparent; }
+        .btn-clear { background: none; border: 1px solid #d1d5db; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; color: #4b5563; white-space: nowrap; }
+        .btn-clear:hover { background: #f9fafb; }
+
+        /* Tabela */
+        .table-container { background: white; border-radius: 8px; border: 1px solid #e5e7eb; padding: 20px; overflow-x: auto; }
+        .table-info { font-size: 14px; font-weight: 500; color: #4b5563; margin-bottom: 12px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 900px; }
+        th { background: #f9fafb; color: #4b5563; padding: 12px 10px; font-weight: 600; border-bottom: 1px solid #e5e7eb; }
+        td { padding: 14px 10px; border-bottom: 1px solid #f3f4f6; color: #111827; }
+        tr:hover { background-color: #f9fafb; }
         
-        .filters-section { background: white; padding: 15px 20px; border-radius: 8px; border: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; color: #444; font-size: 14px; }
-        .btn-clear { background: none; border: 1px solid #ddd; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+        /* Badges de Status */
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; display: inline-block; }
+        .badge-acatada { background: #dcfce7; color: #15803d; }
+        .badge-nao-acatada { background: #fee2e2; color: #b91c1c; }
+        .badge-pendente { background: #fef3c7; color: #d97706; }
         
-        .table-container { background: white; border-radius: 8px; border: 1px solid #e5e7eb; padding: 20px; }
-        .table-info { font-size: 14px; color: #666; margin-bottom: 5px; }
-        .table-subtitle { font-size: 12px; color: #aaa; margin-bottom: 15px; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
-        th { background: #f9fafb; color: #666; padding: 10px; font-weight: 600; border-bottom: 1px solid #e5e7eb; }
-        td { padding: 12px 10px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
-        
-        td[contenteditable="true"]:hover { background: #f3f4f6; cursor: pointer; border-radius: 4px; }
-        td[contenteditable="true"]:focus { background: white; outline: 2px solid #3b82f6; border-radius: 4px; }
-        
-        .status-select { padding: 4px; border-radius: 4px; border: 1px solid #ddd; font-size: 11px; font-weight: 600; text-transform: uppercase; }
-        .actions-btns { display: flex; gap: 10px; font-size: 16px; cursor: pointer; user-select: none; }
-        .btn-delete { background: none; border: none; cursor: pointer; font-size: 16px; }
+        .actions-btns { display: flex; gap: 12px; font-size: 16px; }
+        .action-icon { cursor: pointer; border: none; background: none; transition: transform 0.1s; }
+        .action-icon:hover { transform: scale(1.2); }
+
+        /* Janela Modal (Formulário Flutuante) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-box { background: white; width: 550px; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); padding: 24px; position: relative; animation: fadeIn 0.2s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .modal-title { font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 20px; }
+        .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        .modal-field { display: flex; flex-direction: column; gap: 6px; }
+        .modal-field-full { grid-column: span 2; display: flex; flex-direction: column; gap: 6px; }
+        .modal-field label { font-size: 13px; font-weight: 500; color: #374151; }
+        .modal-field label span { color: #dc2626; }
+        .modal-field input, .modal-field select { padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; }
+        .modal-buttons { display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid #e5e7eb; padding-top: 16px; }
     </style>
 </head>
 <body>
@@ -47,11 +75,13 @@
     <div class="header">
         <div class="title">
             <h1>📋 Notas Fiscais</h1>
-            <p>Gerenciamento de recebimento (Clique em qualquer texto da tabela para alterar)</p>
+            <p>Gerenciamento de recebimento</p>
         </div>
         <div class="buttons">
+            <button class="btn btn-white" onclick="exportarDadosParaAreaTransf()">📋 Copiar Dados (Backup)</button>
+            <button class="btn btn-white" onclick="importarDados()">📥 Importar Dados</button>
             <button class="btn btn-white" onclick="exportarCSV()">⬇ Exportar CSV</button>
-            <button class="btn btn-blue" onclick="adicionarNota()">+ Nova Nota Fiscal</button>
+            <button class="btn btn-blue" onclick="abrirModal()">+ Nova Nota Fiscal</button>
         </div>
     </div>
 
@@ -74,54 +104,126 @@
         </div>
     </div>
 
-    <div class="filters-section">
-        <div>▼ Filtros ativos</div>
-        <button class="btn-clear" onclick="limparTudo()">✕ Limpar Todos os Dados</button>
+    <div class="filters-container">
+        <div class="filters-title">▼ Filtros</div>
+        <div class="filters-row">
+            <input type="text" id="filtro-fornecedor" class="filter-input" placeholder="Fornecedor..." oninput="filtrarTabela()">
+            <input type="text" id="filtro-nf" class="filter-input" placeholder="Nº NF..." oninput="filtrarTabela()">
+            <select id="filtro-status" class="filter-select" onchange="filtrarTabela()">
+                <option value="">Todos os status</option>
+                <option value="ACATADA">Acatada</option>
+                <option value="NÃO ACATADA">Não Acatada</option>
+                <option value="PENDENTE">Pendente</option>
+            </select>
+            <input type="date" id="filtro-data-inicio" class="filter-input" onchange="filtrarTabela()">
+            <input type="date" id="filtro-data-fim" class="filter-input" onchange="filtrarTabela()">
+            <button class="btn-clear" onclick="limparFiltros()">✕ Limpar filtros</button>
+        </div>
     </div>
 
     <div class="table-container">
         <div class="table-info" id="contador-notas">0 notas encontradas</div>
-        <div class="table-subtitle">≡ Clique em qualquer informação da tabela para alterar o texto livremente.</div>
-        
         <table>
             <thead>
                 <tr>
                     <th>Data</th>
                     <th>Fornecedor</th>
                     <th>NF</th>
-                    <th>Valor (Use ponto. Ex: 1119.13)</th>
+                    <th>Valor</th>
                     <th>Chegada</th>
-                    <th>Saída</th>
                     <th>Temp.</th>
-                    <th>Conferente</th>
-                    <th>Prevenção</th>
-                    <th>Status</th>
+                    <th>Saída</th>
                     <th>Observação</th>
+                    <th>Status</th>
                     <th>Ações</th>
                 </tr>
             </thead>
-            <tbody id="corpo-tabela">
-            </tbody>
+            <tbody id="corpo-tabela"></tbody>
         </table>
     </div>
 
+    <div class="modal-overlay" id="modal-nota">
+        <div class="modal-box">
+            <div class="modal-title" id="modal-titulo-acao">Nova Nota Fiscal</div>
+            <form id="form-nota" onsubmit="salvarFormulario(event)">
+                <input type="hidden" id="edit-index">
+                <div class="modal-grid">
+                    <div class="modal-field">
+                        <label>Data <span>*</span></label>
+                        <input type="date" id="form-data" required>
+                    </div>
+                    <div class="modal-field">
+                        <label>Status</label>
+                        <select id="form-status">
+                            <option value="ACATADA">Acatada</option>
+                            <option value="NÃO ACATADA">Não acatada</option>
+                            <option value="PENDENTE">Pendente</option>
+                        </select>
+                    </div>
+                    <div class="modal-field modal-field-full">
+                        <label>Fornecedor <span>*</span></label>
+                        <input type="text" id="form-fornecedor" placeholder="Nome do fornecedor" required>
+                    </div>
+                    <div class="modal-field">
+                        <label>Nº NF <span>*</span></label>
+                        <input type="text" id="form-nf" placeholder="Ex: 1.325.861" required>
+                    </div>
+                    <div class="modal-field">
+                        <label>Valor (R$) <span>*</span></label>
+                        <input type="text" id="form-valor" placeholder="Ex: 1234,56" required>
+                    </div>
+                    <div class="modal-field">
+                        <label>Chegada</label>
+                        <input type="time" id="form-chegada">
+                    </div>
+                    <div class="modal-field">
+                        <label>Temperatura</label>
+                        <input type="text" id="form-temp" placeholder="-">
+                    </div>
+                    <div class="modal-field">
+                        <label>Saída</label>
+                        <input type="time" id="form-saida">
+                    </div>
+                    <div class="modal-field modal-field-full">
+                        <label>Observação</label>
+                        <input type="text" id="form-observacao" placeholder="Opcional">
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn btn-white" onclick="fecharModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-blue" id="btn-salvar-modal">Salvar nota</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // Dados de exemplo para iniciar
-        const dadosPadrao = [{
-            data: "29/06/2026", fornecedor: "Apol", nf: "61.975", valor: "1119.13", 
-            chegada: "07:06", saida: "07:10", temp: "-", conferente: "Amanda", 
-            prevencao: "Lucas", status: "ACATADA", observacao: "-"
-        }];
+        // COLE OS SEUS DADOS DENTRO DESTE ARRAY PARA QUE ELES FIQUEM FIXOS EM QUALQUER PC
+        let notas = [
+            { data: "2026-06-29", fornecedor: "Panco", nf: "2555", valor: "1630.00", chegada: "07:06", temp: "-", saida: "07:10", observacao: "-", status: "NÃO ACATADA" }
+        ];
 
-        // Carrega dados do computador ou usa o padrão
-        let notas = JSON.parse(localStorage.getItem('notas_fiscais_dados')) || dadosPadrao;
-
-        function salvarDados() {
-            localStorage.setItem('notas_fiscais_dados', JSON.stringify(notas));
-            atualizarTela();
+        // Tenta carregar as alterações locais salvas na máquina
+        if (localStorage.getItem('cadastro_notas_salvas')) {
+            notas = JSON.parse(localStorage.getItem('cadastro_notas_salvas'));
         }
 
-        function atualizarTela() {
+        function salvarLocalStorage() {
+            localStorage.setItem('cadastro_notas_salvas', JSON.stringify(notas));
+            atualizarTela(notas);
+        }
+
+        function formatarMoeda(valor) {
+            return parseFloat(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        function formatarDataBR(dataISO) {
+            if(!dataISO) return '-';
+            const partes = dataISO.split('-');
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        }
+
+        function atualizarTela(dadosParaExibir) {
             const tbody = document.getElementById('corpo-tabela');
             tbody.innerHTML = '';
             
@@ -129,94 +231,170 @@
             let acatadas = 0;
             let naoAcatadas = 0;
 
-            notas.forEach((nota, index) => {
-                const numValor = parseFloat(nota.valor) || 0;
-                valorTotal += numValor;
+            // Totais baseados sempre na lista COMPLETA
+            notas.forEach(n => {
+                const val = parseFloat(n.valor) || 0;
+                valorTotal += val;
+                if (n.status === "ACATADA") acatadas++;
+                if (n.status === "NÃO ACATADA") naoAcatadas++;
+            });
+
+            document.getElementById('card-total').innerText = notas.length;
+            document.getElementById('card-valor-total').innerText = formatarMoeda(valorTotal);
+            document.getElementById('card-acatadas').innerText = acatadas;
+            document.getElementById('card-nao-acatadas').innerText = naoAcatadas;
+            document.getElementById('contador-notas').innerText = `${dadosParaExibir.length} nota(s) encontrada(s)`;
+
+            // Renderiza apenas os dados filtrados
+            dadosParaExibir.forEach((nota) => {
+                // Acha o index real na lista principal
+                const realIndex = notas.indexOf(nota);
                 
-                if(nota.status === "ACATADA") acatadas++;
-                if(nota.status === "NÃO ACATADA") naoAcatadas++;
+                let badgeClass = 'badge-pendente';
+                if(nota.status === 'ACATADA') badgeClass = 'badge-acatada';
+                if(nota.status === 'NÃO ACATADA') badgeClass = 'badge-nao-acatada';
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td contenteditable="true" onblur="editarNota(${index}, 'data', this.innerText)">${nota.data}</td>
-                    <td contenteditable="true" onblur="editarNota(${index}, 'fornecedor', this.innerText)">${nota.fornecedor}</td>
-                    <td contenteditable="true" onblur="editarNota(${index}, 'nf', this.innerText)">${nota.nf}</td>
-                    <td contenteditable="true" onblur="editarNota(${index}, 'valor', this.innerText)">${numValor.toFixed(2)}</td>
-                    <td contenteditable="true" onblur="editarNota(${index}, 'chegada', this.innerText)">${nota.chegada}</td>
-                    <td contenteditable="true" onblur="editarNota(${index}, 'saida', this.innerText)">${nota.saida}</td>
-                    <td contenteditable="true" onblur="editarNota(${index}, 'temp', this.innerText)">${nota.temp}</td>
-                    <td contenteditable="true" onblur="editarNota(${index}, 'conferente', this.innerText)">${nota.conferente}</td>
-                    <td contenteditable="true" onblur="editarNota(${index}, 'prevencao', this.innerText)">${nota.prevencao}</td>
-                    <td>
-                        <select class="status-select" onchange="editarNota(${index}, 'status', this.value); salvarDados();">
-                            <option value="ACATADA" ${nota.status === 'ACATADA' ? 'selected' : ''}>Acatada</option>
-                            <option value="NÃO ACATADA" ${nota.status === 'NÃO ACATADA' ? 'selected' : ''}>Não Acatada</option>
-                            <option value="PENDENTE" ${nota.status === 'PENDENTE' ? 'selected' : ''}>Pendente</option>
-                        </select>
-                    </td>
-                    <td contenteditable="true" onblur="editarNota(${index}, 'observacao', this.innerText)">${nota.observacao}</td>
+                    <td>${formatarDataBR(nota.data)}</td>
+                    <td><strong>${nota.fornecedor}</strong></td>
+                    <td>${nota.nf}</td>
+                    <td><strong>${formatarMoeda(nota.valor)}</strong></td>
+                    <td>${nota.chegada || '-'}</td>
+                    <td>${nota.temp || '-'}</td>
+                    <td>${nota.saida || '-'}</td>
+                    <td>${nota.observacao || '-'}</td>
+                    <td><span class="badge ${badgeClass}">${nota.status}</span></td>
                     <td class="actions-btns">
-                        <button class="btn-delete" onclick="removerNota(${index})">🗑️</button>
+                        <button class="action-icon" onclick="abrirModalEditar(${realIndex})">✏️</button>
+                        <button class="action-icon" onclick="deletarNota(${realIndex})">🗑️</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
-
-            document.getElementById('card-total').innerText = notas.length;
-            document.getElementById('contador-notas').innerText = `${notas.length} nota(s) encontrada(s)`;
-            document.getElementById('card-valor-total').innerText = `R$ ${valorTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-            document.getElementById('card-acatadas').innerText = acatadas;
-            document.getElementById('card-nao-acatadas').innerText = naoAcatadas;
         }
 
-        function adicionarNota() {
-            notas.push({
-                data: new Date().toLocaleDateString('pt-BR'), fornecedor: "Editar Fornecedor", nf: "0000", valor: "0.00", 
-                chegada: "00:00", saida: "00:00", temp: "-", conferente: "-", 
-                prevencao: "-", status: "ACATADA", observacao: "-"
-            });
-            salvarDados();
+        function abrirModal() {
+            document.getElementById('form-nota').reset();
+            document.getElementById('edit-index').value = "";
+            document.getElementById('modal-titulo-acao').innerText = "Nova Nota Fiscal";
+            document.getElementById('form-data').value = new Date().toISOString().split('T')[0];
+            document.getElementById('modal-overlay').style.display = 'flex';
         }
 
-        function editarNota(index, campo, valor) {
-            if(campo === 'valor') {
-                valor = valor.replace(',', '.');
-            }
-            notas[index][campo] = valor;
-            localStorage.setItem('notas_fiscais_dados', JSON.stringify(notas));
+        function fecharModal() {
+            document.getElementById('modal-nota').style.display = 'none';
+        }
+
+        function abrirModalEditar(index) {
+            const nota = notas[index];
+            document.getElementById('edit-index').value = index;
+            document.getElementById('modal-titulo-acao').innerText = "Editar Nota Fiscal";
             
-            // Recalcula totais instantaneamente
-            let valorTotal_local = 0;
-            let acatadas = 0;
-            let naoAcatadas = 0;
-            notas.forEach(n => {
-                valorTotal_local += (parseFloat(n.valor) || 0);
-                if(n.status === "ACATADA") acatadas++;
-                if(n.status === "NÃO ACATADA") naoAcatadas++;
-            });
-            document.getElementById('card-valor-total').innerText = `R$ ${valorTotal_local.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-            document.getElementById('card-acatadas').innerText = acatadas;
-            document.getElementById('card-nao-acatadas').innerText = naoAcatadas;
+            document.getElementById('form-data').value = nota.data;
+            document.getElementById('form-status').value = nota.status;
+            document.getElementById('form-fornecedor').value = nota.fornecedor;
+            document.getElementById('form-nf').value = nota.nf;
+            document.getElementById('form-valor').value = nota.valor.replace('.', ',');
+            document.getElementById('form-chegada').value = nota.chegada;
+            document.getElementById('form-temp').value = nota.temp;
+            document.getElementById('form-saida').value = nota.saida;
+            document.getElementById('form-observacao').value = nota.observacao;
+
+            document.getElementById('modal-nota').style.display = 'flex';
         }
 
-        function removerNota(index) {
-            if(confirm("Tem certeza que deseja excluir esta nota?")) {
+        function salvarFormulario(e) {
+            e.preventDefault();
+            
+            let valorTratado = document.getElementById('form-valor').value.replace(/\./g, '').replace(',', '.');
+            
+            const novaNota = {
+                data: document.getElementById('form-data').value,
+                status: document.getElementById('form-status').value,
+                fornecedor: document.getElementById('form-fornecedor').value,
+                nf: document.getElementById('form-nf').value,
+                valor: valorTratado,
+                chegada: document.getElementById('form-chegada').value || '-',
+                temp: document.getElementById('form-temp').value || '-',
+                saida: document.getElementById('form-saida').value || '-',
+                observacao: document.getElementById('form-observacao').value || '-'
+            };
+
+            const indexEdit = document.getElementById('edit-index').value;
+            if(indexEdit !== "") {
+                notas[indexEdit] = novaNota;
+            } else {
+                notas.push(novaNota);
+            }
+
+            salvarLocalStorage();
+            fecharModal();
+        }
+
+        function deletarNota(index) {
+            if(confirm("Deseja mesmo excluir esta nota?")) {
                 notas.splice(index, 1);
-                salvarDados();
+                salvarLocalStorage();
             }
         }
 
-        function limparTudo() {
-            if(confirm("ATENÇÃO: Isso apagará todas as notas salvas neste computador. Continuar?")) {
-                notas = [];
-                salvarDados();
+        function filtrarTabela() {
+            const fFornecedor = document.getElementById('filtro-fornecedor').value.toLowerCase();
+            const fNf = document.getElementById('filtro-nf').value.toLowerCase();
+            const fStatus = document.getElementById('filtro-status').value;
+            const fDataInicio = document.getElementById('filtro-data-inicio').value;
+            const fDataFim = document.getElementById('filtro-data-fim').value;
+
+            const dadosFiltrados = notas.filter(nota => {
+                const bateFornecedor = nota.fornecedor.toLowerCase().includes(fFornecedor);
+                const bateNf = nota.nf.toLowerCase().includes(fNf);
+                const bateStatus = fStatus === "" || nota.status === fStatus;
+                
+                let bateData = true;
+                if (fDataInicio) bateData = bateData && (nota.data >= fDataInicio);
+                if (fDataFim) bateData = bateData && (nota.data <= fDataFim);
+
+                return bateFornecedor && bateNf && bateStatus && bateData;
+            });
+
+            atualizarTela(dadosFiltrados);
+        }
+
+        function limparFiltros() {
+            document.getElementById('filtro-fornecedor').value = "";
+            document.getElementById('filtro-nf').value = "";
+            document.getElementById('filtro-status').value = "";
+            document.getElementById('filtro-data-inicio').value = "";
+            document.getElementById('filtro-data-fim').value = "";
+            atualizarTela(notas);
+        }
+
+        function exportarDadosParaAreaTransf() {
+            const textoDados = JSON.stringify(notas, null, 2);
+            navigator.clipboard.writeText(textoDados).then(() => {
+                alert("Código de dados copiado para a Área de Transferência!\n\nPara atualizar o site de forma definitiva para todos os computadores:\n1. Vá ao GitHub para editar o código do index.html\n2. Ache a linha 164 (let notas = [...])\n3. Substitua aquela lista por este código copiado e salve!");
+            });
+        }
+
+        function importarDados() {
+            const entrada = prompt("Cole aqui os dados de texto exportados de outro computador:");
+            if(entrada) {
+                try {
+                    const novosDados = JSON.parse(entrada);
+                    if(Array.isArray(novosDados)) {
+                        notas = novosDados;
+                        salvarLocalStorage();
+                        alert("Dados importados com sucesso!");
+                    } else { alert("Formato inválido."); }
+                } catch(e) { alert("Erro ao ler os dados. Certifique-se de colar o código completo."); }
             }
         }
 
         function exportarCSV() {
-            let csv = 'Data;Fornecedor;NF;Valor;Chegada;Saida;Temp;Conferente;Prevencao;Status;Observacao\n';
+            let csv = '\u200BData;Fornecedor;NF;Valor;Chegada;Temp;Saida;Observacao;Status\n';
             notas.forEach(n => {
-                csv += `${n.data};${n.fornecedor};${n.nf};${n.valor};${n.chegada};${n.saida};${n.temp};${n.conferente};${n.prevencao};${n.status};${n.observacao}\n`;
+                csv += `${formatarDataBR(n.data)};${n.fornecedor};${n.nf};${n.valor};${n.chegada};${n.temp};${n.saida};${n.observacao};${n.status}\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
@@ -227,8 +405,8 @@
             document.body.removeChild(link);
         }
 
-        // Inicia a tabela
-        atualizarTela();
+        // Inicialização
+        atualizarTela(notas);
     </script>
 </body>
 </html>
