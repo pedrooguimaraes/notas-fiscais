@@ -1,139 +1,115 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.7">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas Fiscais — Gerenciamento</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: #f8f9fa; color: #333; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .title h1 { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .title p { color: #666; font-size: 14px; margin-top: 4px; }
+        .buttons { display: flex; gap: 10px; }
+        .btn { padding: 10px 16px; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; }
+        .btn-white { background: white; border: 1px solid #ddd; color: #333; display: flex; align-items: center; gap: 6px; }
+        .btn-blue { background: #3b82f6; color: white; }
+        .cards-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
+        .card { background: white; padding: 15px 20px; border-radius: 8px; border: 1px solid #e5e7eb; }
+        .card-title { font-size: 11px; text-transform: uppercase; color: #888; font-weight: 600; letter-spacing: 0.5px; }
+        .card-value { font-size: 22px; font-weight: 700; margin-top: 5px; }
+        .value-blue { color: #2563eb; }
+        .value-red { color: #dc2626; }
+        .value-green { color: #16a34a; }
+        .filters-section { background: white; padding: 15px 20px; border-radius: 8px; border: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; color: #444; font-size: 14px; }
+        .btn-clear { background: none; border: 1px solid #ddd; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+        .table-container { background: white; border-radius: 8px; border: 1px solid #e5e7eb; padding: 20px; }
+        .table-info { font-size: 14px; color: #666; margin-bottom: 5px; }
+        .table-subtitle { font-size: 12px; color: #aaa; margin-bottom: 15px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+        th { background: #f9fafb; color: #666; padding: 10px; font-weight: 600; border-bottom: 1px solid #e5e7eb; }
+        td { padding: 12px 10px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
+        .status-badge { background: #dcfce7; color: #15803d; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+        .actions-btns { display: flex; gap: 10px; font-size: 16px; cursor: pointer; }
+    </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="pt-BR"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Notas Fiscais — Gerenciamento&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>body { background-color: #f8f9fa; color: #333; padding: 20px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.title h1 { font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 8px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.title p { color: #666; font-size: 14px; margin-top: 4px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.buttons { display: flex; gap: 10px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.btn { padding: 10px 16px; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.btn-white { background: white; border: 1px solid #ddd; color: #333; display: flex; align-items: center; gap: 6px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.btn-blue { background: #3b82f6; color: white; }</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>/* Dashboard Cards */</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.cards-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.card { background: white; padding: 15px 20px; border-radius: 8px; border: 1px solid #e5e7eb; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.card-title { font-size: 11px; text-transform: uppercase; color: #888; font-weight: 600; letter-spacing: 0.5px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.card-value { font-size: 22px; font-weight: 700; margin-top: 5px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.value-blue { color: #2563eb; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.value-red { color: #dc2626; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.value-green { color: #16a34a; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>/* Filtros */</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.filters-section { background: white; padding: 15px 20px; border-radius: 8px; border: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; color: #444; font-size: 14px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.btn-clear { background: none; border: 1px solid #ddd; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>/* Tabela */</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.table-container { background: white; border-radius: 8px; border: 1px solid #e5e7eb; padding: 20px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.table-info { font-size: 14px; color: #666; margin-bottom: 5px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.table-subtitle { font-size: 12px; color: #aaa; margin-bottom: 15px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>th { background: #f9fafb; color: #666; padding: 10px; font-weight: 600; border-bottom: 1px solid #e5e7eb; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>td { padding: 12px 10px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>/* Status */</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.status-badge { background: #dcfce7; color: #15803d; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.actions-btns { display: flex; gap: 10px; font-size: 16px; cursor: pointer; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="header"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="title"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;h1&gt;📋 Notas Fiscais&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p&gt;Gerenciamento de recebimento&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="buttons"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="btn btn-white"&gt;⬇ Exportar CSV&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="btn btn-blue"&gt;+ Nova Nota Fiscal&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="cards-container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="card-title"&gt;Total de Notas&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="card-value value-blue"&gt;1&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="card-title"&gt;Valor Total&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="card-value"&gt;R$ 1.119,13&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="card-title"&gt;Não Acatadas&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="card-value value-red"&gt;0&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="card-title"&gt;Acatadas&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="card-value value-green"&gt;1&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="filters-section"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;▼ Filtros&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="btn-clear"&gt;✕ Limpar filtros&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="table-container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="table-info"&gt;1 nota encontrada&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="table-subtitle"&gt;≡ Arraste os cabeçalhos para reordenar as colunas&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;table&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;thead&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;tr&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;th&gt;Data ⇅&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;th&gt;Fornecedor ⇅&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;th&gt;NF ⇅&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;th&gt;Valor ⇅&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;th&gt;Chegada&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;th&gt;Saída&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;th&gt;Temp.&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;th&gt;Conferente ⇅&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;th&gt;Prevenção&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;th&gt;Status ⇅&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;th&gt;Observação&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;th&gt;Ações&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/tr&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/thead&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;tbody&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;tr&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;td&gt;29/06/2026&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;td&gt;Apol&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;td&gt;61.975&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;td&gt;&lt;strong&gt;R$ 1.119,13&lt;/strong&gt;&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;td&gt;07:06&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;td&gt;07:10&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;td&gt;-&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;td&gt;Amanda&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;td&gt;Lucas&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;td&gt;&lt;span class="status-badge"&gt;Acatada&lt;/span&gt;&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;td&gt;-&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;td class="actions-btns"&gt;✏️ 🗑️&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/tr&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/tbody&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/table&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+
+    <div class="header">
+        <div class="title">
+            <h1>📋 Notas Fiscais</h1>
+            <p>Gerenciamento de recebimento</p>
+        </div>
+        <div class="buttons">
+            <button class="btn btn-white">⬇ Exportar CSV</button>
+            <button class="btn btn-blue">+ Nova Nota Fiscal</button>
+        </div>
+    </div>
+
+    <div class="cards-container">
+        <div class="card">
+            <div class="card-title">Total de Notas</div>
+            <div class="card-value value-blue">1</div>
+        </div>
+        <div class="card">
+            <div class="card-title">Valor Total</div>
+            <div class="card-value">R$ 1.119,13</div>
+        </div>
+        <div class="card">
+            <div class="card-title">Não Acatadas</div>
+            <div class="card-value value-red">0</div>
+        </div>
+        <div class="card">
+            <div class="card-title">Acatadas</div>
+            <div class="card-value value-green">1</div>
+        </div>
+    </div>
+
+    <div class="filters-section">
+        <div>▼ Filtros</div>
+        <button class="btn-clear">✕ Limpar filtros</button>
+    </div>
+
+    <div class="table-container">
+        <div class="table-info">1 nota encontrada</div>
+        <div class="table-subtitle">≡ Arraste os cabeçalhos para reordenar as colunas</div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Data ⇅</th>
+                    <th>Fornecedor ⇅</th>
+                    <th>NF ⇅</th>
+                    <th>Valor ⇅</th>
+                    <th>Chegada</th>
+                    <th>Saída</th>
+                    <th>Temp.</th>
+                    <th>Conferente ⇅</th>
+                    <th>Prevenção</th>
+                    <th>Status ⇅</th>
+                    <th>Observação</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>29/06/2026</td>
+                    <td>Apol</td>
+                    <td>61.975</td>
+                    <td><strong>R$ 1.119,13</strong></td>
+                    <td>07:06</td>
+                    <td>07:10</td>
+                    <td>-</td>
+                    <td>Amanda</td>
+                    <td>Lucas</td>
+                    <td><span class="status-badge">Acatada</span></td>
+                    <td>-</td>
+                    <td class="actions-btns">✏️ 🗑️</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
 </body>
 </html>
