@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notas Fiscais — Gerenciamento</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background-color: #f8f9fa; color: #333; padding: 20px; }
@@ -39,7 +39,7 @@
         
         .status-select { padding: 4px; border-radius: 4px; border: 1px solid #ddd; font-size: 11px; font-weight: 600; text-transform: uppercase; }
         .actions-btns { display: flex; gap: 10px; font-size: 16px; cursor: pointer; user-select: none; }
-        .btn-delete { background: none; border: none; cursor: pointer; }
+        .btn-delete { background: none; border: none; cursor: pointer; font-size: 16px; }
     </style>
 </head>
 <body>
@@ -47,7 +47,7 @@
     <div class="header">
         <div class="title">
             <h1>📋 Notas Fiscais</h1>
-            <p>Gerenciamento de recebimento (Clique duas vezes em qualquer texto para editar)</p>
+            <p>Gerenciamento de recebimento (Clique em qualquer texto da tabela para alterar)</p>
         </div>
         <div class="buttons">
             <button class="btn btn-white" onclick="exportarCSV()">⬇ Exportar CSV</button>
@@ -81,7 +81,7 @@
 
     <div class="table-container">
         <div class="table-info" id="contador-notas">0 notas encontradas</div>
-        <div class="table-subtitle">≡ Clique duas vezes em qualquer informação da tabela para alterar.</div>
+        <div class="table-subtitle">≡ Clique em qualquer informação da tabela para alterar o texto livremente.</div>
         
         <table>
             <thead>
@@ -89,7 +89,7 @@
                     <th>Data</th>
                     <th>Fornecedor</th>
                     <th>NF</th>
-                    <th>Valor (Ex: 1119.13)</th>
+                    <th>Valor (Use ponto. Ex: 1119.13)</th>
                     <th>Chegada</th>
                     <th>Saída</th>
                     <th>Temp.</th>
@@ -106,12 +106,14 @@
     </div>
 
     <script>
+        // Dados de exemplo para iniciar
         const dadosPadrao = [{
             data: "29/06/2026", fornecedor: "Apol", nf: "61.975", valor: "1119.13", 
             chegada: "07:06", saida: "07:10", temp: "-", conferente: "Amanda", 
             prevencao: "Lucas", status: "ACATADA", observacao: "-"
         }];
 
+        // Carrega dados do computador ou usa o padrão
         let notas = JSON.parse(localStorage.getItem('notas_fiscais_dados')) || dadosPadrao;
 
         function salvarDados() {
@@ -141,12 +143,12 @@
                     <td contenteditable="true" onblur="editarNota(${index}, 'nf', this.innerText)">${nota.nf}</td>
                     <td contenteditable="true" onblur="editarNota(${index}, 'valor', this.innerText)">${numValor.toFixed(2)}</td>
                     <td contenteditable="true" onblur="editarNota(${index}, 'chegada', this.innerText)">${nota.chegada}</td>
-                    <td contenteditable="true" onblur="editableNota(${index}, 'saida', this.innerText)">${nota.saida}</td>
+                    <td contenteditable="true" onblur="editarNota(${index}, 'saida', this.innerText)">${nota.saida}</td>
                     <td contenteditable="true" onblur="editarNota(${index}, 'temp', this.innerText)">${nota.temp}</td>
                     <td contenteditable="true" onblur="editarNota(${index}, 'conferente', this.innerText)">${nota.conferente}</td>
                     <td contenteditable="true" onblur="editarNota(${index}, 'prevencao', this.innerText)">${nota.prevencao}</td>
                     <td>
-                        <select class="status-select" onchange="editarNota(${index}, 'status', this.value)">
+                        <select class="status-select" onchange="editarNota(${index}, 'status', this.value); salvarDados();">
                             <option value="ACATADA" ${nota.status === 'ACATADA' ? 'selected' : ''}>Acatada</option>
                             <option value="NÃO ACATADA" ${nota.status === 'NÃO ACATADA' ? 'selected' : ''}>Não Acatada</option>
                             <option value="PENDENTE" ${nota.status === 'PENDENTE' ? 'selected' : ''}>Pendente</option>
@@ -169,8 +171,8 @@
 
         function adicionarNota() {
             notas.push({
-                data: new Date().toLocaleDateString('pt-BR'), fornecedor: "Clique para editar", nf: "-", valor: "0.00", 
-                chegada: "--:--", saida: "--:--", temp: "-", conferente: "-", 
+                data: new Date().toLocaleDateString('pt-BR'), fornecedor: "Editar Fornecedor", nf: "0000", valor: "0.00", 
+                chegada: "00:00", saida: "00:00", temp: "-", conferente: "-", 
                 prevencao: "-", status: "ACATADA", observacao: "-"
             });
             salvarDados();
@@ -183,48 +185,9 @@
             notas[index][campo] = valor;
             localStorage.setItem('notas_fiscais_dados', JSON.stringify(notas));
             
+            // Recalcula totais instantaneamente
             let valorTotal_local = 0;
             let acatadas = 0;
             let naoAcatadas = 0;
             notas.forEach(n => {
                 valorTotal_local += (parseFloat(n.valor) || 0);
-                if(n.status === "ACATADA") acatadas++;
-                if(n.status === "NÃO ACATADA") naoAcatadas++;
-            });
-            document.getElementById('card-valor-total').innerText = `R$ ${valorTotal_local.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-            document.getElementById('card-acatadas').innerText = acatadas;
-            document.getElementById('card-nao-acatadas').innerText = naoAcatadas;
-        }
-
-        function removerNota(index) {
-            if(confirm("Tem certeza que deseja excluir esta nota?")) {
-                notas.splice(index, 1);
-                salvarDados();
-            }
-        }
-
-        function limparTudo() {
-            if(confirm("ATENÇÃO: Isso apagará todas as notas salvas neste computador. Continuar?")) {
-                notas = [];
-                salvarDados();
-            }
-        }
-
-        function exportarCSV() {
-            let csv = 'Data;Fornecedor;NF;Valor;Chegada;Saida;Temp;Conferente;Prevencao;Status;Observacao\n';
-            notas.forEach(n => {
-                csv += `${n.data};${n.fornecedor};${n.nf};${n.valor};${n.chegada};${n.saida};${n.temp};${n.conferente};${n.prevencao};${n.status};${n.observacao}\n`;
-            });
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.setAttribute("download", "notas_fiscais.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        atualizarTela();
-    </script>
-</body>
-</html>
