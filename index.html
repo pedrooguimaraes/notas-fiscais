@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notas Fiscais — Gerenciamento</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background-color: #f8f9fa; color: #333; padding: 20px; }
@@ -34,7 +34,6 @@
         th { background: #f9fafb; color: #666; padding: 10px; font-weight: 600; border-bottom: 1px solid #e5e7eb; }
         td { padding: 12px 10px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
         
-        /* Células editáveis ganham um efeito visual sutil ao passar o mouse */
         td[contenteditable="true"]:hover { background: #f3f4f6; cursor: pointer; border-radius: 4px; }
         td[contenteditable="true"]:focus { background: white; outline: 2px solid #3b82f6; border-radius: 4px; }
         
@@ -102,19 +101,17 @@
                 </tr>
             </thead>
             <tbody id="corpo-tabela">
-                </tbody>
+            </tbody>
         </table>
     </div>
 
     <script>
-        // Dados iniciais padrão caso o sistema esteja vazio pela primeira vez
         const dadosPadrao = [{
             data: "29/06/2026", fornecedor: "Apol", nf: "61.975", valor: "1119.13", 
             chegada: "07:06", saida: "07:10", temp: "-", conferente: "Amanda", 
             prevencao: "Lucas", status: "ACATADA", observacao: "-"
         }];
 
-        // Carrega os dados que estão salvos no computador ou usa os padrões
         let notas = JSON.parse(localStorage.getItem('notas_fiscais_dados')) || dadosPadrao;
 
         function salvarDados() {
@@ -126,13 +123,13 @@
             const tbody = document.getElementById('corpo-tabela');
             tbody.innerHTML = '';
             
-            let valorTotal global = 0;
+            let valorTotal = 0;
             let acatadas = 0;
             let naoAcatadas = 0;
 
             notas.forEach((nota, index) => {
                 const numValor = parseFloat(nota.valor) || 0;
-                valorTotal_global += numValor;
+                valorTotal += numValor;
                 
                 if(nota.status === "ACATADA") acatadas++;
                 if(nota.status === "NÃO ACATADA") naoAcatadas++;
@@ -144,7 +141,7 @@
                     <td contenteditable="true" onblur="editarNota(${index}, 'nf', this.innerText)">${nota.nf}</td>
                     <td contenteditable="true" onblur="editarNota(${index}, 'valor', this.innerText)">${numValor.toFixed(2)}</td>
                     <td contenteditable="true" onblur="editarNota(${index}, 'chegada', this.innerText)">${nota.chegada}</td>
-                    <td contenteditable="true" onblur="editarNota(${index}, 'saida', this.innerText)">${nota.saida}</td>
+                    <td contenteditable="true" onblur="editableNota(${index}, 'saida', this.innerText)">${nota.saida}</td>
                     <td contenteditable="true" onblur="editarNota(${index}, 'temp', this.innerText)">${nota.temp}</td>
                     <td contenteditable="true" onblur="editarNota(${index}, 'conferente', this.innerText)">${nota.conferente}</td>
                     <td contenteditable="true" onblur="editarNota(${index}, 'prevencao', this.innerText)">${nota.prevencao}</td>
@@ -163,10 +160,9 @@
                 tbody.appendChild(tr);
             });
 
-            // Atualiza os contadores dos cartões do topo
             document.getElementById('card-total').innerText = notas.length;
             document.getElementById('contador-notas').innerText = `${notas.length} nota(s) encontrada(s)`;
-            document.getElementById('card-valor-total').innerText = `R$ ${valorTotal_global.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('card-valor-total').innerText = `R$ ${valorTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('card-acatadas').innerText = acatadas;
             document.getElementById('card-nao-acatadas').innerText = naoAcatadas;
         }
@@ -181,15 +177,12 @@
         }
 
         function editarNota(index, campo, valor) {
-            // Se for o campo valor, limpa espaços
             if(campo === 'valor') {
                 valor = valor.replace(',', '.');
             }
             notas[index][campo] = valor;
-            // Salva silenciosamente sem reconstruir a tela para não perder o foco do clique
             localStorage.setItem('notas_fiscais_dados', JSON.stringify(notas));
             
-            // Recalcula os totais do topo rapidamente
             let valorTotal_local = 0;
             let acatadas = 0;
             let naoAcatadas = 0;
@@ -231,7 +224,6 @@
             document.body.removeChild(link);
         }
 
-        // Inicializa a tabela ao abrir a página
         atualizarTela();
     </script>
 </body>
