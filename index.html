@@ -15,6 +15,7 @@
         .btn { padding: 10px 16px; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; }
         .btn-white { background: white; border: 1px solid #ddd; color: #333; display: flex; align-items: center; gap: 6px; }
         .btn-blue { background: #3b82f6; color: white; }
+        
         .cards-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
         .card { background: white; padding: 15px 20px; border-radius: 8px; border: 1px solid #e5e7eb; }
         .card-title { font-size: 11px; text-transform: uppercase; color: #888; font-weight: 600; letter-spacing: 0.5px; }
@@ -22,16 +23,24 @@
         .value-blue { color: #2563eb; }
         .value-red { color: #dc2626; }
         .value-green { color: #16a34a; }
+        
         .filters-section { background: white; padding: 15px 20px; border-radius: 8px; border: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; color: #444; font-size: 14px; }
         .btn-clear { background: none; border: 1px solid #ddd; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+        
         .table-container { background: white; border-radius: 8px; border: 1px solid #e5e7eb; padding: 20px; }
         .table-info { font-size: 14px; color: #666; margin-bottom: 5px; }
         .table-subtitle { font-size: 12px; color: #aaa; margin-bottom: 15px; }
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
         th { background: #f9fafb; color: #666; padding: 10px; font-weight: 600; border-bottom: 1px solid #e5e7eb; }
         td { padding: 12px 10px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
-        .status-badge { background: #dcfce7; color: #15803d; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
-        .actions-btns { display: flex; gap: 10px; font-size: 16px; cursor: pointer; }
+        
+        /* Células editáveis ganham um efeito visual sutil ao passar o mouse */
+        td[contenteditable="true"]:hover { background: #f3f4f6; cursor: pointer; border-radius: 4px; }
+        td[contenteditable="true"]:focus { background: white; outline: 2px solid #3b82f6; border-radius: 4px; }
+        
+        .status-select { padding: 4px; border-radius: 4px; border: 1px solid #ddd; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+        .actions-btns { display: flex; gap: 10px; font-size: 16px; cursor: pointer; user-select: none; }
+        .btn-delete { background: none; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -39,77 +48,191 @@
     <div class="header">
         <div class="title">
             <h1>📋 Notas Fiscais</h1>
-            <p>Gerenciamento de recebimento</p>
+            <p>Gerenciamento de recebimento (Clique duas vezes em qualquer texto para editar)</p>
         </div>
         <div class="buttons">
-            <button class="btn btn-white">⬇ Exportar CSV</button>
-            <button class="btn btn-blue">+ Nova Nota Fiscal</button>
+            <button class="btn btn-white" onclick="exportarCSV()">⬇ Exportar CSV</button>
+            <button class="btn btn-blue" onclick="adicionarNota()">+ Nova Nota Fiscal</button>
         </div>
     </div>
 
     <div class="cards-container">
         <div class="card">
             <div class="card-title">Total de Notas</div>
-            <div class="card-value value-blue">1</div>
+            <div class="card-value value-blue" id="card-total">0</div>
         </div>
         <div class="card">
             <div class="card-title">Valor Total</div>
-            <div class="card-value">R$ 1.119,13</div>
+            <div class="card-value" id="card-valor-total">R$ 0,00</div>
         </div>
         <div class="card">
             <div class="card-title">Não Acatadas</div>
-            <div class="card-value value-red">0</div>
+            <div class="card-value value-red" id="card-nao-acatadas">0</div>
         </div>
         <div class="card">
             <div class="card-title">Acatadas</div>
-            <div class="card-value value-green">1</div>
+            <div class="card-value value-green" id="card-acatadas">0</div>
         </div>
     </div>
 
     <div class="filters-section">
-        <div>▼ Filtros</div>
-        <button class="btn-clear">✕ Limpar filtros</button>
+        <div>▼ Filtros ativos</div>
+        <button class="btn-clear" onclick="limparTudo()">✕ Limpar Todos os Dados</button>
     </div>
 
     <div class="table-container">
-        <div class="table-info">1 nota encontrada</div>
-        <div class="table-subtitle">≡ Arraste os cabeçalhos para reordenar as colunas</div>
+        <div class="table-info" id="contador-notas">0 notas encontradas</div>
+        <div class="table-subtitle">≡ Clique duas vezes em qualquer informação da tabela para alterar.</div>
         
         <table>
             <thead>
                 <tr>
-                    <th>Data ⇅</th>
-                    <th>Fornecedor ⇅</th>
-                    <th>NF ⇅</th>
-                    <th>Valor ⇅</th>
+                    <th>Data</th>
+                    <th>Fornecedor</th>
+                    <th>NF</th>
+                    <th>Valor (Ex: 1119.13)</th>
                     <th>Chegada</th>
                     <th>Saída</th>
                     <th>Temp.</th>
-                    <th>Conferente ⇅</th>
+                    <th>Conferente</th>
                     <th>Prevenção</th>
-                    <th>Status ⇅</th>
+                    <th>Status</th>
                     <th>Observação</th>
                     <th>Ações</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>29/06/2026</td>
-                    <td>Apol</td>
-                    <td>61.975</td>
-                    <td><strong>R$ 1.119,13</strong></td>
-                    <td>07:06</td>
-                    <td>07:10</td>
-                    <td>-</td>
-                    <td>Amanda</td>
-                    <td>Lucas</td>
-                    <td><span class="status-badge">Acatada</span></td>
-                    <td>-</td>
-                    <td class="actions-btns">✏️ 🗑️</td>
-                </tr>
-            </tbody>
+            <tbody id="corpo-tabela">
+                </tbody>
         </table>
     </div>
 
+    <script>
+        // Dados iniciais padrão caso o sistema esteja vazio pela primeira vez
+        const dadosPadrao = [{
+            data: "29/06/2026", fornecedor: "Apol", nf: "61.975", valor: "1119.13", 
+            chegada: "07:06", saida: "07:10", temp: "-", conferente: "Amanda", 
+            prevencao: "Lucas", status: "ACATADA", observacao: "-"
+        }];
+
+        // Carrega os dados que estão salvos no computador ou usa os padrões
+        let notas = JSON.parse(localStorage.getItem('notas_fiscais_dados')) || dadosPadrao;
+
+        function salvarDados() {
+            localStorage.setItem('notas_fiscais_dados', JSON.stringify(notas));
+            atualizarTela();
+        }
+
+        function atualizarTela() {
+            const tbody = document.getElementById('corpo-tabela');
+            tbody.innerHTML = '';
+            
+            let valorTotal global = 0;
+            let acatadas = 0;
+            let naoAcatadas = 0;
+
+            notas.forEach((nota, index) => {
+                const numValor = parseFloat(nota.valor) || 0;
+                valorTotal_global += numValor;
+                
+                if(nota.status === "ACATADA") acatadas++;
+                if(nota.status === "NÃO ACATADA") naoAcatadas++;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td contenteditable="true" onblur="editarNota(${index}, 'data', this.innerText)">${nota.data}</td>
+                    <td contenteditable="true" onblur="editarNota(${index}, 'fornecedor', this.innerText)">${nota.fornecedor}</td>
+                    <td contenteditable="true" onblur="editarNota(${index}, 'nf', this.innerText)">${nota.nf}</td>
+                    <td contenteditable="true" onblur="editarNota(${index}, 'valor', this.innerText)">${numValor.toFixed(2)}</td>
+                    <td contenteditable="true" onblur="editarNota(${index}, 'chegada', this.innerText)">${nota.chegada}</td>
+                    <td contenteditable="true" onblur="editarNota(${index}, 'saida', this.innerText)">${nota.saida}</td>
+                    <td contenteditable="true" onblur="editarNota(${index}, 'temp', this.innerText)">${nota.temp}</td>
+                    <td contenteditable="true" onblur="editarNota(${index}, 'conferente', this.innerText)">${nota.conferente}</td>
+                    <td contenteditable="true" onblur="editarNota(${index}, 'prevencao', this.innerText)">${nota.prevencao}</td>
+                    <td>
+                        <select class="status-select" onchange="editarNota(${index}, 'status', this.value)">
+                            <option value="ACATADA" ${nota.status === 'ACATADA' ? 'selected' : ''}>Acatada</option>
+                            <option value="NÃO ACATADA" ${nota.status === 'NÃO ACATADA' ? 'selected' : ''}>Não Acatada</option>
+                            <option value="PENDENTE" ${nota.status === 'PENDENTE' ? 'selected' : ''}>Pendente</option>
+                        </select>
+                    </td>
+                    <td contenteditable="true" onblur="editarNota(${index}, 'observacao', this.innerText)">${nota.observacao}</td>
+                    <td class="actions-btns">
+                        <button class="btn-delete" onclick="removerNota(${index})">🗑️</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Atualiza os contadores dos cartões do topo
+            document.getElementById('card-total').innerText = notas.length;
+            document.getElementById('contador-notas').innerText = `${notas.length} nota(s) encontrada(s)`;
+            document.getElementById('card-valor-total').innerText = `R$ ${valorTotal_global.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('card-acatadas').innerText = acatadas;
+            document.getElementById('card-nao-acatadas').innerText = naoAcatadas;
+        }
+
+        function adicionarNota() {
+            notas.push({
+                data: new Date().toLocaleDateString('pt-BR'), fornecedor: "Clique para editar", nf: "-", valor: "0.00", 
+                chegada: "--:--", saida: "--:--", temp: "-", conferente: "-", 
+                prevencao: "-", status: "ACATADA", observacao: "-"
+            });
+            salvarDados();
+        }
+
+        function editarNota(index, campo, valor) {
+            // Se for o campo valor, limpa espaços
+            if(campo === 'valor') {
+                valor = valor.replace(',', '.');
+            }
+            notas[index][campo] = valor;
+            // Salva silenciosamente sem reconstruir a tela para não perder o foco do clique
+            localStorage.setItem('notas_fiscais_dados', JSON.stringify(notas));
+            
+            // Recalcula os totais do topo rapidamente
+            let valorTotal_local = 0;
+            let acatadas = 0;
+            let naoAcatadas = 0;
+            notas.forEach(n => {
+                valorTotal_local += (parseFloat(n.valor) || 0);
+                if(n.status === "ACATADA") acatadas++;
+                if(n.status === "NÃO ACATADA") naoAcatadas++;
+            });
+            document.getElementById('card-valor-total').innerText = `R$ ${valorTotal_local.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+            document.getElementById('card-acatadas').innerText = acatadas;
+            document.getElementById('card-nao-acatadas').innerText = naoAcatadas;
+        }
+
+        function removerNota(index) {
+            if(confirm("Tem certeza que deseja excluir esta nota?")) {
+                notas.splice(index, 1);
+                salvarDados();
+            }
+        }
+
+        function limparTudo() {
+            if(confirm("ATENÇÃO: Isso apagará todas as notas salvas neste computador. Continuar?")) {
+                notas = [];
+                salvarDados();
+            }
+        }
+
+        function exportarCSV() {
+            let csv = 'Data;Fornecedor;NF;Valor;Chegada;Saida;Temp;Conferente;Prevencao;Status;Observacao\n';
+            notas.forEach(n => {
+                csv += `${n.data};${n.fornecedor};${n.nf};${n.valor};${n.chegada};${n.saida};${n.temp};${n.conferente};${n.prevencao};${n.status};${n.observacao}\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute("download", "notas_fiscais.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Inicializa a tabela ao abrir a página
+        atualizarTela();
+    </script>
 </body>
 </html>
