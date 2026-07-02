@@ -204,20 +204,22 @@
                             <input type="time" id="form-saida">
                         </div>
                         <div class="modal-field">
-                            <label>Observação</label>
-                            <input type="text" id="form-observacao" placeholder="Opcional">
+                            <label>Conferente</label>
+                            <input type="text" id="form-conferente" placeholder="Nome do conferente">
                         </div>
                     </div>
 
                     <div class="modal-row">
                         <div class="modal-field">
-                            <label>Conferente</label>
-                            <input type="text" id="form-conferente" placeholder="Nome do conferente">
-                        </div>
-                        <div class="modal-field">
                             <label>Prevenção</label>
                             <input type="text" id="form-prevencao" placeholder="Nome do agente">
                         </div>
+                        <div class="modal-field"></div> <!-- Coluna vazia para manter o alinhamento de 50% -->
+                    </div>
+
+                    <div class="modal-field">
+                        <label>Observação</label>
+                        <input type="text" id="form-observacao" placeholder="Opcional">
                     </div>
                 </div>
                 
@@ -230,18 +232,15 @@
     </div>
 
     <script>
-        // Notas padrão (caso o LocalStorage esteja vazio)
         let notas = [
             { data: "2026-06-29", fornecedor: "Panco", nf: "2555", valor: "1630.00", chegada: "-", temp: "-", saida: "-", observacao: "-", conferente: "-", prevencao: "-", status: "ACATADA" },
             { data: "2026-06-30", fornecedor: "roncoleta", nf: "222", valor: "2222.00", chegada: "-", temp: "-", saida: "-", observacao: "-", conferente: "-", prevencao: "-", status: "ACATADA" }
         ];
 
-        // Carrega dados e aplica a correção preventiva de migração
         if (localStorage.getItem('cadastro_notas_salvas_v4')) {
             try {
                 let dadosLocais = JSON.parse(localStorage.getItem('cadastro_notas_salvas_v4'));
                 if (Array.isArray(dadosLocais)) {
-                    // Preenche campos ausentes nas propriedades antigas para evitar travamentos
                     notas = dadosLocais.map(nota => ({
                         data: nota.data || "",
                         status: nota.status || "PENDENTE",
@@ -440,7 +439,6 @@
             document.body.removeChild(link);
         }
 
-        // Execução inicial estável
         atualizarTela(notas);
     </script>
 </body>
