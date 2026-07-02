@@ -45,7 +45,7 @@
         /* Tabela */
         .table-container { background: white; border-radius: 8px; border: 1px solid #e5e7eb; padding: 20px; overflow-x: auto; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
         .table-info { font-size: 14px; color: #4b5563; margin-bottom: 16px; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; min-width: 950px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; min-width: 1100px; }
         th { background: #f9fafb; color: #4b5563; padding: 12px 16px; font-weight: 500; border-bottom: 1px solid #e5e7eb; }
         td { padding: 16px; border-bottom: 1px solid #f3f4f6; color: #111827; }
         tr:hover { background-color: #f9fafb; }
@@ -61,9 +61,9 @@
         .action-icon { cursor: pointer; border: none; background: none; font-size: 16px; opacity: 0.6; transition: opacity 0.2s; }
         .action-icon:hover { opacity: 1; }
 
-        /* Janela Modal (Formulário Flutuante) - IMPORTANTE: display: none explicitado aqui */
+        /* Janela Modal (Formulário Flutuante) */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); display: none; justify-content: center; align-items: center; z-index: 1000; }
-        .modal-box { background: white; width: 460px; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); padding: 24px; position: relative; }
+        .modal-box { background: white; width: 520px; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); padding: 24px; position: relative; }
         .modal-title { font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 20px; }
         .modal-grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
         .modal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -139,6 +139,8 @@
                     <th>Temp.</th>
                     <th>Saída</th>
                     <th>Observação</th>
+                    <th>Conferente</th>
+                    <th>Prevenção</th>
                     <th>Status</th>
                     <th>Ações</th>
                 </tr>
@@ -206,6 +208,17 @@
                             <input type="text" id="form-observacao" placeholder="Opcional">
                         </div>
                     </div>
+
+                    <div class="modal-row">
+                        <div class="modal-field">
+                            <label>Conferente</label>
+                            <input type="text" id="form-conferente" placeholder="Nome do conferente">
+                        </div>
+                        <div class="modal-field">
+                            <label>Prevenção</label>
+                            <input type="text" id="form-prevencao" placeholder="Nome do agente">
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="modal-buttons">
@@ -217,18 +230,19 @@
     </div>
 
     <script>
-        // Lista base contendo a nota inicial do seu modelo padrão
+        // Lista base contendo a nota inicial do seu modelo padrão com os novos campos
         let notas = [
-            { data: "2026-06-29", fornecedor: "Panco", nf: "2555", valor: "1630.00", chegada: "-", temp: "-", saida: "-", observacao: "-", status: "NÃO ACATADA" }
+            { data: "2026-06-29", fornecedor: "Panco", nf: "2555", valor: "1630.00", chegada: "-", temp: "-", saida: "-", observacao: "-", conferente: "-", prevencao: "-", status: "ACATADA" },
+            { data: "2026-06-30", fornecedor: "roncoleta", nf: "222", valor: "2222.00", chegada: "-", temp: "-", saida: "-", observacao: "-", conferente: "-", prevencao: "-", status: "ACATADA" }
         ];
 
         // Carrega os dados persistidos na máquina do usuário se houver
-        if (localStorage.getItem('cadastro_notas_salvas_v3')) {
-            notas = JSON.parse(localStorage.getItem('cadastro_notas_salvas_v3'));
+        if (localStorage.getItem('cadastro_notas_salvas_v4')) {
+            notas = JSON.parse(localStorage.getItem('cadastro_notas_salvas_v4'));
         }
 
         function salvarLocalStorage() {
-            localStorage.setItem('cadastro_notas_salvas_v3', JSON.stringify(notas));
+            localStorage.setItem('cadastro_notas_salvas_v4', JSON.stringify(notas));
             atualizarTela(notas);
         }
 
@@ -281,6 +295,8 @@
                     <td>${nota.temp || '-'}</td>
                     <td>${nota.saida || '-'}</td>
                     <td>${nota.observacao || '-'}</td>
+                    <td>${nota.conferente || '-'}</td>
+                    <td>${nota.prevencao || '-'}</td>
                     <td><span class="badge ${badgeClass}">${nota.status}</span></td>
                     <td class="actions-btns">
                         <button class="action-icon" onclick="abrirModalEditar(${realIndex})">✏️</button>
@@ -317,6 +333,8 @@
             document.getElementById('form-temp').value = nota.temp === '-' ? '' : nota.temp;
             document.getElementById('form-saida').value = nota.saida === '-' ? '' : nota.saida;
             document.getElementById('form-observacao').value = nota.observacao === '-' ? '' : nota.observacao;
+            document.getElementById('form-conferente').value = nota.conferente === '-' ? '' : nota.conferente;
+            document.getElementById('form-prevencao').value = nota.prevencao === '-' ? '' : nota.prevencao;
 
             document.getElementById('modal-overlay').style.display = 'flex';
         }
@@ -335,7 +353,9 @@
                 chegada: document.getElementById('form-chegada').value || '-',
                 temp: document.getElementById('form-temp').value || '-',
                 saida: document.getElementById('form-saida').value || '-',
-                observacao: document.getElementById('form-observacao').value || '-'
+                observacao: document.getElementById('form-observacao').value || '-',
+                conferente: document.getElementById('form-conferente').value || '-',
+                prevencao: document.getElementById('form-prevencao').value || '-'
             };
 
             const indexEdit = document.getElementById('edit-index').value;
@@ -388,9 +408,11 @@
         }
 
         function exportarCSV() {
-            let csv = '\u200BData;Fornecedor;NF;Valor;Chegada;Temp;Saida;Observacao;Status\n';
+            let csv = '​Data;Fornecedor;NF;Valor;Chegada;Temp;Saida;Observacao;Conferente;Prevencao;Status
+';
             notas.forEach(n => {
-                csv += `${formatarDataBR(n.data)};${n.fornecedor};${n.nf};${n.valor};${n.chegada};${n.temp};${n.saida};${n.observacao};${n.status}\n`;
+                csv += `${formatarDataBR(n.data)};${n.fornecedor};${n.nf};${n.valor};${n.chegada};${n.temp};${n.saida};${n.observacao};${n.conferente};${n.prevencao};${n.status}
+`;
             });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
