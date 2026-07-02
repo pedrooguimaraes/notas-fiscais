@@ -61,7 +61,7 @@
         .action-icon { cursor: pointer; border: none; background: none; font-size: 16px; opacity: 0.6; transition: opacity 0.2s; }
         .action-icon:hover { opacity: 1; }
 
-        /* Janela Modal (Formulário Flutuante) */
+        /* Janela Modal */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); display: none; justify-content: center; align-items: center; z-index: 1000; }
         .modal-box { background: white; width: 520px; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); padding: 24px; position: relative; }
         .modal-title { font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 20px; }
@@ -230,15 +230,35 @@
     </div>
 
     <script>
-        // Lista base contendo a nota inicial do seu modelo padrão com os novos campos
+        // Notas padrão (caso o LocalStorage esteja vazio)
         let notas = [
             { data: "2026-06-29", fornecedor: "Panco", nf: "2555", valor: "1630.00", chegada: "-", temp: "-", saida: "-", observacao: "-", conferente: "-", prevencao: "-", status: "ACATADA" },
             { data: "2026-06-30", fornecedor: "roncoleta", nf: "222", valor: "2222.00", chegada: "-", temp: "-", saida: "-", observacao: "-", conferente: "-", prevencao: "-", status: "ACATADA" }
         ];
 
-        // Carrega os dados persistidos na máquina do usuário se houver
+        // Carrega dados e aplica a correção preventiva de migração
         if (localStorage.getItem('cadastro_notas_salvas_v4')) {
-            notas = JSON.parse(localStorage.getItem('cadastro_notas_salvas_v4'));
+            try {
+                let dadosLocais = JSON.parse(localStorage.getItem('cadastro_notas_salvas_v4'));
+                if (Array.isArray(dadosLocais)) {
+                    // Preenche campos ausentes nas propriedades antigas para evitar travamentos
+                    notas = dadosLocais.map(nota => ({
+                        data: nota.data || "",
+                        status: nota.status || "PENDENTE",
+                        fornecedor: nota.fornecedor || "",
+                        nf: nota.nf || "",
+                        valor: nota.valor || "0",
+                        chegada: nota.chegada || "-",
+                        temp: nota.temp || "-",
+                        saida: nota.saida || "-",
+                        observacao: nota.observacao || "-",
+                        conferente: nota.conferente || "-",
+                        prevencao: nota.prevencao || "-"
+                    }));
+                }
+            } catch(e) {
+                console.error("Erro ao carregar dados antigos, restaurando padrão seguro.");
+            }
         }
 
         function salvarLocalStorage() {
@@ -264,7 +284,6 @@
             let acatadas = 0;
             let naoAcatadas = 0;
 
-            // Totais calculados na lista mestre completa
             notas.forEach(n => {
                 const val = parseFloat(n.valor) || 0;
                 valorTotal += val;
@@ -408,11 +427,9 @@
         }
 
         function exportarCSV() {
-            let csv = '​Data;Fornecedor;NF;Valor;Chegada;Temp;Saida;Observacao;Conferente;Prevencao;Status
-';
+            let csv = '\u200BData;Fornecedor;NF;Valor;Chegada;Temp;Saida;Observacao;Conferente;Prevencao;Status\n';
             notas.forEach(n => {
-                csv += `${formatarDataBR(n.data)};${n.fornecedor};${n.nf};${n.valor};${n.chegada};${n.temp};${n.saida};${n.observacao};${n.conferente};${n.prevencao};${n.status}
-`;
+                csv += `${formatarDataBR(n.data)};${n.fornecedor};${n.nf};${n.valor};${n.chegada};${n.temp};${n.saida};${n.observacao};${n.conferente};${n.prevencao};${n.status}\n`;
             });
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
@@ -423,7 +440,7 @@
             document.body.removeChild(link);
         }
 
-        // Inicializa renderizando a tela principal
+        // Execução inicial estável
         atualizarTela(notas);
     </script>
 </body>
