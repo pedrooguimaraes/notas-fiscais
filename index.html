@@ -94,6 +94,7 @@
   }
 </style>
 </head>
+&lt;script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"&gt;&lt;/script&gt;
 <body>
 <div class="page">
 
@@ -109,9 +110,9 @@
   </div>
 
   <div class="summary">
-    <div class="summary-card"><div class="label">Total de notas</div><div class="value blue" id="s-total">6</div></div>
-    <div class="summary-card"><div class="label">Valor total</div><div class="value" id="s-valor">R$ 21.306,96</div></div>
-    <div class="summary-card"><div class="label">Não acatadas</div><div class="value red" id="s-nao">6</div></div>
+    <div class="summary-card"><div class="label">Total de notas</div><div class="value blue" id="s-total">1</div></div>
+    <div class="summary-card"><div class="label">Valor total</div><div class="value" id="s-valor">R$ 250,00</div></div>
+    <div class="summary-card"><div class="label">Não acatadas</div><div class="value red" id="s-nao">0</div></div>
     <div class="summary-card"><div class="label">Acatadas</div><div class="value green" id="s-ok">0</div></div>
   </div>
 
@@ -136,7 +137,7 @@
   </div>
 
   <div class="card">
-    <div class="count-label" id="count-label">6 notas encontradas</div>
+    <div class="count-label" id="count-label">1 nota encontrada</div>
     <div class="drag-hint">☰ Arraste os cabeçalhos para reordenar as colunas</div>
     <div class="table-wrap">
       <table id="tabela">
@@ -161,37 +162,22 @@
       </div></th><th data-idx="6" data-key="temp"><div class="th-inner">
         <span class="drag-handle" draggable="true" title="Arrastar para mover coluna">☰</span>
         <span>Temp.</span>
-      </div></th><th data-idx="7" data-key="conferente" class="sortable"><div class="th-inner">
-        <span class="drag-handle" draggable="true" title="Arrastar para mover coluna">☰</span>
-        <span onclick="ordenar('conferente')" style="cursor:pointer">Conferente <span style="opacity:.5;font-size:10px">↕</span></span>
-      </div></th><th data-idx="8" data-key="prevencao"><div class="th-inner">
-        <span class="drag-handle" draggable="true" title="Arrastar para mover coluna">☰</span>
-        <span>Prevenção</span>
-      </div></th><th data-idx="9" data-key="status" class="sortable"><div class="th-inner">
-        <span class="drag-handle" draggable="true" title="Arrastar para mover coluna">☰</span>
-        <span onclick="ordenar('status')" style="cursor:pointer">Status <span style="opacity:.5;font-size:10px">↕</span></span>
-      </div></th><th data-idx="10" data-key="obs"><div class="th-inner">
+      </div></th><th data-idx="7" data-key="obs"><div class="th-inner">
         <span class="drag-handle" draggable="true" title="Arrastar para mover coluna">☰</span>
         <span>Observação</span>
+      </div></th><th data-idx="8" data-key="conferente" class="sortable"><div class="th-inner">
+        <span class="drag-handle" draggable="true" title="Arrastar para mover coluna">☰</span>
+        <span onclick="ordenar('conferente')" style="cursor:pointer">Conferente <span style="opacity:.5;font-size:10px">↕</span></span>
+      </div></th><th data-idx="9" data-key="prevencao"><div class="th-inner">
+        <span class="drag-handle" draggable="true" title="Arrastar para mover coluna">☰</span>
+        <span>Prevenção</span>
+      </div></th><th data-idx="10" data-key="status" class="sortable"><div class="th-inner">
+        <span class="drag-handle" draggable="true" title="Arrastar para mover coluna">☰</span>
+        <span onclick="ordenar('status')" style="cursor:pointer">Status <span style="opacity:.5;font-size:10px">↕</span></span>
       </div></th><th data-idx="11" data-key="acoes" class="actions-col" style="width: 70px;"><div class="th-inner">Ações</div></th></tr></thead>
-        <tbody id="tabela-body"><tr><td>22/06/2026</td><td><span title="Pepsico">Pepsico</span></td><td>282.275</td><td><span style="font-weight:600">R$ 28,65</span></td><td>09:05</td><td>10:53</td><td>-</td><td><span title="-">-</span></td><td><span title="-">-</span></td><td><span class="badge badge-nao">NÃO ACATADA</span></td><td><span title="-">-</span></td><td><div class="row-actions">
-      <button class="icon-btn" title="Editar" onclick="editarNota(5)">✏️</button>
-      <button class="icon-btn del" title="Excluir" onclick="excluirNota(5)">🗑️</button>
-    </div></td></tr><tr><td>22/06/2026</td><td><span title="Pepsico">Pepsico</span></td><td>282.276</td><td><span style="font-weight:600">R$ 14.663,59</span></td><td>09:04</td><td>10:53</td><td>-</td><td><span title="-">-</span></td><td><span title="-">-</span></td><td><span class="badge badge-nao">NÃO ACATADA</span></td><td><span title="-">-</span></td><td><div class="row-actions">
-      <button class="icon-btn" title="Editar" onclick="editarNota(6)">✏️</button>
-      <button class="icon-btn del" title="Excluir" onclick="excluirNota(6)">🗑️</button>
-    </div></td></tr><tr><td>22/06/2026</td><td><span title="Panco">Panco</span></td><td>3.841.912</td><td><span style="font-weight:600">R$ 3.075,49</span></td><td>09:04</td><td>-</td><td>-</td><td><span title="-">-</span></td><td><span title="-">-</span></td><td><span class="badge badge-nao">NÃO ACATADA</span></td><td><span title="-">-</span></td><td><div class="row-actions">
-      <button class="icon-btn" title="Editar" onclick="editarNota(7)">✏️</button>
-      <button class="icon-btn del" title="Excluir" onclick="excluirNota(7)">🗑️</button>
-    </div></td></tr><tr><td>22/06/2026</td><td><span title="Rufini">Rufini</span></td><td>236.560</td><td><span style="font-weight:600">R$ 1.153,80</span></td><td>09:03</td><td>-</td><td>-</td><td><span title="-">-</span></td><td><span title="-">-</span></td><td><span class="badge badge-nao">NÃO ACATADA</span></td><td><span title="-">-</span></td><td><div class="row-actions">
-      <button class="icon-btn" title="Editar" onclick="editarNota(8)">✏️</button>
-      <button class="icon-btn del" title="Excluir" onclick="excluirNota(8)">🗑️</button>
-    </div></td></tr><tr><td>22/06/2026</td><td><span title="Rufini">Rufini</span></td><td>236.561</td><td><span style="font-weight:600">R$ 1.266,30</span></td><td>09:02</td><td>-</td><td>-</td><td><span title="-">-</span></td><td><span title="-">-</span></td><td><span class="badge badge-nao">NÃO ACATADA</span></td><td><span title="-">-</span></td><td><div class="row-actions">
-      <button class="icon-btn" title="Editar" onclick="editarNota(9)">✏️</button>
-      <button class="icon-btn del" title="Excluir" onclick="excluirNota(9)">🗑️</button>
-    </div></td></tr><tr><td>22/06/2026</td><td><span title="Alpi">Alpi</span></td><td>61.975</td><td><span style="font-weight:600">R$ 1.119,13</span></td><td>07:06</td><td>-</td><td>-</td><td><span title="-">-</span></td><td><span title="-">-</span></td><td><span class="badge badge-nao">NÃO ACATADA</span></td><td><span title="-">-</span></td><td><div class="row-actions">
-      <button class="icon-btn" title="Editar" onclick="editarNota(10)">✏️</button>
-      <button class="icon-btn del" title="Excluir" onclick="excluirNota(10)">🗑️</button>
+        <tbody id="tabela-body"><tr><td>02/07/2026</td><td><span title="Apol">Apol</span></td><td>12222</td><td><span style="font-weight:600">R$ 250,00</span></td><td>07:00</td><td>07:05</td><td>5</td><td><span title="-">-</span></td><td><span title="Amanda">Amanda</span></td><td><span title="Lucas">Lucas</span></td><td><span class="badge badge-pend">PENDENTE</span></td><td><div class="row-actions">
+      <button class="icon-btn" title="Editar" onclick="editarNota(11)">✏️</button>
+      <button class="icon-btn del" title="Excluir" onclick="excluirNota(11)">🗑️</button>
     </div></td></tr></tbody>
       </table>
       <div class="empty" id="empty-msg" style="display:none">Nenhuma nota encontrada.</div>
@@ -233,8 +219,10 @@
 <div class="toast" id="toast">Nota excluída.</div>
 
 <script>
-const STORAGE_KEY = 'notas_fiscais_v2';
-const COL_ORDER_KEY = 'notas_col_order_v2';
+const SUPABASE_URL = 'https://awmkztddgaizjsduhxdz.supabase.co/rest/v1/'; 
+const SUPABASE_KEY = 'awmkztddgaizjsduhxdz'; 
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 
 // Definição de todas as colunas (key = campo no objeto nota, ou 'acoes')
 const COLUNAS_DEF = [
@@ -281,19 +269,21 @@ function colunasOrdenadas() {
 }
 
 // ── Persistência ──────────────────────────────────────────────
-function salvarStorage() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({ notas, nextId }));
-}
-function carregarStorage() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const d = JSON.parse(raw);
-      notas = d.notas || [];
-      nextId = d.nextId || notas.length + 1;
-    }
-  } catch(e) {}
-  if (notas.length === 0) carregarDadosIniciais();
+// Busca todas as notas no Supabase e atualiza a tela 
+async function carregarNotas() { 
+const { data, error } = await supabase    
+.from('notas_fiscais')    
+.select('*')    
+.order('data', { ascending: false });  
+
+if (error) {    
+console.error('Erro ao carregar notas:', error);    
+toast('Erro ao carregar notas. Veja o console.');    
+return;  
+}  
+
+notas = data;  
+renderTabela(); 
 }
 function carregarDadosIniciais() {
   notas = [
@@ -500,36 +490,47 @@ document.getElementById('modal-overlay').addEventListener('click', function(e) {
 document.addEventListener('keydown', e => { if (e.key === 'Escape') fecharModal(); });
 
 function salvarNota() {
-  const fornecedor = document.getElementById('m-fornecedor').value.trim();
-  const nf   = document.getElementById('m-nf').value.trim();
-  const data = document.getElementById('m-data').value;
-  if (!fornecedor) { toast('Informe o fornecedor.'); return; }
-  if (!nf)         { toast('Informe o número da NF.'); return; }
-  if (!data)       { toast('Informe a data.'); return; }
+async function salvarNota() {  
+const fornecedor = document.getElementById('m-fornecedor').value.trim();  
+const nf = document.getElementById('m-nf').value.trim();  
+const data = document.getElementById('m-data').value;  
 
-  const nota = {
-    data, fornecedor, nf,
-    valor:      parseValor(document.getElementById('m-valor').value),
-    chegada:    document.getElementById('m-chegada').value   || '-',
-    temp:       document.getElementById('m-temp').value.trim()  || '-',
-    saida:      document.getElementById('m-saida').value     || '-',
-    conferente: document.getElementById('m-conferente').value.trim() || '-',
-    prevencao:  document.getElementById('m-prevencao').value.trim()  || '-',
-    obs:        document.getElementById('m-obs').value.trim()  || '-',
-    status:     document.getElementById('m-status').value,
+if (!fornecedor) { toast('Informe o fornecedor.'); return; }  
+if (!nf) { toast('Informe o numero da NF.'); return; }  
+if (!data) { toast('Informe a data.'); return; }
+
+const nota = {    
+data,    
+fornecedor,    
+nf,    
+valor: parseValor(document.getElementById('m-valor').value),    
+chegada: document.getElementById('m-chegada').value || '-',   
+temp: document.getElementById('m-temp').value.trim() || '-',    
+saida: document.getElementById('m-saida').value || '-',    
+conferente: document.getElementById('m-conferente').value.trim() || '-',    
+prevencao: document.getElementById('m-prevencao').value.trim() || '-',    
+obs: document.getElementById('m-obs').value.trim() || '-',    
+status: document.getElementById('m-status').value
   };
 
-  if (editId) {
-    const idx = notas.findIndex(n => n.id === editId);
-    if (idx !== -1) notas[idx] = { ...notas[idx], ...nota };
-    toast('Nota atualizada!');
-  } else {
-    notas.unshift({ id: nextId++, ...nota });
-    toast('Nota adicionada!');
-  }
-  salvarStorage();
-  fecharModal();
-  renderTabela();
+ if (editId) {    
+const { error } = await supabase      
+.from('notas_fiscais')      
+.update(nota)      .eq('id', editId);    
+
+if (error) { console.error(error); toast('Erro ao atualizar nota.'); return; }    
+toast('Nota atualizada!');  
+} else {    
+const { error } = await supabase      
+.from('notas_fiscais')      
+.insert([nota]);    
+
+if (error) { console.error(error); toast('Erro ao salvar nota.'); return; }    
+toast('Nota adicionada!');  
+}  
+
+fecharModal();  
+await carregarNotas(); 
 }
 
 function editarNota(id) {
@@ -537,11 +538,18 @@ function editarNota(id) {
   if (nota) abrirModal(nota);
 }
 function excluirNota(id) {
-  if (!confirm('Excluir esta nota fiscal? Esta ação não pode ser desfeita.')) return;
-  notas = notas.filter(n => n.id !== id);
-  salvarStorage();
-  renderTabela();
-  toast('Nota excluída.');
+async function excluirNota(id) {  
+if (!confirm('Excluir esta nota fiscal? Esta acao nao pode ser desfeita.')) return;  
+
+const { error } = await supabase    
+.from('notas_fiscais')    
+.delete()    
+.eq('id', id);  
+
+if (error) { console.error(error); toast('Erro ao excluir nota.'); return; }  
+
+toast('Nota excluida.');  
+await carregarNotas(); 
 }
 
 // ── Exportar ──────────────────────────────────────────────────
@@ -580,10 +588,12 @@ function toast(msg) {
 }
 
 // ── Init ──────────────────────────────────────────────────────
-carregarStorage();
+carregarNotas();
+// Init 
+carregarNotas(); 
 renderCabecalho();
-renderTabela();
 </script>
 
 
-</body></html>
+
+</body><div class="twell-caa"></div></html>
