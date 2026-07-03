@@ -1,13 +1,8 @@
 <script>
-// CREDENCIAIS DO SUPABASE
-const SUPABASE_URL = 'https://awmkztddgaizjsduhxdz.supabase.co'; 
-// ATENÇÃO: Cole a chave longa (anon public) dentro das aspas abaixo:
-const SUPABASE_KEY = 'ssb_secret_YruU_SVmJYPZZ58ZqWB7Yw_fnYIVL_p'; 
-
-// Inicializa o cliente do Supabase corretamente
+const SUPABASE_URL = 'https://awmkztddgaizjsduhxdz.supabase.co/rest/v1/'; 
+const SUPABASE_KEY = 'sb_publishable_P9eCIPtrzDtUkf0aX1Ex_Q_LNwNwPw_'; 
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Correção do erro da variável oculta
 const COL_ORDER_KEY = 'ordem_colunas_nf';
 
 // Definição de todas as colunas
@@ -54,25 +49,21 @@ function colunasOrdenadas() {
   return colOrder.map(k => COLUNAS_DEF.find(c => c.key === k));
 }
 
-// ── Persistência (Carregar Dados) ─────────────────────────────
+// ── Persistência ──────────────────────────────────────────────
 async function carregarNotas() { 
-  try {
-    const { data, error } = await supabase    
-      .from('notas_fiscais')    
-      .select('*')    
-      .order('data', { ascending: false });  
+  const { data, error } = await supabase    
+    .from('notas_fiscais')    
+    .select('*')    
+    .order('data', { ascending: false });  
 
-    if (error) {    
-      console.error('Erro do Supabase:', error);    
-      toast('Erro ao carregar notas. Verifique o Console (F12).');    
-      return;  
-    }  
+  if (error) {    
+    console.error('Erro ao carregar notas:', error);    
+    toast('Erro ao carregar notas. Veja o console.');    
+    return;  
+  }  
 
-    notas = data || [];  
-    renderTabela(); 
-  } catch (err) {
-    console.error('Erro inesperado:', err);
-  }
+  notas = data || [];  
+  renderTabela(); 
 }
 
 // ── Formatação ────────────────────────────────────────────────
@@ -86,7 +77,6 @@ function fmtValor(v) {
   return 'R$ ' + Number(v).toLocaleString('pt-BR', { minimumFractionDigits:2, maximumFractionDigits:2 });
 }
 
-// Corrige o bug que fazia a classe badge falhar no seu ficheiro original
 function badgeClass(s) {
   if (s === 'NÃO ACATADA') return 'badge-nao';
   if (s === 'ACATADA') return 'badge-ok';
@@ -121,7 +111,6 @@ function celula(col, n) {
 // ── Cabeçalho com drag & drop ─────────────────────────────────
 function renderCabecalho() {
   const tr = document.querySelector('#thead-row tr');
-  if(!tr) return;
   tr.innerHTML = '';
   colunasOrdenadas().forEach((col, idx) => {
     const th = document.createElement('th');
@@ -201,15 +190,14 @@ function toggleFiltros() {
   document.getElementById('filtros-row').style.display = filtrosVisiveis ? 'flex' : 'none';
 }
 
-// Limpa os campos corretamente de acordo com o HTML fornecido
 function limparFiltros() {
   ['f-fornecedor','f-nf','f-conferente','f-status','f-data-ini','f-data-fim'].forEach(id => {
-    const el = document.getElementById(id);
-    if(el) el.value = '';
+    document.getElementById(id).value = '';
   });
   renderTabela();
 }
 
+// ── Ordenação ─────────────────────────────────────────────────
 function ordenar(col) {
   if (sortCol === col) sortAsc = !sortAsc;
   else { sortCol = col; sortAsc = true; }
@@ -274,7 +262,6 @@ document.getElementById('modal-overlay').addEventListener('click', function(e) {
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') fecharModal(); });
 
-// ── GUARDAR NOTA (CORRIGIDA) ──────────────────────────────────
 async function salvarNota() {   
   const fornecedor = document.getElementById('m-fornecedor').value.trim();   
   const nf = document.getElementById('m-nf').value.trim();   
@@ -324,7 +311,6 @@ function editarNota(id) {
   if (nota) abrirModal(nota);
 }
 
-// ── ELIMINAR NOTA (CORRIGIDA) ─────────────────────────────────
 async function excluirNota(id) {   
   if (!confirm('Excluir esta nota fiscal? Esta ação não pode ser desfeita.')) return;   
 
@@ -339,7 +325,7 @@ async function excluirNota(id) {
   await carregarNotas(); 
 }
 
-// ── Exportar CSV ──────────────────────────────────────────────
+// ── Exportar ──────────────────────────────────────────────────
 function exportarCSV() {
   const cols = colunasOrdenadas().filter(c => c.key !== 'acoes');
   const header = cols.map(c => c.label).join(';');
@@ -368,14 +354,13 @@ function exportarCSV() {
 let toastTimer;
 function toast(msg) {
   const el = document.getElementById('toast');
-  if(!el) return;
   el.textContent = msg;
   el.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
 }
 
-// ── Inicialização ─────────────────────────────────────────────
+// ── Init ──────────────────────────────────────────────────────
+carregarNotas(); 
 renderCabecalho();
-carregarNotas();
 </script>
