@@ -29,7 +29,7 @@
                 <p class="text-xs text-[#777777] mt-1 font-medium">Gerenciamento de recebimento</p>
             </div>
             <div class="flex items-center gap-3">
-                <button onclick="gerarRelatorioAbas()" class="flex items-center gap-1.5 bg-white border border-[#cccccc] hover:bg-gray-50 text-[#333333] text-xs font-semibold px-4 py-2.5 rounded-md shadow-sm">
+                <button onclick="gerarRelatorioProfissional()" class="flex items-center gap-1.5 bg-white border border-[#cccccc] hover:bg-gray-50 text-[#333333] text-xs font-semibold px-4 py-2.5 rounded-md shadow-sm">
                     <span class="text-sm">📋</span> Gerar Relatório / PDF
                 </button>
                 <button onclick="abrirModal()" class="bg-[#1e5bb9] hover:bg-[#164996] text-white text-xs font-semibold px-4 py-2.5 rounded-md shadow-sm">
@@ -105,16 +105,16 @@
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="border-y border-[#e5e5e5] bg-[#fafafa]">
-                            <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Data <span class="text-[10px] th-icon">↕</span></th>
-                            <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Fornecedor <span class="text-[10px] th-icon">↕</span></th>
-                            <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> NF <span class="text-[10px] th-icon">↕</span></th>
-                            <th class="py-3 px-4 th-text"><span class="th-icon">≡</span> Valor <span class="text-[10px] th-icon">↕</span></th>
+                            <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Data</th>
+                            <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Fornecedor</th>
+                            <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> NF</th>
+                            <th class="py-3 px-4 th-text"><span class="th-icon">≡</span> Valor</th>
                             <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Chegada</th>
                             <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Saída</th>
                             <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Temp.</th>
-                            <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Conferente <span class="text-[10px] th-icon">↕</span></th>
+                            <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Conferente</th>
                             <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Prevenção</th>
-                            <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Status <span class="text-[10px] th-icon">↕</span></th>
+                            <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Status</th>
                             <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Observação</th>
                             <th class="py-2.5 px-4 text-xs font-bold text-[#666666]">Ações</th>
                         </tr>
@@ -190,18 +190,17 @@
     </div>
 
     <script>
-        // Carrega do LocalStorage ou insere as 6 notas exatas da sua foto original
-        let notas = JSON.parse(localStorage.getItem('app_notas_v2')) || [
+        let notas = JSON.parse(localStorage.getItem('app_notas_v3')) || [
             { id: 1, data: "22/06/2026", fornecedor: "Pepsico", nf: "282.275", valor: 28.65, chegada: "09:05", saida: "10:53", temp: "-", conferente: "-", prevencao: "-", status: "NÃO ACATADA", observacao: "-" },
             { id: 2, data: "22/06/2026", fornecedor: "Pepsico", nf: "282.276", valor: 14663.59, chegada: "09:04", saida: "10:53", temp: "-", conferente: "-", prevencao: "-", status: "NÃO ACATADA", observacao: "-" },
-            { id: 3, data: "22/06/2026", fornecedor: "Panco", nf: "3.841.912", valor: 3075.49, llegada: "09:04", saida: "-", temp: "-", conferente: "-", prevencao: "-", status: "NÃO ACATADA", observacao: "-" },
+            { id: 3, data: "22/06/2026", fornecedor: "Panco", nf: "3.841.912", valor: 3075.49, chegada: "09:04", saida: "-", temp: "-", conferente: "-", prevencao: "-", status: "NÃO ACATADA", observacao: "-" },
             { id: 4, data: "22/06/2026", fornecedor: "Rufini", nf: "236.560", valor: 1153.80, chegada: "09:03", saida: "-", temp: "-", conferente: "-", prevencao: "-", status: "NÃO ACATADA", observacao: "-" },
             { id: 5, data: "22/06/2026", fornecedor: "Rufini", nf: "236.561", valor: 1266.30, chegada: "09:02", saida: "-", temp: "-", conferente: "-", prevencao: "-", status: "NÃO ACATADA", observacao: "-" },
             { id: 6, data: "22/06/2026", fornecedor: "Alpi", nf: "61.975", valor: 1119.13, chegada: "07:06", saida: "-", temp: "-", conferente: "-", prevencao: "-", status: "NÃO ACATADA", observacao: "-" }
         ];
 
-        function sincronizar() {
-            localStorage.setItem('app_notas_v2', JSON.stringify(notas));
+        function salvarDados() {
+            localStorage.setItem('app_notas_v3', JSON.stringify(notas));
         }
 
         function abrirModal(id = null) {
@@ -256,7 +255,7 @@
             } else {
                 notas.push(dados);
             }
-            sincronizar();
+            salvarDados();
             fecharModal();
             renderizarTabela();
         }
@@ -264,7 +263,7 @@
         function excluirNota(id) {
             if(confirm("Deseja excluir definitivamente esta nota?")) {
                 notas = notas.filter(n => n.id !== id);
-                sincronizar();
+                salvarDados();
                 renderizarTabela();
             }
         }
@@ -313,13 +312,13 @@
                     <td class="py-3 px-4 font-medium">${n.fornecedor}</td>
                     <td class="py-3 px-4">${n.nf}</td>
                     <td class="py-3 px-4 font-bold">R$ ${n.valor.toLocaleString('pt-BR', {minimumFractionDigits:2})}</td>
-                    <td class="py-3 px-4">${n.chegada || '-'}</td>
-                    <td class="py-3 px-4">${n.saida || '-'}</td>
-                    <td class="py-3 px-4">${n.temp || '-'}</td>
-                    <td class="py-3 px-4">${n.conferente || '-'}</td>
-                    <td class="py-3 px-4">${n.prevencao || '-'}</td>
+                    <td class="py-3 px-4">${n.chegada}</td>
+                    <td class="py-3 px-4">${n.saida}</td>
+                    <td class="py-3 px-4">${n.temp}</td>
+                    <td class="py-3 px-4">${n.conferente}</td>
+                    <td class="py-3 px-4">${n.prevencao}</td>
                     <td class="py-3 px-4"><span class="${stClass} text-[10px] font-bold px-1.5 py-0.5 rounded border">${n.status}</span></td>
-                    <td class="py-3 px-4">${n.observacao || '-'}</td>
+                    <td class="py-3 px-4">${n.observacao}</td>
                     <td class="py-3 px-4"><div class="flex gap-3">
                         <button onclick="abrirModal(${n.id})" class="text-amber-500 text-base">✏️</button>
                         <button onclick="excluirNota(${n.id})" class="text-gray-400 hover:text-red-500 text-base">🗑️</button>
@@ -335,51 +334,44 @@
             document.getElementById('contador-notas').innerText = list.length + " notas encontradas";
         }
 
-        // NOVA FUNÇÃO TOTALMENTE PROTEGIDA CONTRA VAZAMENTO DE CÓDIGO HTML
-        function gerarRelatorioAbas() {
-            let dadosRelatorio = obterFiltrados();
-            if(dadosRelatorio.length === 0) {
-                alert("Nenhuma nota para exibir no relatório.");
+        function gerarRelatorioProfissional() {
+            let dados = obterFiltrados();
+            if(dados.length === 0) {
+                alert("Nenhuma nota filtrada para exibir.");
                 return;
             }
 
-            let somaValor = 0;
-            let countAcatadas = 0;
-            let countNaoAcatadas = 0;
-            let tabelaLinhasText = "";
+            let vTotal = 0, nAcat = 0, acat = 0;
+            let linhas = "";
 
-            dadosRelatorio.forEach(n => {
-                somaValor += n.valor;
-                if(n.status === "ACATADA") countAcatadas++; else countNaoAcatadas++;
+            dados.forEach(n => {
+                vTotal += n.valor;
+                if(n.status === "ACATADA") acat++; else nAcat++;
+                let badge = n.status === "ACATADA" ? "background:#f0fdf4;color:#15803d;border-color:#bbf7d0;" : "background:#ffebeb;color:#ca3e3e;border-color:#ffd1d1;";
 
-                let corStatus = n.status === "ACATADA" ? "background:#f0fdf4;color:#15803d;border-color:#bbf7d0;" : "background:#ffebeb;color:#ca3e3e;border-color:#ffd1d1;";
-
-                tabelaLinhasText += "<tr>" +
-                    "<td style='padding:12px 16px; border-bottom:1px solid #eeeeee;'>" + n.data + "</td>" +
-                    "<td style='padding:12px 16px; border-bottom:1px solid #eeeeee; font-weight:500;'>" + n.fornecedor + "</td>" +
-                    "<td style='padding:12px 16px; border-bottom:1px solid #eeeeee;'>" + n.nf + "</td>" +
-                    "<td style='padding:12px 16px; border-bottom:1px solid #eeeeee; font-weight:bold;'>R$ " + n.valor.toLocaleString('pt-BR', {minimumFractionDigits:2}) + "</td>" +
-                    "<td style='padding:12px 16px; border-bottom:1px solid #eeeeee;'>" + (n.chegada || '-') + "</td>" +
-                    "<td style='padding:12px 16px; border-bottom:1px solid #eeeeee;'>" + (n.saida || '-') + "</td>" +
-                    "<td style='padding:12px 16px; border-bottom:1px solid #eeeeee;'>" + (n.temp || '-') + "</td>" +
-                    "<td style='padding:12px 16px; border-bottom:1px solid #eeeeee;'>" + (n.conferente || '-') + "</td>" +
-                    "<td style='padding:12px 16px; border-bottom:1px solid #eeeeee;'>" + (n.prevencao || '-') + "</td>" +
-                    "<td style='padding:12px 16px; border-bottom:1px solid #eeeeee;'><span style='" + corStatus + " font-size:10px; font-weight:bold; padding:2px 6px; border-radius:4px; border:1px solid;'>" + n.status + "</span></td>" +
-                    "<td style='padding:12px 16px; border-bottom:1px solid #eeeeee;'>" + (n.observacao || '-') + "</td>" +
+                linhas += "<tr>" +
+                    "<td style='padding:12px;border-bottom:1px solid #eee;'>" + n.data + "</td>" +
+                    "<td style='padding:12px;border-bottom:1px solid #eee;font-weight:500;'>" + n.fornecedor + "</td>" +
+                    "<td style='padding:12px;border-bottom:1px solid #eee;'>" + n.nf + "</td>" +
+                    "<td style='padding:12px;border-bottom:1px solid #eee;font-weight:bold;'>R$ " + n.valor.toLocaleString('pt-BR',{minimumFractionDigits:2}) + "</td>" +
+                    "<td style='padding:12px;border-bottom:1px solid #eee;'>" + n.chegada + "</td>" +
+                    "<td style='padding:12px;border-bottom:1px solid #eee;'>" + n.saida + "</td>" +
+                    "<td style='padding:12px;border-bottom:1px solid #eee;'>" + n.temp + "</td>" +
+                    "<td style='padding:12px;border-bottom:1px solid #eee;'>" + n.conferente + "</td>" +
+                    "<td style='padding:12px;border-bottom:1px solid #eee;'>" + n.prevencao + "</td>" +
+                    "<td style='padding:12px;border-bottom:1px solid #eee;'><span style='" + badge + "font-size:10px;font-weight:bold;padding:2px 6px;border-radius:4px;border:1px solid;'>" + n.status + "</span></td>" +
+                    "<td style='padding:12px;border-bottom:1px solid #eee;'>" + n.observacao + "</td>" +
                 "</tr>";
             });
 
-            let aba = window.open('', '_blank');
-            
-            let htmlFinal = "<!DOCTYPE html><html lang='pt-BR'><head><meta charset='UTF-8'><title>Relatório Profissional</title>" +
+            let docHtml = "<!DOCTYPE html><html lang='pt-BR'><head><meta charset='UTF-8'><title>Relatório Gerencial</title>" +
                 "<script src='https://cdn.tailwindcss.com'></" + "script>" +
                 "<link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap' rel='stylesheet'>" +
-                "<style>body{font-family:'Inter',sans-serif;background:#ffffff;} .card{border:1px solid #e1e1e1;border-radius:8px;} @media print{.no-print{display:none;}}</style></head>" +
-                "<body class='p-8'>" +
-                "<div class='max-w-[1500px] mx-auto space-y-6'>" +
+                "<style>body{font-family:'Inter',sans-serif;background:#ffffff;} .box{border:1px solid #e1e1e1;border-radius:8px;} @media print{.no-print{display:none;}}</style></head>" +
+                "<body class='p-8'><div class='max-w-[1500px] mx-auto space-y-6'>" +
                     "<div class='no-print flex justify-between items-center bg-slate-800 text-white p-4 rounded-lg shadow mb-6'>" +
-                        "<span class='text-xs font-medium'>📋 Visualização Exclusiva de Impressão</span>" +
-                        "<button onclick='window.print()' class='bg-[#1e5bb9] hover:bg-[#164996] text-white text-xs font-semibold px-4 py-2 rounded shadow'>🖨️ Imprimir / Salvar PDF</button>" +
+                        "<span class='text-xs font-medium'>📋 Visualização Exclusiva do Relatório</span>" +
+                        "<button onclick='window.print()' class='bg-[#1e5bb9] text-white text-xs font-semibold px-4 py-2 rounded shadow hover:bg-[#164996]'>🖨️ Imprimir / Salvar PDF</button>" +
                     "</div>" +
                     "<div class='flex justify-between items-start border-b pb-4'>" +
                         "<div><h1 class='text-2xl font-bold text-[#111111]'>Relatório de Notas Fiscais</h1>" +
@@ -387,23 +379,19 @@
                         "<div class='text-xs text-gray-400 font-medium'>Documento Interno</div>" +
                     "</div>" +
                     "<div class='grid grid-cols-4 gap-4'>" +
-                        "<div class='card p-4'><p class='text-[10px] font-bold text-[#888888] uppercase'>Total de Notas</p><p class='text-2xl font-bold text-[#1e5bb9] mt-1'>" + dadosRelatorio.length + "</p></div>" +
-                        "<div class='card p-4'><p class='text-[10px] font-bold text-[#888888] uppercase'>Valor Total</p><p class='text-2xl font-bold text-[#111111] mt-1'>R$ " + somaValor.toLocaleString('pt-BR', {minimumFractionDigits:2}) + "</p></div>" +
-                        "<div class='card p-4'><p class='text-[10px] font-bold text-[#888888] uppercase'>Não Acatadas</p><p class='text-2xl font-bold text-[#ca3e3e] mt-1'>" + countNaoAcatadas + "</p></div>" +
-                        "<div class='card p-4'><p class='text-[10px] font-bold text-[#888888] uppercase'>Acatadas</p><p class='text-2xl font-bold text-[#2e7d32] mt-1'>" + countAcatadas + "</p></div>" +
+                        "<div class='box p-4'><p class='text-[10px] font-bold text-[#888888] uppercase'>Total de Notas</p><p class='text-2xl font-bold text-[#1e5bb9] mt-1'>" + dados.length + "</p></div>" +
+                        "<div class='box p-4'><p class='text-[10px] font-bold text-[#888888] uppercase'>Valor Total</p><p class='text-2xl font-bold text-[#111111] mt-1'>R$ " + vTotal.toLocaleString('pt-BR',{minimumFractionDigits:2}) + "</p></div>" +
+                        "<div class='box p-4'><p class='text-[10px] font-bold text-[#888888] uppercase'>Não Acatadas</p><p class='text-2xl font-bold text-[#ca3e3e] mt-1'>" + nAcat + "</p></div>" +
+                        "<div class='box p-4'><p class='text-[10px] font-bold text-[#888888] uppercase'>Acatadas</p><p class='text-2xl font-bold text-[#2e7d32] mt-1'>" + acat + "</p></div>" +
                     "</div>" +
-                    "<div class='card overflow-hidden mt-4'>" +
-                        "<table class='w-full text-left border-collapse text-[13px]'>" +
-                            "<thead><tr class='border-b bg-[#fafafa] text-[#666666] font-semibold'>" +
-                                "<th style='padding:10px 16px;'>Data</th><th style='padding:10px 16px;'>Fornecedor</th><th style='padding:10px 16px;'>NF</th><th style='padding:10px 16px;'>Valor</th><th style='padding:10px 16px;'>Chegada</th><th style='padding:10px 16px;'>Saída</th><th style='padding:10px 16px;'>Temp.</th><th style='padding:10px 16px;'>Conferente</th><th style='padding:10px 16px;'>Prevenção</th><th style='padding:10px 16px;'>Status</th><th style='padding:10px 16px;'>Observação</th>" +
-                            "</tr></thead>" +
-                            "<tbody>" + tabelaLinhasText + "</tbody>" +
-                        "</table>" +
-                    "</div>" +
+                    "<div class='box overflow-hidden mt-4'><table class='w-full text-left border-collapse text-[13px]'>" +
+                        "<thead><tr class='border-b bg-[#fafafa] text-[#666666] font-semibold'>" +
+                            "<th style='padding:12px;'>Data</th><th style='padding:12px;'>Fornecedor</th><th style='padding:12px;'>NF</th><th style='padding:12px;'>Valor</th><th style='padding:12px;'>Chegada</th><th style='padding:12px;'>Saída</th><th style='padding:12px;'>Temp.</th><th style='padding:12px;'>Conferente</th><th style='padding:12px;'>Prevenção</th><th style='padding:12px;'>Status</th><th style='padding:12px;'>Observação</th>" +
+                        "</tr></thead><tbody>" + linhas + "</tbody>" +
+                    "</table></div>" +
                 "</div></body></html>";
 
-            aba.document.write(htmlFinal);
-            aba.document.close();
+            window.open().document.write(docHtml);
         }
 
         renderizarTabela();
