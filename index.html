@@ -81,11 +81,11 @@
                 </div>
                 <div>
                     <label class="text-[11px] font-bold text-[#777777] uppercase">Fornecedor</label>
-                    <input type="text" id="f-fornecedor" placeholder="Buscar fornecedor..." oninput="renderizarTabela()" class="w-full mt-1 border border-gray-300 rounded px-2 py-1.5 text-xs">
+                    <input type="text" id="f-fornecedor" placeholder="Buscar..." oninput="renderizarTabela()" class="w-full mt-1 border border-gray-300 rounded px-2 py-1.5 text-xs">
                 </div>
                 <div>
                     <label class="text-[11px] font-bold text-[#777777] uppercase">Número NF</label>
-                    <input type="text" id="f-nf" placeholder="Buscar número..." oninput="renderizarTabela()" class="w-full mt-1 border border-gray-300 rounded px-2 py-1.5 text-xs">
+                    <input type="text" id="f-nf" placeholder="Buscar..." oninput="renderizarTabela()" class="w-full mt-1 border border-gray-300 rounded px-2 py-1.5 text-xs">
                 </div>
                 <div>
                     <label class="text-[11px] font-bold text-[#777777] uppercase">Valor Máximo</label>
@@ -139,35 +139,35 @@
                 </div>
                 <div>
                     <label class="font-semibold block mb-1">Fornecedor</label>
-                    <input type="text" id="m-fornecedor" required class="w-full border rounded p-1.5" placeholder="Ex: Pepsico">
+                    <input type="text" id="m-fornecedor" required class="w-full border rounded p-1.5">
                 </div>
                 <div>
                     <label class="font-semibold block mb-1">Número da NF</label>
-                    <input type="text" id="m-nf" required class="w-full border rounded p-1.5" placeholder="Ex: 282.275">
+                    <input type="text" id="m-nf" required class="w-full border rounded p-1.5">
                 </div>
                 <div>
                     <label class="font-semibold block mb-1">Valor (R$)</label>
-                    <input type="number" step="0.01" id="m-valor" required class="w-full border rounded p-1.5" placeholder="0.00">
+                    <input type="number" step="0.01" id="m-valor" required class="w-full border rounded p-1.5">
                 </div>
                 <div>
                     <label class="font-semibold block mb-1">Horário Chegada</label>
-                    <input type="text" id="m-chegada" class="w-full border rounded p-1.5" placeholder="09:05">
+                    <input type="text" id="m-chegada" class="w-full border rounded p-1.5">
                 </div>
                 <div>
                     <label class="font-semibold block mb-1">Horário Saída</label>
-                    <input type="text" id="m-saida" class="w-full border rounded p-1.5" placeholder="10:53">
+                    <input type="text" id="m-saida" class="w-full border rounded p-1.5">
                 </div>
                 <div>
                     <label class="font-semibold block mb-1">Temperatura</label>
-                    <input type="text" id="m-temp" class="w-full border rounded p-1.5" placeholder="-">
+                    <input type="text" id="m-temp" class="w-full border rounded p-1.5">
                 </div>
                 <div>
                     <label class="font-semibold block mb-1">Conferente</label>
-                    <input type="text" id="m-conferente" class="w-full border rounded p-1.5" placeholder="-">
+                    <input type="text" id="m-conferente" class="w-full border rounded p-1.5">
                 </div>
                 <div>
                     <label class="font-semibold block mb-1">Prevenção</label>
-                    <input type="text" id="m-prevencao" class="w-full border rounded p-1.5" placeholder="-">
+                    <input type="text" id="m-prevencao" class="w-full border rounded p-1.5">
                 </div>
                 <div>
                     <label class="font-semibold block mb-1">Status</label>
@@ -178,7 +178,7 @@
                 </div>
                 <div class="col-span-2">
                     <label class="font-semibold block mb-1">Observação</label>
-                    <input type="text" id="m-observacao" class="w-full border rounded p-1.5" placeholder="-">
+                    <input type="text" id="m-observacao" class="w-full border rounded p-1.5">
                 </div>
                 <div class="col-span-2 flex justify-end gap-2 pt-3 border-t mt-2">
                     <button type="button" onclick="fecharModal()" class="border px-4 py-1.5 rounded bg-gray-50 hover:bg-gray-100 font-medium">Cancelar</button>
@@ -189,7 +189,11 @@
     </div>
 
     <script>
-        let notas = [];
+        // Começa com dados de teste para você poder clicar em Editar e Excluir imediatamente!
+        let notas = [
+            { id: 1, data: "22/06/2026", fornecedor: "Pepsico", nf: "282.275", valor: 28.65, chegada: "09:05", saida: "10:53", temp: "-", conferente: "-", prevencao: "-", status: "NÃO ACATADA", observacao: "-" },
+            { id: 2, data: "22/06/2026", fornecedor: "Panco", nf: "3.841.912", valor: 3075.49, chegada: "09:04", saida: "-", temp: "-", conferente: "-", prevencao: "-", status: "ACATADA", observacao: "-" }
+        ];
 
         function abrirModal(id = null) {
             document.getElementById('modal-nf').classList.remove('hidden');
@@ -250,7 +254,7 @@
         }
 
         function excluirNota(id) {
-            if(confirm("Deseja mesmo remover permanentemente este registro?")) {
+            if(confirm("Deseja remover permanentemente esta nota?")) {
                 notas = notas.filter(n => n.id !== id);
                 renderizarTabela();
             }
@@ -309,8 +313,8 @@
                     <td class="py-3 px-4"><span class="${statusClass} text-[10px] font-bold px-1.5 py-0.5 rounded border tracking-wide">${nota.status}</span></td>
                     <td class="py-3 px-4">${nota.observacao}</td>
                     <td class="py-3 px-4"><div class="flex gap-3">
-                        <button onclick="abrirModal(${nota.id})" class="text-amber-500 hover:scale-110 transition">✏️</button>
-                        <button onclick="excluirNota(${nota.id})" class="text-gray-400 hover:text-red-500 hover:scale-110 transition">🗑️</button>
+                        <button onclick="abrirModal(${nota.id})" class="text-amber-500 hover:scale-110 transition" title="Editar">✏️</button>
+                        <button onclick="excluirNota(${nota.id})" class="text-gray-400 hover:text-red-500 hover:scale-110 transition" title="Excluir">🗑️</button>
                     </div></td>
                 `;
                 corpo.appendChild(tr);
@@ -325,7 +329,7 @@
 
         function exportarCSV() {
             if(notas.length === 0) {
-                alert("Adicione pelo menos uma nota antes de exportar.");
+                alert("Não há notas para exportar.");
                 return;
             }
             let csv = 'Data;Fornecedor;NF;Valor;Chegada;Saida;Temp;Conferente;Prevencao;Status;Observacao\n';
