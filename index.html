@@ -57,39 +57,39 @@
         </div>
 
         <div class="custom-card p-4 space-y-4">
-            <div class="flex justify-between items-center cursor-pointer" onclick="toggleFiltros()">
+            <div class="flex justify-between items-center">
                 <button class="flex items-center gap-1.5 text-xs font-bold text-[#444444]">
-                    <span id="seta-filtro" class="text-[9px] text-[#555555]">▶</span> Filtros
+                    <span class="text-[9px] text-[#555555]">▼</span> Filtros de Busca
                 </button>
                 <button onclick="limparFiltros(event)" class="border border-[#cccccc] hover:bg-gray-50 text-[#333333] px-3 py-1 rounded text-xs font-medium bg-white">
                     ✕ Limpar filtros
                 </button>
             </div>
             
-            <div id="corpo-filtros" class="hidden grid grid-cols-5 gap-3 pt-2 border-t border-gray-100">
+            <div class="grid grid-cols-5 gap-4 pt-2 border-t border-gray-100">
                 <div>
-                    <label class="text-[11px] font-semibold text-gray-500 uppercase">Status</label>
-                    <select id="f-status" onchange="renderizarTabela()" class="w-full mt-1 border border-gray-300 rounded px-2 py-1 text-xs bg-white">
+                    <label class="text-[11px] font-bold text-[#777777] uppercase">Status Nota</label>
+                    <select id="f-status" onchange="renderizarTabela()" class="w-full mt-1 border border-gray-300 rounded px-2 py-1.5 text-xs bg-white">
                         <option value="">Todos</option>
                         <option value="ACATADA">Acatada</option>
                         <option value="NÃO ACATADA">Não Acatada</option>
                     </select>
                 </div>
                 <div>
-                    <label class="text-[11px] font-semibold text-gray-500 uppercase">Data</label>
-                    <input type="text" id="f-data" placeholder="Ex: 22/06/2026" oninput="renderizarTabela()" class="w-full mt-1 border border-gray-300 rounded px-2 py-1 text-xs">
+                    <label class="text-[11px] font-bold text-[#777777] uppercase">Filtrar Data</label>
+                    <input type="text" id="f-data" placeholder="Ex: 22/06/2026" oninput="renderizarTabela()" class="w-full mt-1 border border-gray-300 rounded px-2 py-1.5 text-xs">
                 </div>
                 <div>
-                    <label class="text-[11px] font-semibold text-gray-500 uppercase">Fornecedor</label>
-                    <input type="text" id="f-fornecedor" placeholder="Digitar..." oninput="renderizarTabela()" class="w-full mt-1 border border-gray-300 rounded px-2 py-1 text-xs">
+                    <label class="text-[11px] font-bold text-[#777777] uppercase">Fornecedor</label>
+                    <input type="text" id="f-fornecedor" placeholder="Buscar fornecedor..." oninput="renderizarTabela()" class="w-full mt-1 border border-gray-300 rounded px-2 py-1.5 text-xs">
                 </div>
                 <div>
-                    <label class="text-[11px] font-semibold text-gray-500 uppercase">NF</label>
-                    <input type="text" id="f-nf" placeholder="Digitar..." oninput="renderizarTabela()" class="w-full mt-1 border border-gray-300 rounded px-2 py-1 text-xs">
+                    <label class="text-[11px] font-bold text-[#777777] uppercase">Número NF</label>
+                    <input type="text" id="f-nf" placeholder="Buscar número..." oninput="renderizarTabela()" class="w-full mt-1 border border-gray-300 rounded px-2 py-1.5 text-xs">
                 </div>
                 <div>
-                    <label class="text-[11px] font-semibold text-gray-500 uppercase">Valor Máx</label>
-                    <input type="number" id="f-valor" placeholder="Ex: 5000" oninput="renderizarTabela()" class="w-full mt-1 border border-gray-300 rounded px-2 py-1 text-xs">
+                    <label class="text-[11px] font-bold text-[#777777] uppercase">Valor Máximo</label>
+                    <input type="number" id="f-valor" placeholder="Ex: 2000" oninput="renderizarTabela()" class="w-full mt-1 border border-gray-300 rounded px-2 py-1.5 text-xs">
                 </div>
             </div>
         </div>
@@ -125,7 +125,7 @@
         </div>
     </div>
 
-    <div id="modal-nf" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center p-4">
+    <div id="modal-nf" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-lg shadow-xl border border-gray-200 max-w-lg w-full overflow-hidden">
             <div class="bg-gray-50 px-4 py-3 border-b flex justify-between items-center">
                 <h3 id="modal-titulo" class="font-bold text-sm text-gray-800">Nova Nota Fiscal</h3>
@@ -135,27 +135,27 @@
                 <input type="hidden" id="edit-id">
                 <div>
                     <label class="font-semibold block mb-1">Data</label>
-                    <input type="text" id="m-data" required class="w-full border rounded p-1.5" placeholder="dd/mm/aaaa">
+                    <input type="text" id="m-data" required class="w-full border rounded p-1.5" placeholder="22/06/2026">
                 </div>
                 <div>
                     <label class="font-semibold block mb-1">Fornecedor</label>
-                    <input type="text" id="m-fornecedor" required class="w-full border rounded p-1.5">
+                    <input type="text" id="m-fornecedor" required class="w-full border rounded p-1.5" placeholder="Ex: Pepsico">
                 </div>
                 <div>
                     <label class="font-semibold block mb-1">Número da NF</label>
-                    <input type="text" id="m-nf" required class="w-full border rounded p-1.5">
+                    <input type="text" id="m-nf" required class="w-full border rounded p-1.5" placeholder="Ex: 282.275">
                 </div>
                 <div>
                     <label class="font-semibold block mb-1">Valor (R$)</label>
-                    <input type="number" step="0.01" id="m-valor" required class="w-full border rounded p-1.5">
+                    <input type="number" step="0.01" id="m-valor" required class="w-full border rounded p-1.5" placeholder="0.00">
                 </div>
                 <div>
                     <label class="font-semibold block mb-1">Horário Chegada</label>
-                    <input type="text" id="m-chegada" class="w-full border rounded p-1.5" placeholder="00:00">
+                    <input type="text" id="m-chegada" class="w-full border rounded p-1.5" placeholder="09:05">
                 </div>
                 <div>
                     <label class="font-semibold block mb-1">Horário Saída</label>
-                    <input type="text" id="m-saida" class="w-full border rounded p-1.5" placeholder="00:00">
+                    <input type="text" id="m-saida" class="w-full border rounded p-1.5" placeholder="10:53">
                 </div>
                 <div>
                     <label class="font-semibold block mb-1">Temperatura</label>
@@ -182,22 +182,14 @@
                 </div>
                 <div class="col-span-2 flex justify-end gap-2 pt-3 border-t mt-2">
                     <button type="button" onclick="fecharModal()" class="border px-4 py-1.5 rounded bg-gray-50 hover:bg-gray-100 font-medium">Cancelar</button>
-                    <button type="submit" class="bg-[#1e5bb9] text-white px-4 py-1.5 rounded hover:bg-[#164996] font-medium">Salvar</button>
+                    <button type="submit" class="bg-[#1e5bb9] text-white px-4 py-1.5 rounded hover:bg-[#164996] font-medium">Salvar Nota</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-        // Array de dados que inicia VAZIO
         let notas = [];
-
-        function toggleFiltros() {
-            const corpo = document.getElementById('corpo-filtros');
-            const seta = document.getElementById('seta-filtro');
-            corpo.classList.toggle('hidden');
-            seta.innerText = corpo.classList.contains('hidden') ? '▶' : '▼';
-        }
 
         function abrirModal(id = null) {
             document.getElementById('modal-nf').classList.remove('hidden');
@@ -258,7 +250,7 @@
         }
 
         function excluirNota(id) {
-            if(confirm("Tem certeza que deseja excluir esta nota?")) {
+            if(confirm("Deseja mesmo remover permanentemente este registro?")) {
                 notas = notas.filter(n => n.id !== id);
                 renderizarTabela();
             }
@@ -278,7 +270,6 @@
             const corpo = document.getElementById('tabela-corpo');
             corpo.innerHTML = "";
 
-            // Captura valores dos filtros
             const fStatus = document.getElementById('f-status').value;
             const fData = document.getElementById('f-data').value.toLowerCase();
             const fFornecedor = document.getElementById('f-fornecedor').value.toLowerCase();
@@ -293,7 +284,6 @@
                        (!fValor || nota.valor <= parseFloat(fValor));
             });
 
-            // Atualiza os contadores dos Cards com base nos dados filtrados/existentes
             let totalValor = 0;
             let naoAcatadas = 0;
             let acatadas = 0;
@@ -335,7 +325,7 @@
 
         function exportarCSV() {
             if(notas.length === 0) {
-                alert("Não existem dados para exportar.");
+                alert("Adicione pelo menos uma nota antes de exportar.");
                 return;
             }
             let csv = 'Data;Fornecedor;NF;Valor;Chegada;Saida;Temp;Conferente;Prevencao;Status;Observacao\n';
@@ -352,7 +342,6 @@
             document.body.removeChild(link);
         }
 
-        // Inicializa com a planilha zerada
         renderizarTabela();
     </script>
 </body>
