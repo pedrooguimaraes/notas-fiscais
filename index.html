@@ -171,7 +171,7 @@
                     <input type="text" id="m-saida" class="w-full border rounded p-1.5">
                 </div>
                 <div>
-                    <label class="font-semibold block mb-1">Temperatura (Temp.)</label>
+                    <label class="font-semibold block mb-1">Temperatura</label>
                     <input type="text" id="m-temp" class="w-full border rounded p-1.5">
                 </div>
                 <div>
@@ -206,20 +206,25 @@
         const SHEETDB_URL = 'https://sheetdb.io/api/v1/h5ssgqcelrexs';
         let notas = [];
 
+        // BUSCAR DADOS DA PLANILHA DO GOOGLE AO ABRIR O SITE
         function buscarNotasDoBanco() {
             fetch(SHEETDB_URL)
                 .then(response => response.json())
                 .then(dados => {
                     notas = dados.map(item => {
+                        // Limpeza e tratamento robusto do valor numérico vindo do banco
                         let valorCru = item.Valor ? item.Valor.toString() : '0';
                         valorCru = valorCru.replace('R$', '').replace(/\s/g, '');
                         
                         let valorNumerico;
                         if (valorCru.includes(',') && valorCru.includes('.')) {
+                            // Formato padrão brasileiro com separador de milhar (Ex: 1.250,50)
                             valorNumerico = parseFloat(valorCru.replace(/\./g, '').replace(',', '.'));
                         } else if (valorCru.includes(',')) {
+                            // Formato simples com vírgula (Ex: 150,50)
                             valorNumerico = parseFloat(valorCru.replace(',', '.'));
                         } else {
+                            // Formato float puro ou string limpa
                             valorNumerico = parseFloat(valorCru);
                         }
 
@@ -231,8 +236,7 @@
                             valor: isNaN(valorNumerico) ? 0 : valorNumerico,
                             chegada: item.Chegada || '-',
                             saida: item.Saída || item.Saida || '-',
-                            // Garante o mapeamento correto caso esteja com ponto ou maiúsculo/minúsculo no SheetDB
-                            temp: item['Temp.'] || item.Temp || item.temp || '-',
+                            temp: item.Temp || '-',
                             conferente: item.Conferente || '-',
                             prevencao: item.Prevenção || item.Prevencao || '-',
                             status: item.Status ? item.Status.toUpperCase() : 'NÃO ACATADA',
@@ -260,7 +264,7 @@
                 document.getElementById('m-data').value = nota.data;
                 document.getElementById('m-fornecedor').value = nota.fornecedor;
                 document.getElementById('m-nf').value = nota.nf;
-                document.getElementById('m-nf').disabled = true; 
+                document.getElementById('m-nf').disabled = true; // Desabilita NF na edição por segurança
                 document.getElementById('m-valor').value = nota.valor;
                 document.getElementById('m-chegada').value = nota.chegada;
                 document.getElementById('m-saida').value = nota.saida;
@@ -274,36 +278,17 @@
                 document.getElementById('form-nf').reset();
                 document.getElementById('edit-id').value = "";
                 document.getElementById('m-nf').disabled = false;
+                
+                // Preenche a data de hoje automaticamente no formato brasileiro
                 document.getElementById('m-data').value = new Date().toLocaleDateString('pt-BR');
             }
-        }
-
-        function incluirMaisNotasDesteFornecedor(id) {
-            document.getElementById('modal-nf').classList.remove('hidden');
-            document.getElementById('form-nf').reset();
-            
-            const notaBase = notas.find(n => n.id === id.toString());
-            
-            document.getElementById('modal-titulo').innerText = `Incluir Nova Nota para: ${notaBase.fornecedor}`;
-            document.getElementById('edit-id').value = ""; 
-            document.getElementById('m-nf').disabled = false;
-            
-            document.getElementById('m-data').value = notaBase.data;
-            document.getElementById('m-fornecedor').value = notaBase.fornecedor;
-            document.getElementById('m-chegada').value = notaBase.chegada;
-            document.getElementById('m-saida').value = notaBase.saida;
-            document.getElementById('m-temp').value = notaBase.temp;
-            document.getElementById('m-conferente').value = notaBase.conferente;
-            document.getElementById('m-prevencao').value = notaBase.prevencao;
-            document.getElementById('m-status').value = notaBase.status;
-            
-            setTimeout(() => document.getElementById('m-nf').focus(), 100);
         }
 
         function fecharModal() {
             document.getElementById('modal-nf').classList.add('hidden');
         }
 
+        // SALVAR OU EDITAR UMA NOTA DIRETAMENTE NO GOOGLE SHEETS
         function salvarNota(e) {
             e.preventDefault();
             const id = document.getElementById('edit-id').value;
@@ -313,9 +298,8 @@
             btnSalvar.innerText = "Salvando no Banco...";
 
             const idFinal = id ? id : Date.now().toString();
-            const valorTemperatura = document.getElementById('m-temp').value || '-';
 
-            // ATENÇÃO: Enviamos de 3 formas diferentes para garantir a gravação independente de como a sua coluna está nomeada no Excel/Google Sheets
+            // Payload mapeado exatamente com as chaves esperadas na planilha
             const payload = {
                 "id": idFinal,
                 "Data": document.getElementById('m-data').value,
@@ -324,9 +308,7 @@
                 "Valor": parseFloat(document.getElementById('m-valor').value),
                 "Chegada": document.getElementById('m-chegada').value || '-',
                 "Saída": document.getElementById('m-saida').value || '-',
-                "Temp": valorTemperatura,
-                "Temp.": valorTemperatura,
-                "temp": valorTemperatura,
+                "Temp": document.getElementById('m-temp').value || '-',
                 "Conferente": document.getElementById('m-conferente').value || '-',
                 "Prevenção": document.getElementById('m-prevencao').value || '-',
                 "Status": document.getElementById('m-status').value,
@@ -334,6 +316,7 @@
             };
 
             if (id) {
+                // PATCH (Editar) baseado na coluna chave id
                 fetch(`${SHEETDB_URL}/id/${id}`, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
@@ -350,6 +333,7 @@
                     btnSalvar.innerText = "Salvar Nota";
                 });
             } else {
+                // POST (Inserir nova linha)
                 fetch(SHEETDB_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -368,6 +352,7 @@
             }
         }
 
+        // DELETAR NOTA DA PLANILHA
         function excluirNota(id) {
             if(confirm("Deseja remover permanentemente esta nota do Banco de Dados Sincronizado?")) {
                 const corpo = document.getElementById('tabela-corpo');
@@ -397,7 +382,7 @@
             renderizarTabela();
         }
 
-        function obtenerFiltrados() {
+        function obterFiltrados() {
             const fStatus = document.getElementById('f-status').value;
             const fData = document.getElementById('f-data').value.toLowerCase();
             const fFornecedor = document.getElementById('f-fornecedor').value.toLowerCase();
@@ -447,8 +432,7 @@
                     <td class="py-3 px-4"><span class="${statusClass} text-[10px] font-bold px-1.5 py-0.5 rounded border tracking-wide">${nota.status}</span></td>
                     <td class="py-3 px-4">${nota.observacao}</td>
                     <td class="py-3 px-4">
-                        <div class="flex items-center gap-2.5">
-                            <button onclick="incluirMaisNotasDesteFornecedor('${nota.id}')" class="text-green-600 text-sm font-bold bg-green-50 hover:bg-green-100 border border-green-300 w-6 h-6 flex items-center justify-center rounded shadow-sm" title="Incluir outra nota para este Fornecedor">➕</button>
+                        <div class="flex gap-3">
                             <button onclick="abrirModal('${nota.id}')" class="text-amber-500 text-base" title="Editar">✏️</button>
                             <button onclick="excluirNota('${nota.id}')" class="text-gray-400 hover:text-red-500 text-base" title="Excluir">🗑️</button>
                         </div>
