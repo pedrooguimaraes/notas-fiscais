@@ -154,12 +154,13 @@
                     <label class="font-semibold block mb-1">Fornecedor</label>
                     <input type="text" id="m-fornecedor" required class="w-full border rounded p-1.5">
                 </div>
-                <div>
-                    <label class="font-semibold block mb-1">Número da NF</label>
-                    <input type="text" id="m-nf" required class="w-full border rounded p-1.5">
+                <div class="col-span-2 bg-blue-50/50 p-2 border border-blue-100 rounded">
+                    <label class="font-bold text-blue-800 block mb-1">Número(s) da NF</label>
+                    <input type="text" id="m-nf" required class="w-full border border-blue-300 rounded p-1.5 bg-white" placeholder="Ex para várias: 1024, 1025, 1026">
+                    <p id="helper-multiplo" class="text-[10px] text-blue-600 mt-1 font-medium">💡 Para lançar mais de 1 nota deste mesmo fornecedor, separe os números por vírgula.</p>
                 </div>
                 <div>
-                    <label class="font-semibold block mb-1">Valor (R$)</label>
+                    <label id="lbl-valor" class="font-semibold block mb-1">Valor Unitário (R$)</label>
                     <input type="number" step="0.01" id="m-valor" required class="w-full border rounded p-1.5">
                 </div>
                 <div>
@@ -195,7 +196,7 @@
                 </div>
                 <div class="col-span-2 flex justify-end gap-2 pt-3 border-t mt-2">
                     <button type="button" onclick="fecharModal()" class="border px-4 py-1.5 rounded bg-gray-50 hover:bg-gray-100 font-medium">Cancelar</button>
-                    <button type="submit" id="btn-salvar" class="bg-[#1e5bb9] text-white px-4 py-1.5 rounded hover:bg-[#164996] font-medium">Salvar Nota</button>
+                    <button type="submit" id="btn-salvar" class="bg-[#1e5bb9] text-white px-4 py-1.5 rounded hover:bg-[#164996] font-medium">Salvar Notas</button>
                 </div>
             </form>
         </div>
@@ -212,19 +213,15 @@
                 .then(response => response.json())
                 .then(dados => {
                     notas = dados.map(item => {
-                        // Limpeza e tratamento robusto do valor numérico vindo do banco
                         let valorCru = item.Valor ? item.Valor.toString() : '0';
                         valorCru = valorCru.replace('R$', '').replace(/\s/g, '');
                         
                         let valorNumerico;
                         if (valorCru.includes(',') && valorCru.includes('.')) {
-                            // Formato padrão brasileiro com separador de milhar (Ex: 1.250,50)
                             valorNumerico = parseFloat(valorCru.replace(/\./g, '').replace(',', '.'));
                         } else if (valorCru.includes(',')) {
-                            // Formato simples com vírgula (Ex: 150,50)
                             valorNumerico = parseFloat(valorCru.replace(',', '.'));
                         } else {
-                            // Formato float puro ou string limpa
                             valorNumerico = parseFloat(valorCru);
                         }
 
@@ -259,12 +256,15 @@
             document.getElementById('modal-nf').classList.remove('hidden');
             if (id !== null) {
                 document.getElementById('modal-titulo').innerText = "Editar Nota Fiscal";
+                document.getElementById('helper-multiplo').classList.add('hidden');
+                document.getElementById('lbl-valor').innerText = "Valor (R$)";
+                
                 const nota = notas.find(n => n.id === id.toString());
                 document.getElementById('edit-id').value = nota.id;
                 document.getElementById('m-data').value = nota.data;
                 document.getElementById('m-fornecedor').value = nota.fornecedor;
                 document.getElementById('m-nf').value = nota.nf;
-                document.getElementById('m-nf').disabled = true; // Desabilita NF na edição por segurança
+                document.getElementById('m-nf').disabled = true; 
                 document.getElementById('m-valor').value = nota.valor;
                 document.getElementById('m-chegada').value = nota.chegada;
                 document.getElementById('m-saida').value = nota.saida;
@@ -275,11 +275,12 @@
                 document.getElementById('m-observacao').value = nota.observacao;
             } else {
                 document.getElementById('modal-titulo').innerText = "Nova Nota Fiscal";
+                document.getElementById('helper-multiplo').classList.remove('hidden');
+                document.getElementById('lbl-valor').innerText = "Valor por Nota (R$)";
+                
                 document.getElementById('form-nf').reset();
                 document.getElementById('edit-id').value = "";
                 document.getElementById('m-nf').disabled = false;
-                
-                // Preenche a data de hoje automaticamente no formato brasileiro
                 document.getElementById('m-data').value = new Date().toLocaleDateString('pt-BR');
             }
         }
@@ -288,7 +289,7 @@
             document.getElementById('modal-nf').classList.add('hidden');
         }
 
-        // SALVAR OU EDITAR UMA NOTA DIRETAMENTE NO GOOGLE SHEETS
+        // SALVAR OU EDITAR DIRETAMENTE NO GOOGLE SHEETS (SUPORTE A MULTIPLOS REGISTROS)
         function salvarNota(e) {
             e.preventDefault();
             const id = document.getElementById('edit-id').value;
@@ -297,14 +298,13 @@
             btnSalvar.disabled = true;
             btnSalvar.innerText = "Salvando no Banco...";
 
-            const idFinal = id ? id : Date.now().toString();
+            // Captura o campo NF e divide por vírgula para identificar se existem múltiplas notas
+            const campoNF = document.getElementById('m-nf').value;
+            const listaNFs = campoNF.split(',').map(nf => nf.trim()).filter(nf => nf !== "");
 
-            // Payload mapeado exatamente com as chaves esperadas na planilha
-            const payload = {
-                "id": idFinal,
+            const dataComum = {
                 "Data": document.getElementById('m-data').value,
                 "Fornecedor": document.getElementById('m-fornecedor').value,
-                "NF": document.getElementById('m-nf').value,
                 "Valor": parseFloat(document.getElementById('m-valor').value),
                 "Chegada": document.getElementById('m-chegada').value || '-',
                 "Saída": document.getElementById('m-saida').value || '-',
@@ -316,38 +316,47 @@
             };
 
             if (id) {
-                // PATCH (Editar) baseado na coluna chave id
+                // EDIÇÃO (Apenas 1 nota por vez)
+                const payloadAlterado = { "id": id, "NF": listaNFs[0], ...dataComum };
                 fetch(`${SHEETDB_URL}/id/${id}`, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ data: payload })
+                    body: JSON.stringify({ data: payloadAlterado })
                 })
                 .then(response => response.json())
                 .then(() => {
                     fecharModal();
                     buscarNotasDoBanco();
                 })
-                .catch(erro => alert("Erro ao editar no banco de dados: " + erro))
+                .catch(erro => alert("Erro ao editar no banco: " + erro))
                 .finally(() => {
                     btnSalvar.disabled = false;
-                    btnSalvar.innerText = "Salvar Nota";
+                    btnSalvar.innerText = "Salvar Notas";
                 });
             } else {
-                // POST (Inserir nova linha)
+                // CADASTRO NOVO (Pode conter 1 ou mais NFs)
+                const payloadMultiplo = listaNFs.map((numeroNota, index) => {
+                    return {
+                        "id": (Date.now() + index).toString(),
+                        "NF": numeroNota,
+                        ...dataComum
+                    };
+                });
+
                 fetch(SHEETDB_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ data: [payload] })
+                    body: JSON.stringify({ data: payloadMultiplo })
                 })
                 .then(response => response.json())
                 .then(() => {
                     fecharModal();
                     buscarNotasDoBanco();
                 })
-                .catch(erro => alert("Erro ao cadastrar no banco de dados: " + erro))
+                .catch(erro => alert("Erro ao cadastrar no banco: " + erro))
                 .finally(() => {
                     btnSalvar.disabled = false;
-                    btnSalvar.innerText = "Salvar Nota";
+                    btnSalvar.innerText = "Salvar Notas";
                 });
             }
         }
@@ -382,7 +391,7 @@
             renderizarTabela();
         }
 
-        function obterFiltrados() {
+        function obtenerFiltrados() {
             const fStatus = document.getElementById('f-status').value;
             const fData = document.getElementById('f-data').value.toLowerCase();
             const fFornecedor = document.getElementById('f-fornecedor').value.toLowerCase();
