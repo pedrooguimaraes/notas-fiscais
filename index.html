@@ -401,21 +401,29 @@
         function renderizarTabela() {
             const corpo = document.getElementById('tabela-corpo');
             corpo.innerHTML = "";
+            
+            // Obtém as notas filtradas
             let filtrados = obterFiltrados();
 
             let totalValor = 0;
             let naoAcatadas = 0;
             let acatadas = 0;
 
-            if (filtrados.length === 0) {
-                corpo.innerHTML = `<tr><td colspan="12" class="text-center py-6 text-gray-400">Nenhum registro encontrado.</td></tr>`;
-            }
-
+            // Calcula métricas antes de inverter a ordem para exibição
             filtrados.forEach(nota => {
                 totalValor += nota.valor;
                 if (nota.status === "NÃO ACATADA") naoAcatadas++;
                 if (nota.status === "ACATADA") acatadas++;
+            });
 
+            if (filtrados.length === 0) {
+                corpo.innerHTML = `<tr><td colspan="12" class="text-center py-6 text-gray-400">Nenhum registro encontrado.</td></tr>`;
+            }
+
+            // AQUI ESTÁ A ALTERAÇÃO: Inverte a ordem do array filtrado para renderizar as mais novas por primeiro
+            const filtradosInvertidos = [...filtrados].reverse();
+
+            filtradosInvertidos.forEach(nota => {
                 const tr = document.createElement('tr');
                 const statusClass = nota.status === "ACATADA" ? "bg-green-50 text-green-700 border-green-200" : "bg-[#ffebeb] text-[#ca3e3e] border-[#ffd1d1]";
                 
