@@ -187,9 +187,12 @@
 
         // 1. BUSCAR DADOS
         function buscarNotasDoBanco() {
-            fetch(SHEETDB_URL)
-                .then(res => res.json())
-                .then(dados => {
+fetch('https://script.google.com/macros/s/AKfycbw2F8bzDm_WWOXv3Bo-yNAPy2LMebW-RRYE8WhpZEI9_35LdofKDwHLFgD5YoA4buw7/exec')
+  .then(response => response.json())
+  .then(data => {
+      console.log(data); // Seus dados aparecerão aqui
+      // O resto da sua lógica de exibir na tela continua igual
+  });
                     // Mapeamento completo garantindo que todas as colunas sejam capturadas
                     notasGlobais = dados.map(item => ({
                         id: item.id || Date.now().toString(),
