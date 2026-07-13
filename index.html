@@ -286,7 +286,14 @@ function salvarNota(e) {
 
     fetch(url, { 
         method: method, 
-        mode: 'no-cors', // Adicione isso se estiver recebendo erro de CORS
+        fetch(SCRIPT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ 
+        action: id ? 'update' : 'create', 
+        data: payload 
+    })
+})
         headers: { 'Content-Type': 'application/json' }, 
         body: JSON.stringify(payload) 
     })
