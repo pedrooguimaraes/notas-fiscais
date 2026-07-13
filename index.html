@@ -280,29 +280,24 @@ function salvarNota(e) {
         "Observação": document.getElementById('m-observacao').value
     };
 
-    // Simplificando: enviando apenas o payload diretamente
-    const method = id ? 'POST' : 'POST'; // Muitas vezes o GAS funciona melhor apenas com POST
-    const url = SCRIPT; 
-
-    fetch(url, { 
-        method: method, 
-        fetch(SCRIPT, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ 
-        action: id ? 'update' : 'create', 
-        data: payload 
+    fetch(SCRIPT, { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            action: id ? 'update' : 'create', 
+            data: payload 
+        })
     })
-})
-        headers: { 'Content-Type': 'application/json' }, 
-        body: JSON.stringify(payload) 
-    })
-    .then(() => { 
+    .then(response => response.json())
+    .then(result => { 
+        console.log("Sucesso:", result);
         fecharModal(); 
-        // Pequena pausa para garantir que o Sheets processou
         setTimeout(buscarNotasDoBanco, 1000); 
     })
-    .catch(err => console.error("Erro ao salvar:", err));
+    .catch(err => {
+        console.error("Erro ao salvar:", err);
+        alert("Erro ao salvar a nota. Verifique o console.");
+    });
 }
 
         function excluirNota(id) {
