@@ -201,19 +201,11 @@
     </div>
 
     <script>
-        const SCRIPT = 'https://script.google.com/macros/s/AKfycbyl7Bx9I7xf7_Nb3OqJ1ESTfnJ5sNNR5f3CDArCZN7I4uAUL--oAfEW0aa6KvpETlES/exec';
+        const SCRIPT = 'https://script.google.com/macros/s/AKfycbzVqJ6ptOTzAJhDfucvI0NW4VhwpcrIi71QQRNzfwb40LRJPYXrfKnkJyul54V1RdJM/exec';
         let notas = [];
 
         function buscarNotasDoBanco() {
-            fetch(SCRIPT, {
-    method: 'POST',
-    // REMOVA: mode: 'no-cors',  <-- Delete esta linha
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ 
-        action: id ? 'update' : 'create', 
-        data: payload 
-    })
-})
+            fetch(SCRIPT)
                 .then(response => response.json())
                 .then(dados => {
                     notas = dados.map(item => {
