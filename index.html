@@ -200,170 +200,111 @@
         </div>
     </div>
 
-    <script>
-        const SCRIPT = 'https://script.google.com/macros/s/AKfycbzVqJ6ptOTzAJhDfucvI0NW4VhwpcrIi71QQRNzfwb40LRJPYXrfKnkJyul54V1RdJM/exec';
-        let notas = [];
+ <script>
+    const SCRIPT = 'https://script.google.com/macros/s/AKfycbzVqJ6ptOTzAJhDfucvI0NW4VhwpcrIi71QQRNzfwb40LRJPYXrfKnkJyul54V1RdJM/exec';
+    let notas = [];
 
-        function buscarNotasDoBanco() {
-            fetch(SCRIPT)
-                .then(response => response.json())
-                .then(dados => {
-                    notas = dados.map(item => {
-                        let valorCru = item.Valor ? item.Valor.toString() : '0';
-                        valorCru = valorCru.replace('R$', '').replace(/\s/g, '');
-                        let valorNumerico = valorCru.includes(',') ? parseFloat(valorCru.replace(/\./g, '').replace(',', '.')) : parseFloat(valorCru);
-
-                        return {
-                            id: item.id ? item.id.toString() : (Date.now() + Math.random()).toString(),
-                            data: item.Data || '',
-                            fornecedor: item.Fornecedor || '',
-                            nf: item.NF || '',
-                            valor: isNaN(valorNumerico) ? 0 : valorNumerico,
-                            chegada: item.Chegada || '-',
-                            saida: item.Saída || item.Saida || '-',
-                            temp: item.Temp || '-',
-                            conferente: item.Conferente || '-',
-                            prevencao: item.Prevenção || item.Prevencao || '-',
-                            status: (item.Status || 'NÃO ACATADA').toUpperCase(),
-                            observacao: item.Observação || item.Observacao || '-'
-                        };
-                    });
-                    renderizarTabela();
-                })
-                .catch(erro => console.error("Erro ao buscar:", erro));
+    // Função auxiliar para formatar datas vindo do Google Sheets
+    function formatarDataExibicao(dataStr) {
+        if (!dataStr || dataStr === '-') return '-';
+        if (dataStr.includes('T')) {
+            const data = new Date(dataStr);
+            return data.toLocaleDateString('pt-BR');
         }
+        return dataStr;
+    }
 
-        function abrirModal(id = null) {
-            document.getElementById('modal-nf').classList.remove('hidden');
-            if (id) {
-                const nota = notas.find(n => n.id === id);
-                document.getElementById('modal-titulo').innerText = "Editar Nota Fiscal";
-                document.getElementById('edit-id').value = nota.id;
-                document.getElementById('m-data').value = nota.data;
-                document.getElementById('m-fornecedor').value = nota.fornecedor;
-                document.getElementById('m-nf').value = nota.nf;
-                document.getElementById('m-nf').disabled = true;
-                document.getElementById('m-valor').value = nota.valor;
-                document.getElementById('m-chegada').value = nota.chegada;
-                document.getElementById('m-saida').value = nota.saida;
-                document.getElementById('m-temp').value = nota.temp;
-                document.getElementById('m-conferente').value = nota.conferente;
-                document.getElementById('m-prevencao').value = nota.prevencao;
-                document.getElementById('m-status').value = nota.status;
-                document.getElementById('m-observacao').value = nota.observacao;
-            } else {
-                document.getElementById('modal-titulo').innerText = "Nova Nota Fiscal";
-                document.getElementById('form-nf').reset();
-                document.getElementById('edit-id').value = "";
-                document.getElementById('m-nf').disabled = false;
-                document.getElementById('m-data').value = new Date().toLocaleDateString('pt-BR');
-            }
-        }
+    function buscarNotasDoBanco() {
+        fetch(SCRIPT)
+            .then(response => response.json())
+            .then(dados => {
+                notas = dados.map(item => {
+                    let valorCru = item.Valor ? item.Valor.toString() : '0';
+                    let valorNumerico = parseFloat(valorCru.toString().replace(/[^\d.-]/g, ''));
 
-        function fecharModal() { document.getElementById('modal-nf').classList.add('hidden'); }
+                    return {
+                        id: item.id ? item.id.toString() : (Date.now() + Math.random()).toString(),
+                        data: formatarDataExibicao(item.Data),
+                        fornecedor: item.Fornecedor || '',
+                        nf: item.NF || '',
+                        valor: isNaN(valorNumerico) ? 0 : valorNumerico,
+                        chegada: formatarDataExibicao(item.Chegada),
+                        saida: formatarDataExibicao(item.Saída || item.Saida),
+                        temp: item.Temp || '-',
+                        conferente: item.Conferente || '-',
+                        prevencao: item.Prevenção || item.Prevencao || '-',
+                        status: (item.Status || 'NÃO ACATADA').toUpperCase(),
+                        observacao: item.Observação || item.Observacao || '-'
+                    };
+                });
+                renderizarTabela();
+            })
+            .catch(erro => console.error("Erro ao buscar:", erro));
+    }
 
-        function salvarNota(e) {
-            e.preventDefault();
-            const id = document.getElementById('edit-id').value;
-            const payload = {
-                "id": id || Date.now().toString(),
-                "Data": document.getElementById('m-data').value,
-                "Fornecedor": document.getElementById('m-fornecedor').value,
-                "NF": document.getElementById('m-nf').value,
-                "Valor": parseFloat(document.getElementById('m-valor').value),
-                "Chegada": document.getElementById('m-chegada').value,
-                "Saída": document.getElementById('m-saida').value,
-                "Temp": document.getElementById('m-temp').value,
-                "Conferente": document.getElementById('m-conferente').value,
-                "Prevenção": document.getElementById('m-prevencao').value,
-                "Status": document.getElementById('m-status').value,
-                "Observação": document.getElementById('m-observacao').value
-            };
+    // ... (Mantenha as funções abrirModal, fecharModal, excluirNota exatamente como estavam)
 
-            const method = id ? 'PATCH' : 'POST';
-            const url = id ? `${SCRIPT}/id/${id}` : SCRIPT;
+    function salvarNota(e) {
+        e.preventDefault();
+        const id = document.getElementById('edit-id').value;
+        const payload = {
+            "id": id || Date.now().toString(),
+            "Data": document.getElementById('m-data').value,
+            "Fornecedor": document.getElementById('m-fornecedor').value,
+            "NF": document.getElementById('m-nf').value,
+            "Valor": parseFloat(document.getElementById('m-valor').value),
+            "Chegada": document.getElementById('m-chegada').value,
+            "Saída": document.getElementById('m-saida').value,
+            "Temp": document.getElementById('m-temp').value,
+            "Conferente": document.getElementById('m-conferente').value,
+            "Prevenção": document.getElementById('m-prevencao').value,
+            "Status": document.getElementById('m-status').value,
+            "Observação": document.getElementById('m-observacao').value
+        };
 
-            fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data: id ? payload : [payload] }) })
-                .then(() => { fecharModal(); buscarNotasDoBanco(); });
-        }
+        const url = id ? `${SCRIPT}/id/${id}` : SCRIPT;
+        const method = id ? 'PATCH' : 'POST';
 
-        function excluirNota(id) {
-            if(confirm("Excluir nota?")) {
-                fetch(`${SCRIPT}/id/${id}`, { method: 'DELETE' }).then(() => buscarNotasDoBanco());
-            }
-        }
+        fetch(url, { 
+            method: method, 
+            mode: 'no-cors', // Adicionado para evitar problemas de bloqueio
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify({ data: id ? payload : [payload] }) 
+        })
+        .then(() => { 
+            fecharModal(); 
+            setTimeout(buscarNotasDoBanco, 1000); // Aguarda um pouco para o banco processar
+        });
+    }
 
-        function limparFiltros(e) {
-            e.stopPropagation();
-            document.querySelectorAll('select, input').forEach(el => el.value = "");
-            renderizarTabela();
-        }
+    function renderizarTabela() {
+        const corpo = document.getElementById('tabela-corpo');
+        corpo.innerHTML = "";
+        let filtrados = obterFiltrados();
+        
+        filtrados.reverse().forEach(nota => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="py-3 px-4">${nota.data}</td>
+                <td class="py-3 px-4 font-medium">${nota.fornecedor}</td>
+                <td class="py-3 px-4">${nota.nf}</td>
+                <td class="py-3 px-4 font-bold">R$ ${nota.valor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
+                <td class="py-3 px-4">${nota.chegada}</td>
+                <td class="py-3 px-4">${nota.saida}</td>
+                <td class="py-3 px-4">${nota.temp}</td>
+                <td class="py-3 px-4">${nota.conferente}</td>
+                <td class="py-3 px-4">${nota.prevencao}</td>
+                <td class="py-3 px-4"><span class="${nota.status === "ACATADA" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"} text-[10px] font-bold px-1.5 py-0.5 rounded border">${nota.status}</span></td>
+                <td class="py-3 px-4">${nota.observacao}</td>
+                <td class="py-3 px-4 flex gap-3">
+                    <button onclick="abrirModal('${nota.id}')" class="text-amber-500">✏️</button>
+                    <button onclick="excluirNota('${nota.id}')" class="text-red-400">🗑️</button>
+                </td>
+            `;
+            corpo.appendChild(tr);
+        });
+        // ... (resto da função de métricas)
+    }
 
-        function obterFiltrados() {
-            const fStatus = document.getElementById('f-status').value;
-            const fData = document.getElementById('f-data').value.toLowerCase();
-            const fFornecedor = document.getElementById('f-fornecedor').value.toLowerCase();
-            const fNf = document.getElementById('f-nf').value.toLowerCase();
-            const fValor = document.getElementById('f-valor').value;
-
-            return notas.filter(nota => 
-                (!fStatus || nota.status === fStatus) &&
-                (!fData || nota.data.toLowerCase().includes(fData)) &&
-                (!fFornecedor || nota.fornecedor.toLowerCase().includes(fFornecedor)) &&
-                (!fNf || nota.nf.toLowerCase().includes(fNf)) &&
-                (!fValor || nota.valor <= parseFloat(fValor))
-            );
-        }
-
-        function renderizarTabela() {
-            const corpo = document.getElementById('tabela-corpo');
-            corpo.innerHTML = "";
-            let filtrados = obterFiltrados();
-            let totalValor = 0, naoAcatadas = 0, acatadas = 0;
-
-            filtrados.forEach(n => {
-                totalValor += n.valor;
-                n.status === "ACATADA" ? acatadas++ : naoAcatadas++;
-            });
-
-            [...filtrados].reverse().forEach(nota => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="py-3 px-4">${nota.data}</td>
-                    <td class="py-3 px-4 font-medium">${nota.fornecedor}</td>
-                    <td class="py-3 px-4">${nota.nf}</td>
-                    <td class="py-3 px-4 font-bold">R$ ${nota.valor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
-                    <td class="py-3 px-4">${nota.chegada}</td>
-                    <td class="py-3 px-4">${nota.saida}</td>
-                    <td class="py-3 px-4">${nota.temp}</td>
-                    <td class="py-3 px-4">${nota.conferente}</td>
-                    <td class="py-3 px-4">${nota.prevencao}</td>
-                    <td class="py-3 px-4"><span class="${nota.status === "ACATADA" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"} text-[10px] font-bold px-1.5 py-0.5 rounded border">${nota.status}</span></td>
-                    <td class="py-3 px-4">${nota.observacao}</td>
-                    <td class="py-3 px-4 flex gap-3">
-                        <button onclick="abrirModal('${nota.id}')" class="text-amber-500">✏️</button>
-                        <button onclick="excluirNota('${nota.id}')" class="text-red-400">🗑️</button>
-                    </td>
-                `;
-                corpo.appendChild(tr);
-            });
-
-            document.getElementById('card-total').innerText = filtrados.length;
-            document.getElementById('card-valor').innerText = `R$ ${totalValor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-            document.getElementById('card-nao-acatadas').innerText = naoAcatadas;
-            document.getElementById('card-acatadas').innerText = acatadas;
-            document.getElementById('contador-notas').innerText = `${filtrados.length} notas encontradas`;
-        }
-
-        function gerarRelatorioProfissional() {
-            let dados = obterFiltrados();
-            let lines = dados.map(n => `<tr><td style='padding:12px;'>${n.data}</td><td style='padding:12px;'>${n.fornecedor}</td><td style='padding:12px;'>${n.nf}</td><td style='padding:12px;'>R$ ${n.valor.toFixed(2)}</td><td style='padding:12px;'>${n.status}</td></tr>`).join('');
-            let novaAba = window.open();
-            novaAba.document.write(`<html><body><h1>Relatório</h1><table border='1'>${lines}</table><button onclick='window.print()'>Imprimir</button></body></html>`);
-            novaAba.document.close();
-        }
-
-        window.onload = buscarNotasDoBanco;
-    </script>
-</body>
-</html>
+    window.onload = buscarNotasDoBanco;
+</script>
