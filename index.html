@@ -106,24 +106,23 @@
         <div class="custom-card bg-white overflow-hidden">
             <div class="p-4 bg-white">
                 <p id="contador-notas" class="text-xs font-medium text-[#777777]">0 notas encontradas</p>
-                <p class="text-[11px] text-[#aaaaaa] mt-1"><span class="font-normal text-sm">≡</span> Arraste os cabeçalhos para reordenar as colunas</p>
             </div>
 
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="border-y border-[#e5e5e5] bg-[#fafafa]">
-                            <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Data</th>
-                            <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Fornecedor</th>
-                            <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> NF</th>
-                            <th class="py-3 px-4 th-text"><span class="th-icon">≡</span> Valor</th>
-                            <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Chegada</th>
-                            <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Saída</th>
-                            <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Temp.</th>
-                            <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Conferente</th>
-                            <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Prevenção</th>
-                            <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Status</th>
-                            <th class="py-2.5 px-4 th-text"><span class="th-icon">≡</span> Observação</th>
+                            <th class="py-2.5 px-4 th-text">Data</th>
+                            <th class="py-2.5 px-4 th-text">Fornecedor</th>
+                            <th class="py-2.5 px-4 th-text">NF</th>
+                            <th class="py-3 px-4 th-text">Valor</th>
+                            <th class="py-2.5 px-4 th-text">Chegada</th>
+                            <th class="py-2.5 px-4 th-text">Saída</th>
+                            <th class="py-2.5 px-4 th-text">Temp.</th>
+                            <th class="py-2.5 px-4 th-text">Conferente</th>
+                            <th class="py-2.5 px-4 th-text">Prevenção</th>
+                            <th class="py-2.5 px-4 th-text">Status</th>
+                            <th class="py-2.5 px-4 th-text">Observação</th>
                             <th class="py-2.5 px-4 text-xs font-bold text-[#666666]">Ações</th>
                         </tr>
                     </thead>
@@ -201,35 +200,21 @@
         </div>
     </div>
 
-    <!-- CONTROLADORES JAVASCRIPT INTEGRADO AO SHEETDB -->
     <script>
         const SCRIPT = 'https://script.google.com/macros/s/AKfycbzVqJ6ptOTzAJhDfucvI0NW4VhwpcrIi71QQRNzfwb40LRJPYXrfKnkJyul54V1RdJM/exec';
         let notas = [];
 
-        // BUSCAR DADOS DA PLANILHA DO GOOGLE AO ABRIR O SITE
         function buscarNotasDoBanco() {
             fetch(SCRIPT)
                 .then(response => response.json())
                 .then(dados => {
                     notas = dados.map(item => {
-                        // Limpeza e tratamento robusto do valor numérico vindo do banco
                         let valorCru = item.Valor ? item.Valor.toString() : '0';
                         valorCru = valorCru.replace('R$', '').replace(/\s/g, '');
-                        
-                        let valorNumerico;
-                        if (valorCru.includes(',') && valorCru.includes('.')) {
-                            // Formato padrão brasileiro com separador de milhar (Ex: 1.250,50)
-                            valorNumerico = parseFloat(valorCru.replace(/\./g, '').replace(',', '.'));
-                        } else if (valorCru.includes(',')) {
-                            // Formato simples com vírgula (Ex: 150,50)
-                            valorNumerico = parseFloat(valorCru.replace(',', '.'));
-                        } else {
-                            // Formato float puro ou string limpa
-                            valorNumerico = parseFloat(valorCru);
-                        }
+                        let valorNumerico = valorCru.includes(',') ? parseFloat(valorCru.replace(/\./g, '').replace(',', '.')) : parseFloat(valorCru);
 
                         return {
-                            id: item.id ? item.id.toString() : (Date.now() + Math.floor(Math.random() * 1000)).toString(),
+                            id: item.id ? item.id.toString() : (Date.now() + Math.random()).toString(),
                             data: item.Data || '',
                             fornecedor: item.Fornecedor || '',
                             nf: item.NF || '',
@@ -239,32 +224,25 @@
                             temp: item.Temp || '-',
                             conferente: item.Conferente || '-',
                             prevencao: item.Prevenção || item.Prevencao || '-',
-                            status: item.Status ? item.Status.toUpperCase() : 'NÃO ACATADA',
+                            status: (item.Status || 'NÃO ACATADA').toUpperCase(),
                             observacao: item.Observação || item.Observacao || '-'
                         };
                     });
                     renderizarTabela();
                 })
-                .catch(erro => {
-                    console.error("Erro ao buscar dados do banco:", erro);
-                    document.getElementById('tabela-corpo').innerHTML = `
-                        <tr>
-                            <td colspan="12" class="text-center py-6 text-red-500 font-medium">Erro ao carregar os dados. Verifique a URL do SheetDB.</td>
-                        </tr>
-                    `;
-                });
+                .catch(erro => console.error("Erro ao buscar:", erro));
         }
 
         function abrirModal(id = null) {
             document.getElementById('modal-nf').classList.remove('hidden');
-            if (id !== null) {
+            if (id) {
+                const nota = notas.find(n => n.id === id);
                 document.getElementById('modal-titulo').innerText = "Editar Nota Fiscal";
-                const nota = notas.find(n => n.id === id.toString());
                 document.getElementById('edit-id').value = nota.id;
                 document.getElementById('m-data').value = nota.data;
                 document.getElementById('m-fornecedor').value = nota.fornecedor;
                 document.getElementById('m-nf').value = nota.nf;
-                document.getElementById('m-nf').disabled = true; // Desabilita NF na edição por segurança
+                document.getElementById('m-nf').disabled = true;
                 document.getElementById('m-valor').value = nota.valor;
                 document.getElementById('m-chegada').value = nota.chegada;
                 document.getElementById('m-saida').value = nota.saida;
@@ -278,107 +256,46 @@
                 document.getElementById('form-nf').reset();
                 document.getElementById('edit-id').value = "";
                 document.getElementById('m-nf').disabled = false;
-                
-                // Preenche a data de hoje automaticamente no formato brasileiro
                 document.getElementById('m-data').value = new Date().toLocaleDateString('pt-BR');
             }
         }
 
-        function fecharModal() {
-            document.getElementById('modal-nf').classList.add('hidden');
-        }
+        function fecharModal() { document.getElementById('modal-nf').classList.add('hidden'); }
 
-        // SALVAR OU EDITAR UMA NOTA DIRETAMENTE NO GOOGLE SHEETS
         function salvarNota(e) {
             e.preventDefault();
             const id = document.getElementById('edit-id').value;
-            const btnSalvar = document.getElementById('btn-salvar');
-            
-            btnSalvar.disabled = true;
-            btnSalvar.innerText = "Salvando no Banco...";
-
-            const idFinal = id ? id : Date.now().toString();
-
-            // Payload mapeado exatamente com as chaves esperadas na planilha
             const payload = {
-                "id": idFinal,
+                "id": id || Date.now().toString(),
                 "Data": document.getElementById('m-data').value,
                 "Fornecedor": document.getElementById('m-fornecedor').value,
                 "NF": document.getElementById('m-nf').value,
                 "Valor": parseFloat(document.getElementById('m-valor').value),
-                "Chegada": document.getElementById('m-chegada').value || '-',
-                "Saída": document.getElementById('m-saida').value || '-',
-                "Temp": document.getElementById('m-temp').value || '-',
-                "Conferente": document.getElementById('m-conferente').value || '-',
-                "Prevenção": document.getElementById('m-prevencao').value || '-',
+                "Chegada": document.getElementById('m-chegada').value,
+                "Saída": document.getElementById('m-saida').value,
+                "Temp": document.getElementById('m-temp').value,
+                "Conferente": document.getElementById('m-conferente').value,
+                "Prevenção": document.getElementById('m-prevencao').value,
                 "Status": document.getElementById('m-status').value,
-                "Observação": document.getElementById('m-observacao').value || '-'
+                "Observação": document.getElementById('m-observacao').value
             };
 
-            if (id) {
-                // PATCH (Editar) baseado na coluna chave id
-                fetch(`${SCRIPT}/id/${id}`, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ data: payload })
-                })
-                .then(response => response.json())
-                .then(() => {
-                    fecharModal();
-                    buscarNotasDoBanco();
-                })
-                .catch(erro => alert("Erro ao editar no banco de dados: " + erro))
-                .finally(() => {
-                    btnSalvar.disabled = false;
-                    btnSalvar.innerText = "Salvar Nota";
-                });
-            } else {
-                // POST (Inserir nova linha)
-                fetch(SCRIPT, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ data: [payload] })
-                })
-                .then(response => response.json())
-                .then(() => {
-                    fecharModal();
-                    buscarNotasDoBanco();
-                })
-                .catch(erro => alert("Erro ao cadastrar no banco de dados: " + erro))
-                .finally(() => {
-                    btnSalvar.disabled = false;
-                    btnSalvar.innerText = "Salvar Nota";
-                });
-            }
+            const method = id ? 'PATCH' : 'POST';
+            const url = id ? `${SCRIPT}/id/${id}` : SCRIPT;
+
+            fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data: id ? payload : [payload] }) })
+                .then(() => { fecharModal(); buscarNotasDoBanco(); });
         }
 
-        // DELETAR NOTA DA PLANILHA
         function excluirNota(id) {
-            if(confirm("Deseja remover permanentemente esta nota do Banco de Dados Sincronizado?")) {
-                const corpo = document.getElementById('tabela-corpo');
-                corpo.innerHTML = `<tr><td colspan="12" class="text-center py-6 text-amber-600 font-medium">Removendo nota do banco...</td></tr>`;
-
-                fetch(`${SCRIPT}/id/${id}`, {
-                    method: 'DELETE'
-                })
-                .then(response => response.json())
-                .then(() => {
-                    buscarNotasDoBanco();
-                })
-                .catch(erro => {
-                    alert("Erro ao excluir do banco de dados: " + erro);
-                    buscarNotasDoBanco();
-                });
+            if(confirm("Excluir nota?")) {
+                fetch(`${SCRIPT}/id/${id}`, { method: 'DELETE' }).then(() => buscarNotasDoBanco());
             }
         }
 
         function limparFiltros(e) {
             e.stopPropagation();
-            document.getElementById('f-status').value = "";
-            document.getElementById('f-data').value = "";
-            document.getElementById('f-fornecedor').value = "";
-            document.getElementById('f-nf').value = "";
-            document.getElementById('f-valor').value = "";
+            document.querySelectorAll('select, input').forEach(el => el.value = "");
             renderizarTabela();
         }
 
@@ -389,68 +306,50 @@
             const fNf = document.getElementById('f-nf').value.toLowerCase();
             const fValor = document.getElementById('f-valor').value;
 
-            return notas.filter(nota => {
-                return (!fStatus || nota.status === fStatus) &&
-                       (!fData || nota.data.toLowerCase().includes(fData)) &&
-                       (!fFornecedor || nota.fornecedor.toLowerCase().includes(fFornecedor)) &&
-                       (!fNf || nota.nf.toLowerCase().includes(fNf)) &&
-                       (!fValor || nota.valor <= parseFloat(fValor));
-            });
+            return notas.filter(nota => 
+                (!fStatus || nota.status === fStatus) &&
+                (!fData || nota.data.toLowerCase().includes(fData)) &&
+                (!fFornecedor || nota.fornecedor.toLowerCase().includes(fFornecedor)) &&
+                (!fNf || nota.nf.toLowerCase().includes(fNf)) &&
+                (!fValor || nota.valor <= parseFloat(fValor))
+            );
         }
 
         function renderizarTabela() {
             const corpo = document.getElementById('tabela-corpo');
             corpo.innerHTML = "";
-            
-            // Obtém as notas filtradas
             let filtrados = obterFiltrados();
+            let totalValor = 0, naoAcatadas = 0, acatadas = 0;
 
-            let totalValor = 0;
-            let naoAcatadas = 0;
-            let acatadas = 0;
-
-            // Calcula métricas antes de inverter a ordem para exibição
-            filtrados.forEach(nota => {
-                totalValor += nota.valor;
-                if (nota.status === "NÃO ACATADA") naoAcatadas++;
-                if (nota.status === "ACATADA") acatadas++;
+            filtrados.forEach(n => {
+                totalValor += n.valor;
+                n.status === "ACATADA" ? acatadas++ : naoAcatadas++;
             });
 
-            if (filtrados.length === 0) {
-                corpo.innerHTML = `<tr><td colspan="12" class="text-center py-6 text-gray-400">Nenhum registro encontrado.</td></tr>`;
-            }
-
-            // AQUI ESTÁ A ALTERAÇÃO: Inverte a ordem do array filtrado para renderizar as mais novas por primeiro
-            const filtradosInvertidos = [...filtrados].reverse();
-
-            filtradosInvertidos.forEach(nota => {
+            [...filtrados].reverse().forEach(nota => {
                 const tr = document.createElement('tr');
-                const statusClass = nota.status === "ACATADA" ? "bg-green-50 text-green-700 border-green-200" : "bg-[#ffebeb] text-[#ca3e3e] border-[#ffd1d1]";
-                
                 tr.innerHTML = `
                     <td class="py-3 px-4">${nota.data}</td>
                     <td class="py-3 px-4 font-medium">${nota.fornecedor}</td>
                     <td class="py-3 px-4">${nota.nf}</td>
-                    <td class="py-3 px-4 font-bold">R$ ${nota.valor.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td class="py-3 px-4 font-bold">R$ ${nota.valor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</td>
                     <td class="py-3 px-4">${nota.chegada}</td>
                     <td class="py-3 px-4">${nota.saida}</td>
                     <td class="py-3 px-4">${nota.temp}</td>
                     <td class="py-3 px-4">${nota.conferente}</td>
                     <td class="py-3 px-4">${nota.prevencao}</td>
-                    <td class="py-3 px-4"><span class="${statusClass} text-[10px] font-bold px-1.5 py-0.5 rounded border tracking-wide">${nota.status}</span></td>
+                    <td class="py-3 px-4"><span class="${nota.status === "ACATADA" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"} text-[10px] font-bold px-1.5 py-0.5 rounded border">${nota.status}</span></td>
                     <td class="py-3 px-4">${nota.observacao}</td>
-                    <td class="py-3 px-4">
-                        <div class="flex gap-3">
-                            <button onclick="abrirModal('${nota.id}')" class="text-amber-500 text-base" title="Editar">✏️</button>
-                            <button onclick="excluirNota('${nota.id}')" class="text-gray-400 hover:text-red-500 text-base" title="Excluir">🗑️</button>
-                        </div>
+                    <td class="py-3 px-4 flex gap-3">
+                        <button onclick="abrirModal('${nota.id}')" class="text-amber-500">✏️</button>
+                        <button onclick="excluirNota('${nota.id}')" class="text-red-400">🗑️</button>
                     </td>
                 `;
                 corpo.appendChild(tr);
             });
 
             document.getElementById('card-total').innerText = filtrados.length;
-            document.getElementById('card-valor').innerText = `R$ ${totalValor.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('card-valor').innerText = `R$ ${totalValor.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
             document.getElementById('card-nao-acatadas').innerText = naoAcatadas;
             document.getElementById('card-acatadas').innerText = acatadas;
             document.getElementById('contador-notas').innerText = `${filtrados.length} notas encontradas`;
@@ -458,63 +357,9 @@
 
         function gerarRelatorioProfissional() {
             let dados = obterFiltrados();
-            if(dados.length === 0) {
-                alert("Nenhuma nota filtrada encontrada para gerar relatório.");
-                return;
-            }
-
-            let vTotal = 0, nAcat = 0, acat = 0;
-            let lines = "";
-
-            dados.forEach(n => {
-                vTotal += n.valor;
-                if(n.status === "ACATADA") acat++; else nAcat++;
-                let badge = n.status === "ACATADA" ? "background:#f0fdf4;color:#15803d;border-color:#bbf7d0;" : "background:#ffebeb;color:#ca3e3e;border-color:#ffd1d1;";
-
-                lines += "<tr>" +
-                    "<td style='padding:12px;border-bottom:1px solid #eee;'>" + n.data + "</td>" +
-                    "<td style='padding:12px;border-bottom:1px solid #eee;font-weight:500;'>" + n.fornecedor + "</td>" +
-                    "<td style='padding:12px;border-bottom:1px solid #eee;'>" + n.nf + "</td>" +
-                    "<td style='padding:12px;border-bottom:1px solid #eee;font-weight:bold;'>R$ " + n.valor.toLocaleString('pt-BR',{minimumFractionDigits:2}) + "</td>" +
-                    "<td style='padding:12px;border-bottom:1px solid #eee;'>" + n.chegada + "</td>" +
-                    "<td style='padding:12px;border-bottom:1px solid #eee;'>" + n.saida + "</td>" +
-                    "<td style='padding:12px;border-bottom:1px solid #eee;'>" + n.temp + "</td>" +
-                    "<td style='padding:12px;border-bottom:1px solid #eee;'>" + n.conferente + "</td>" +
-                    "<td style='padding:12px;border-bottom:1px solid #eee;'>" + n.prevencao + "</td>" +
-                    "<td style='padding:12px;border-bottom:1px solid #eee;'><span style='" + badge + "font-size:10px;font-weight:bold;padding:2px 6px;border-radius:4px;border:1px solid;'>" + n.status + "</span></td>" +
-                    "<td style='padding:12px;border-bottom:1px solid #eee;'>" + n.observacao + "</td>" +
-                "</tr>";
-            });
-
-            let docHtml = "<!DOCTYPE html><html lang='pt-BR'><head><meta charset='UTF-8'><title>Relatório Gerencial</title>" +
-                "<script src='https://cdn.tailwindcss.com'></" + "script>" +
-                "<link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap' rel='stylesheet'>" +
-                "<style>body{font-family:'Inter',sans-serif;background:#ffffff;} .box{border:1px solid #e1e1e1;border-radius:8px;} @media print{.no-print{display:none;}}</style></head>" +
-                "<body class='p-8'><div class='max-w-[1500px] mx-auto space-y-6'>" +
-                    "<div class='no-print flex justify-between items-center bg-slate-800 text-white p-4 rounded-lg shadow mb-6'>" +
-                        "<span class='text-xs font-medium'>📋 Visualização Exclusiva do Relatório</span>" +
-                        "<button onclick='window.print()' class='bg-[#1e5bb9] text-white text-xs font-semibold px-4 py-2 rounded shadow hover:bg-[#164996]'>🖨️ Imprimir / Salvar PDF</button>" +
-                    "</div>" +
-                    "<div class='flex justify-between items-start border-b pb-4'>" +
-                        "<div><h1 class='text-2xl font-bold text-[#111111]'>Relatório de Notas Fiscais</h1>" +
-                        "<p class='text-xs text-[#777777] mt-1'>Gerenciamento de recebimento — Emitido em: " + new Date().toLocaleDateString('pt-BR') + "</p></div>" +
-                        "<div class='text-xs text-gray-400 font-medium'>Documento Interno</div>" +
-                    "</div>" +
-                    "<div class='grid grid-cols-4 gap-4'>" +
-                        "<div class='box p-4'><p class='text-[10px] font-bold text-[#888888] uppercase'>Total de Notas</p><p class='text-2xl font-bold text-[#1e5bb9] mt-1'>" + dados.length + "</p></div>" +
-                        "<div class='box p-4'><p class='text-[10px] font-bold text-[#888888] uppercase'>Valor Total</p><p class='text-2xl font-bold text-[#111111] mt-1'>R$ " + vTotal.toLocaleString('pt-BR',{minimumFractionDigits:2}) + "</p></div>" +
-                        "<div class='box p-4'><p class='text-[10px] font-bold text-[#888888] uppercase'>Não Acatadas</p><p class='text-2xl font-bold text-[#ca3e3e] mt-1'>" + nAcat + "</p></div>" +
-                        "<div class='box p-4'><p class='text-[10px] font-bold text-[#888888] uppercase'>Acatadas</p><p class='text-2xl font-bold text-[#2e7d32] mt-1'>" + acat + "</p></div>" +
-                    "</div>" +
-                    "<div class='box overflow-hidden mt-4'><table class='w-full text-left border-collapse text-[13px]'>" +
-                        "<thead><tr class='border-b bg-[#fafafa] text-[#666666] font-semibold'>" +
-                            "<th style='padding:12px;'>Data</th><th style='padding:12px;'>Fornecedor</th><th style='padding:12px;'>NF</th><th style='padding:12px;'>Valor</th><th style='padding:12px;'>Chegada</th><th style='padding:12px;'>Saída</th><th style='padding:12px;'>Temp.</th><th style='padding:12px;'>Conferente</th><th style='padding:12px;'>Prevenção</th><th style='padding:12px;'>Status</th><th style='padding:12px;'>Observação</th>" +
-                        "</tr></thead><tbody>" + lines + "</tbody>" +
-                    "</table></div>" +
-                "</div></body></html>";
-
+            let lines = dados.map(n => `<tr><td style='padding:12px;'>${n.data}</td><td style='padding:12px;'>${n.fornecedor}</td><td style='padding:12px;'>${n.nf}</td><td style='padding:12px;'>R$ ${n.valor.toFixed(2)}</td><td style='padding:12px;'>${n.status}</td></tr>`).join('');
             let novaAba = window.open();
-            novaAba.document.write(docHtml);
+            novaAba.document.write(`<html><body><h1>Relatório</h1><table border='1'>${lines}</table><button onclick='window.print()'>Imprimir</button></body></html>`);
             novaAba.document.close();
         }
 
