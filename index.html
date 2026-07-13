@@ -203,12 +203,12 @@
 
     <!-- CONTROLADORES JAVASCRIPT INTEGRADO AO SHEETDB -->
     <script>
-        const SHEETDB_URL = 'https://sheetdb.io/api/v1/h5ssgqcelrexs';
+        const SCRIPT = 'https://script.google.com/macros/s/AKfycbzVqJ6ptOTzAJhDfucvI0NW4VhwpcrIi71QQRNzfwb40LRJPYXrfKnkJyul54V1RdJM/exec';
         let notas = [];
 
         // BUSCAR DADOS DA PLANILHA DO GOOGLE AO ABRIR O SITE
         function buscarNotasDoBanco() {
-            fetch(SHEETDB_URL)
+            fetch(SCRIPT)
                 .then(response => response.json())
                 .then(dados => {
                     notas = dados.map(item => {
@@ -317,7 +317,7 @@
 
             if (id) {
                 // PATCH (Editar) baseado na coluna chave id
-                fetch(`${SHEETDB_URL}/id/${id}`, {
+                fetch(`${SCRIPT}/id/${id}`, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ data: payload })
@@ -334,7 +334,7 @@
                 });
             } else {
                 // POST (Inserir nova linha)
-                fetch(SHEETDB_URL, {
+                fetch(SCRIPT, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ data: [payload] })
@@ -358,7 +358,7 @@
                 const corpo = document.getElementById('tabela-corpo');
                 corpo.innerHTML = `<tr><td colspan="12" class="text-center py-6 text-amber-600 font-medium">Removendo nota do banco...</td></tr>`;
 
-                fetch(`${SHEETDB_URL}/id/${id}`, {
+                fetch(`${SCRIPT}/id/${id}`, {
                     method: 'DELETE'
                 })
                 .then(response => response.json())
