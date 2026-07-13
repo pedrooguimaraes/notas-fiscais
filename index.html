@@ -262,30 +262,41 @@
 
         function fecharModal() { document.getElementById('modal-nf').classList.add('hidden'); }
 
-        function salvarNota(e) {
-            e.preventDefault();
-            const id = document.getElementById('edit-id').value;
-            const payload = {
-                "id": id || Date.now().toString(),
-                "Data": document.getElementById('m-data').value,
-                "Fornecedor": document.getElementById('m-fornecedor').value,
-                "NF": document.getElementById('m-nf').value,
-                "Valor": parseFloat(document.getElementById('m-valor').value),
-                "Chegada": document.getElementById('m-chegada').value,
-                "Saída": document.getElementById('m-saida').value,
-                "Temp": document.getElementById('m-temp').value,
-                "Conferente": document.getElementById('m-conferente').value,
-                "Prevenção": document.getElementById('m-prevencao').value,
-                "Status": document.getElementById('m-status').value,
-                "Observação": document.getElementById('m-observacao').value
-            };
+function salvarNota(e) {
+    e.preventDefault();
+    const id = document.getElementById('edit-id').value;
+    const payload = {
+        "id": id || Date.now().toString(),
+        "Data": document.getElementById('m-data').value,
+        "Fornecedor": document.getElementById('m-fornecedor').value,
+        "NF": document.getElementById('m-nf').value,
+        "Valor": parseFloat(document.getElementById('m-valor').value),
+        "Chegada": document.getElementById('m-chegada').value,
+        "Saída": document.getElementById('m-saida').value,
+        "Temp": document.getElementById('m-temp').value,
+        "Conferente": document.getElementById('m-conferente').value,
+        "Prevenção": document.getElementById('m-prevencao').value,
+        "Status": document.getElementById('m-status').value,
+        "Observação": document.getElementById('m-observacao').value
+    };
 
-            const method = id ? 'PATCH' : 'POST';
-            const url = id ? `${SCRIPT}/id/${id}` : SCRIPT;
+    // Simplificando: enviando apenas o payload diretamente
+    const method = id ? 'POST' : 'POST'; // Muitas vezes o GAS funciona melhor apenas com POST
+    const url = SCRIPT; 
 
-            fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data: id ? payload : [payload] }) })
-                .then(() => { fecharModal(); buscarNotasDoBanco(); });
-        }
+    fetch(url, { 
+        method: method, 
+        mode: 'no-cors', // Adicione isso se estiver recebendo erro de CORS
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify(payload) 
+    })
+    .then(() => { 
+        fecharModal(); 
+        // Pequena pausa para garantir que o Sheets processou
+        setTimeout(buscarNotasDoBanco, 1000); 
+    })
+    .catch(err => console.error("Erro ao salvar:", err));
+}
 
         function excluirNota(id) {
             if(confirm("Excluir nota?")) {
