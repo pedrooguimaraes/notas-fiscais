@@ -366,7 +366,6 @@
 
     <script>
 
-        const SHEETDB_URL = 'https://sheetdb.io/api/v1/h5ssgqcelrexs'; // Mantenha sua URL do SheetDB aqui
 
         let notasGlobais = [];
 
@@ -376,17 +375,40 @@
 
         function buscarNotasDoBanco() {
 
-fetch('https://script.google.com/macros/s/AKfycbw2F8bzDm_WWOXv3Bo-yNAPy2LMebW-RRYE8WhpZEI9_35LdofKDwHLFgD5YoA4buw7/exec')
-
-  .then(response => response.json())
-
-  .then(data => {
-
-      console.log(data); // Seus dados aparecerão aqui
-
-      // O resto da sua lógica de exibir na tela continua igual
-
-  });
+// 1. BUSCAR DADOS
+function buscarNotasDoBanco() {
+    // Utilize a URL que realmente retorna os seus dados
+    const URL_DADOS = 'https://script.google.com/macros/s/AKfycbw2F8bzDm_WWOXv3Bo-yNAPy2LMebW-RRYE8WhpZEI9_35LdofKDwHLFgD5YoA4buw7/exec';
+    
+    fetch(URL_DADOS)
+        .then(response => response.json())
+        .then(dados => {
+            // Agora 'dados' é o array que veio da sua planilha
+            console.log("Dados recebidos:", dados);
+            
+            // Mapeamento corrigido
+            notasGlobais = dados.map(item => ({
+                id: item.id || Date.now().toString(),
+                data: item.Data || '',
+                fornecedor: item.Fornecedor || '',
+                nf: item.NF || '',
+                valor: parseFloat(item.Valor) || 0,
+                chegada: item.Chegada || '-',
+                saida: item.Saída || '-',
+                temp: item.Temp || '-',
+                conferente: item.Conferente || '-',
+                prevencao: item.Prevenção || '-',
+                status: (item.Status || '').toUpperCase(),
+                observacao: item.Observação || '-'
+            }));
+            
+            aplicarFiltros(); // Renderiza após processar os dados
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Erro ao carregar os dados. Verifique o console.");
+        });
+}
 
                     // Mapeamento completo garantindo que todas as colunas sejam capturadas
 
@@ -740,8 +762,6 @@ fetch('https://script.google.com/macros/s/AKfycbw2F8bzDm_WWOXv3Bo-yNAPy2LMebW-RR
 
 
 
-            const url = id ? `${SHEETDB_URL}/id/${id}` : SHEETDB_URL;
-
             const metodo = id ? 'PATCH' : 'POST';
 
             const corpo = id ? { data: payload } : { data: [payload] };
@@ -788,7 +808,6 @@ fetch('https://script.google.com/macros/s/AKfycbw2F8bzDm_WWOXv3Bo-yNAPy2LMebW-RR
 
             if(confirm("Tem certeza que deseja excluir esta nota definitivamente?")) {
 
-                fetch(`${SHEETDB_URL}/id/${id}`, { method: 'DELETE' })
 
                     .then(() => buscarNotasDoBanco())
 
