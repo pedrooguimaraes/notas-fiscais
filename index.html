@@ -133,9 +133,13 @@
             
             notas.forEach((n, i) => {
                 if ((fStatus === "Todos" || n.status === fStatus) && n.fornecedor.toLowerCase().includes(fForn) && n.nf.includes(fNF)) {
+                    // Formatação da data para DD-MM-AAAA
+                    const d = n.data.split('-');
+                    const dataFormatada = d.length === 3 ? `${d[2]}-${d[1]}-${d[0]}` : n.data;
+                    
                     const statusClass = n.status === 'Acatada' ? 'status-acatada' : 'status-nao-acatada';
                     tbody.innerHTML += `<tr>
-                        <td>${n.data}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>R$ ${n.valor.toFixed(2)}</td>
+                        <td>${dataFormatada}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>R$ ${n.valor.toFixed(2)}</td>
                         <td>${n.chegada}</td><td>${n.saida}</td><td>${n.temp}</td><td>${n.prev}</td>
                         <td class="${statusClass}">${n.status}</td>
                         <td><button onclick="abrirModal(${i})">✏️</button> <button onclick="excluir(${i})">🗑️</button></td>
