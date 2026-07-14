@@ -13,11 +13,15 @@
         .filter-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
         table { width: 100%; border-collapse: collapse; background: white; border: 1px solid #e0e0e0; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; font-size: 13px; }
+        
+        /* Cores Status */
+        .status-acatada { color: green; font-weight: bold; }
+        .status-nao-acatada { color: red; font-weight: bold; }
+        
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
         .modal-content { background: white; padding: 25px; border-radius: 8px; width: 600px; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .full-width { grid-column: span 2; }
-        input, select, textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; margin-top: 5px; }
+        input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; margin-top: 5px; }
         .btn { padding: 10px 20px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; }
         .btn-add { background-color: #215598; color: white; }
     </style>
@@ -41,25 +45,20 @@
 
         <div class="filters">
             <div class="filter-grid">
-                <select id="fStatus" onchange="renderizar()">
-                    <option value="Todos">Status: Todos</option>
-                    <option value="Acatada">Acatada</option>
-                    <option value="Não Acatada">Não Acatada</option>
-                </select>
-                <input type="text" id="fFornecedor" placeholder="Fornecedor" onkeyup="renderizar()">
-                <input type="text" id="fNF" placeholder="Número NF" onkeyup="renderizar()">
+                <select id="fStatus" onchange="renderizar()"><option value="Todos">Status: Todos</option><option value="Acatada">Acatada</option><option value="Não Acatada">Não Acatada</option></select>
+                <input type="text" id="fFornecedor" placeholder="Buscar Fornecedor" onkeyup="renderizar()">
+                <input type="text" id="fNF" placeholder="Buscar NF" onkeyup="renderizar()">
             </div>
         </div>
 
         <table>
             <thead>
-                <tr><th>Data</th><th>Fornecedor</th><th>NF</th><th>Valor</th><th>Status</th><th>Ações</th></tr>
+                <tr><th>Data</th><th>Fornecedor</th><th>NF</th><th>Valor</th><th>Chegada</th><th>Saída</th><th>Temp.</th><th>Prevenção</th><th>Status</th><th>Ações</th></tr>
             </thead>
             <tbody id="corpoTabela"></tbody>
         </table>
     </div>
 
-    <!-- Modal -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <h3 id="tituloModal">Nova Nota Fiscal</h3>
@@ -69,6 +68,10 @@
                 <div><label>Fornecedor</label><input type="text" id="fornecedor"></div>
                 <div><label>NF</label><input type="text" id="nf"></div>
                 <div><label>Valor (R$)</label><input type="number" id="valor" step="0.01"></div>
+                <div><label>Chegada</label><input type="time" id="chegada"></div>
+                <div><label>Saída</label><input type="time" id="saida"></div>
+                <div><label>Temp.</label><input type="text" id="temp"></div>
+                <div><label>Prevenção</label><input type="text" id="prev"></div>
                 <div><label>Status</label><select id="status"><option>Não Acatada</option><option>Acatada</option></select></div>
             </div>
             <div style="margin-top: 20px; text-align: right;">
@@ -89,16 +92,16 @@
                 document.getElementById('fornecedor').value = n.fornecedor;
                 document.getElementById('nf').value = n.nf;
                 document.getElementById('valor').value = n.valor;
+                document.getElementById('chegada').value = n.chegada;
+                document.getElementById('saida').value = n.saida;
+                document.getElementById('temp').value = n.temp;
+                document.getElementById('prev').value = n.prev;
                 document.getElementById('status').value = n.status;
                 document.getElementById('indiceEdicao').value = index;
             }
         }
 
-        function fecharModal() {
-            document.getElementById('modal').style.display = 'none';
-            document.getElementById('indiceEdicao').value = "";
-            document.getElementById('tituloModal').innerText = "Nova Nota Fiscal";
-        }
+        function fecharModal() { document.getElementById('modal').style.display = 'none'; document.getElementById('indiceEdicao').value = ""; }
 
         function salvarNota() {
             const nota = {
@@ -106,6 +109,10 @@
                 fornecedor: document.getElementById('fornecedor').value,
                 nf: document.getElementById('nf').value,
                 valor: parseFloat(document.getElementById('valor').value) || 0,
+                chegada: document.getElementById('chegada').value,
+                saida: document.getElementById('saida').value,
+                temp: document.getElementById('temp').value,
+                prev: document.getElementById('prev').value,
                 status: document.getElementById('status').value
             };
             const idx = document.getElementById('indiceEdicao').value;
@@ -114,20 +121,25 @@
             fecharModal(); renderizar();
         }
 
-        function excluir(idx) { if(confirm("Excluir esta nota?")) { notas.splice(idx, 1); localStorage.setItem('notasApp', JSON.stringify(notas)); renderizar(); } }
+        function excluir(idx) { if(confirm("Excluir nota?")) { notas.splice(idx, 1); localStorage.setItem('notasApp', JSON.stringify(notas)); renderizar(); } }
 
         function renderizar() {
             const fStatus = document.getElementById('fStatus').value;
             const fForn = document.getElementById('fFornecedor').value.toLowerCase();
+            const fNF = document.getElementById('fNF').value;
             const tbody = document.getElementById('corpoTabela');
             tbody.innerHTML = '';
-            
             let totalV = 0, cat = 0, naoCat = 0;
             
             notas.forEach((n, i) => {
-                if ((fStatus === "Todos" || n.status === fStatus) && n.fornecedor.toLowerCase().includes(fForn)) {
-                    tbody.innerHTML += `<tr><td>${n.data}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>R$ ${n.valor.toFixed(2)}</td><td>${n.status}</td>
-                    <td><button onclick="abrirModal(${i})">✏️</button> <button onclick="excluir(${i})">🗑️</button></td></tr>`;
+                if ((fStatus === "Todos" || n.status === fStatus) && n.fornecedor.toLowerCase().includes(fForn) && n.nf.includes(fNF)) {
+                    const statusClass = n.status === 'Acatada' ? 'status-acatada' : 'status-nao-acatada';
+                    tbody.innerHTML += `<tr>
+                        <td>${n.data}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>R$ ${n.valor.toFixed(2)}</td>
+                        <td>${n.chegada}</td><td>${n.saida}</td><td>${n.temp}</td><td>${n.prev}</td>
+                        <td class="${statusClass}">${n.status}</td>
+                        <td><button onclick="abrirModal(${i})">✏️</button> <button onclick="excluir(${i})">🗑️</button></td>
+                    </tr>`;
                     totalV += n.valor;
                     n.status === 'Acatada' ? cat++ : naoCat++;
                 }
