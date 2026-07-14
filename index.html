@@ -200,8 +200,64 @@
         </div>
     </div>
 
-    <script>
-        const SCRIPT = 'https://script.google.com/macros/s/AKfycbzVqJ6ptOTzAJhDfucvI0NW4VhwpcrIi71QQRNzfwb40LRJPYXrfKnkJyul54V1RdJM/exec';
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    // Coloque aqui sua URL e sua Chave (a "Publishable key")
+    const supabaseUrl = 'https://dbpbszetxuexlqqrtjbl.supabase.co';
+    const supabaseKey = 'COLE_AQUI_SUA_PUBLISHABLE_KEY'; 
+
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    let notas = [];
+
+    // Esta função agora busca direto no Supabase
+    async function buscarNotasDoBanco() {
+        const { data, error } = await supabase.from('notas').select('*');
+        if (error) {
+            console.error("Erro ao buscar:", error);
+            return;
+        }
+        notas = data || [];
+        renderizarTabela();
+    }
+
+    // Esta função agora salva direto no Supabase
+    async function salvarNota(e) {
+        e.preventDefault();
+        const id = document.getElementById('edit-id').value;
+        const payload = {
+            data: document.getElementById('m-data').value,
+            fornecedor: document.getElementById('m-fornecedor').value,
+            nf: document.getElementById('m-nf').value,
+            valor: parseFloat(document.getElementById('m-valor').value),
+            chegada: document.getElementById('m-chegada').value,
+            saida: document.getElementById('m-saida').value,
+            temp: document.getElementById('m-temp').value,
+            conferente: document.getElementById('m-conferente').value,
+            prevencao: document.getElementById('m-prevencao').value,
+            status: document.getElementById('m-status').value,
+            observacao: document.getElementById('m-observacao').value
+        };
+
+        if (id) {
+            await supabase.from('notas').update(payload).eq('id', id);
+        } else {
+            await supabase.from('notas').insert([payload]);
+        }
+        fecharModal();
+        buscarNotasDoBanco();
+    }
+
+    // Esta função agora exclui direto no Supabase
+    async function excluirNota(id) {
+        if(confirm("Excluir nota?")) {
+            await supabase.from('notas').delete().eq('id', id);
+            buscarNotasDoBanco();
+        }
+    }
+
+    // Carrega ao iniciar
+    window.onload = buscarNotasDoBanco;
+</script>      
         let notas = [];
 
         function buscarNotasDoBanco() {
