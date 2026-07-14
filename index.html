@@ -109,29 +109,12 @@
             </div>
 
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="border-y border-[#e5e5e5] bg-[#fafafa]">
-                            <th class="py-2.5 px-4 th-text">Data</th>
-                            <th class="py-2.5 px-4 th-text">Fornecedor</th>
-                            <th class="py-2.5 px-4 th-text">NF</th>
-                            <th class="py-3 px-4 th-text">Valor</th>
-                            <th class="py-2.5 px-4 th-text">Chegada</th>
-                            <th class="py-2.5 px-4 th-text">Saída</th>
-                            <th class="py-2.5 px-4 th-text">Temp.</th>
-                            <th class="py-2.5 px-4 th-text">Conferente</th>
-                            <th class="py-2.5 px-4 th-text">Prevenção</th>
-                            <th class="py-2.5 px-4 th-text">Status</th>
-                            <th class="py-2.5 px-4 th-text">Observação</th>
-                            <th class="py-2.5 px-4 text-xs font-bold text-[#666666]">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabela-corpo" class="text-[13px] text-[#222222] divide-y divide-[#eeeeee]">
-                        <tr>
-                            <td colspan="12" class="text-center py-6 text-gray-500">Carregando notas fiscais...</td>
-                        </tr>
-                    </tbody>
-                </table>
+<table>
+  <thead>...</thead>
+  <tbody id="tabela-corpo">
+    <!-- As notas aparecerão aqui automaticamente -->
+  </tbody>
+</table>
             </div>
         </div>
     </div>
@@ -202,22 +185,39 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const supabaseUrl = 'https://dbpbszetxuexlqqrtjbl.supabase.co';
-  const supabaseKey = 'COLE_AQUI_SUA_PUBLISHABLE_KEY'; // Substitua pela sua chave sb_publishable...
-  const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    const supabaseUrl = 'https://dbpbszetxuexlqqrtjbl.supabase.co';
+    const supabaseKey = 'COLE_AQUI_SUA_PUBLISHABLE_KEY'; // <-- NÃO ESQUEÇA DE TROCAR!
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-  async function buscarNotasDoBanco() {
-    const { data, error } = await supabase.from('notas').select('*');
-    if (error) {
-      console.error("Erro ao buscar no Supabase:", error);
-      return;
+    let notas = [];
+
+    async function buscarNotasDoBanco() {
+        // Busca os dados do Supabase
+        const { data, error } = await supabase.from('notas').select('*');
+        if (error) {
+            console.error("Erro:", error);
+            return;
+        }
+        notas = data;
+        renderizarTabela();
     }
-    notas = data; // O Supabase já retorna os dados com os nomes corretos
-    renderizarTabela(); // Esta função precisa existir no seu restante do código
-  }
 
-  // Chame esta função ao carregar a página
-  window.onload = buscarNotasDoBanco;
+    // Função para mostrar as notas na tela
+    function renderizarTabela() {
+        const corpo = document.getElementById('tabela-corpo'); // Certifique-se de que sua tabela tem este ID
+        corpo.innerHTML = ""; 
+        notas.forEach(n => {
+            corpo.innerHTML += `<tr>
+                <td>${n.data}</td>
+                <td>${n.fornecedor}</td>
+                <td>${n.nf}</td>
+                <td>${n.valor}</td>
+                <td>${n.status}</td>
+            </tr>`;
+        });
+    }
+
+    window.onload = buscarNotasDoBanco;
 </script>
 
     // Esta função agora salva direto no Supabase
