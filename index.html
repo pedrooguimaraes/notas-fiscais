@@ -202,23 +202,23 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-    // Coloque aqui sua URL e sua Chave (a "Publishable key")
-    const supabaseUrl = 'https://dbpbszetxuexlqqrtjbl.supabase.co';
-    const supabaseKey = 'sb_publishable_07HcshjE-j_iLmATc9x__g_Pv_WhetR'; 
+  const supabaseUrl = 'https://dbpbszetxuexlqqrtjbl.supabase.co';
+  const supabaseKey = 'COLE_AQUI_SUA_PUBLISHABLE_KEY'; // Substitua pela sua chave sb_publishable...
+  const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-    let notas = [];
-
-    // Esta função agora busca direto no Supabase
-    async function buscarNotasDoBanco() {
-        const { data, error } = await supabase.from('notas').select('*');
-        if (error) {
-            console.error("Erro ao buscar:", error);
-            return;
-        }
-        notas = data || [];
-        renderizarTabela();
+  async function buscarNotasDoBanco() {
+    const { data, error } = await supabase.from('notas').select('*');
+    if (error) {
+      console.error("Erro ao buscar no Supabase:", error);
+      return;
     }
+    notas = data; // O Supabase já retorna os dados com os nomes corretos
+    renderizarTabela(); // Esta função precisa existir no seu restante do código
+  }
+
+  // Chame esta função ao carregar a página
+  window.onload = buscarNotasDoBanco;
+</script>
 
     // Esta função agora salva direto no Supabase
     async function salvarNota(e) {
