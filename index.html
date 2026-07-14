@@ -13,17 +13,13 @@
         .filter-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
         table { width: 100%; border-collapse: collapse; background: white; border: 1px solid #e0e0e0; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; font-size: 13px; }
-        
-        /* Modal Styles */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 25px; border-radius: 8px; width: 600px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .modal-content { background: white; padding: 25px; border-radius: 8px; width: 600px; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .full-width { grid-column: span 2; }
         input, select, textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; margin-top: 5px; }
-        
         .btn { padding: 10px 20px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; }
         .btn-add { background-color: #215598; color: white; }
-        .btn-cancel { background-color: #eee; }
     </style>
 </head>
 <body>
@@ -32,60 +28,116 @@
             <div><h1>📋 Notas Fiscais</h1><p>Gerenciamento de recebimento</p></div>
             <div>
                 <button class="btn" onclick="window.print()">📄 Gerar Relatório / PDF</button>
-                <button class="btn btn-add" onclick="document.getElementById('modal').style.display='flex'">+ Nova Nota Fiscal</button>
+                <button class="btn btn-add" onclick="abrirModal()">+ Nova Nota Fiscal</button>
             </div>
         </div>
 
         <div class="stats-grid">
-            <div class="card"><small>TOTAL DE NOTAS</small><h2>52</h2></div>
-            <div class="card"><small>VALOR TOTAL</small><h2>R$ 111.508,37</h2></div>
-            <div class="card"><small>NÃO ACATADAS</small><h2>52</h2></div>
-            <div class="card"><small>ACATADAS</small><h2>0</h2></div>
+            <div class="card"><small>TOTAL DE NOTAS</small><h2 id="totalNotas">0</h2></div>
+            <div class="card"><small>VALOR TOTAL</small><h2 id="valorTotal">R$ 0,00</h2></div>
+            <div class="card"><small>NÃO ACATADAS</small><h2 id="naoAcatadas">0</h2></div>
+            <div class="card"><small>ACATADAS</small><h2 id="acatadas">0</h2></div>
         </div>
 
         <div class="filters">
-            <strong>▼ Filtros de Busca</strong>
-            <div class="filter-grid" style="margin-top:10px;">
-                <select><option>Status Nota: Todos</option></select>
-                <input type="text" placeholder="Data">
-                <input type="text" placeholder="Fornecedor">
-                <input type="text" placeholder="Número NF">
-                <input type="text" placeholder="Valor Máximo">
+            <div class="filter-grid">
+                <select id="fStatus" onchange="renderizar()">
+                    <option value="Todos">Status: Todos</option>
+                    <option value="Acatada">Acatada</option>
+                    <option value="Não Acatada">Não Acatada</option>
+                </select>
+                <input type="text" id="fFornecedor" placeholder="Fornecedor" onkeyup="renderizar()">
+                <input type="text" id="fNF" placeholder="Número NF" onkeyup="renderizar()">
             </div>
         </div>
 
         <table>
             <thead>
-                <tr><th>Data</th><th>Fornecedor</th><th>NF</th><th>Valor</th><th>Chegada</th><th>Saída</th><th>Temp.</th><th>Conferente</th><th>Prevenção</th><th>Status</th><th>Obs</th><th>Ações</th></tr>
+                <tr><th>Data</th><th>Fornecedor</th><th>NF</th><th>Valor</th><th>Status</th><th>Ações</th></tr>
             </thead>
-            <tbody>
-                <tr><td>2026-07-13</td><td>CD FLV / PANIF.</td><td>252709</td><td>R$ 0,00</td><td>20:30</td><td>20:30</td><td>-</td><td>-</td><td>Marcos</td><td>NÃO ACATADA</td><td>-</td><td>✏️ 🗑️</td></tr>
-            </tbody>
+            <tbody id="corpoTabela"></tbody>
         </table>
     </div>
 
-    <!-- Modal de Inclusão -->
+    <!-- Modal -->
     <div id="modal" class="modal">
         <div class="modal-content">
-            <h3>Nova Nota Fiscal</h3>
+            <h3 id="tituloModal">Nova Nota Fiscal</h3>
+            <input type="hidden" id="indiceEdicao">
             <div class="form-grid">
-                <div><label>Data</label><input type="date"></div>
-                <div><label>Fornecedor</label><input type="text"></div>
-                <div><label>Número da NF</label><input type="text"></div>
-                <div><label>Valor (R$)</label><input type="text"></div>
-                <div><label>Horário Chegada</label><input type="time"></div>
-                <div><label>Horário Saída</label><input type="time"></div>
-                <div><label>Temp.</label><input type="text"></div>
-                <div><label>Conferente</label><input type="text"></div>
-                <div><label>Prevenção</label><input type="text"></div>
-                <div><label>Status</label><select><option>Não Acatada</option><option>Acatada</option></select></div>
-                <div class="full-width"><label>Observação</label><textarea></textarea></div>
+                <div><label>Data</label><input type="date" id="data"></div>
+                <div><label>Fornecedor</label><input type="text" id="fornecedor"></div>
+                <div><label>NF</label><input type="text" id="nf"></div>
+                <div><label>Valor (R$)</label><input type="number" id="valor" step="0.01"></div>
+                <div><label>Status</label><select id="status"><option>Não Acatada</option><option>Acatada</option></select></div>
             </div>
             <div style="margin-top: 20px; text-align: right;">
-                <button class="btn btn-cancel" onclick="document.getElementById('modal').style.display='none'">Cancelar</button>
-                <button class="btn btn-add">Salvar Nota</button>
+                <button class="btn" onclick="fecharModal()">Cancelar</button>
+                <button class="btn btn-add" onclick="salvarNota()">Salvar</button>
             </div>
         </div>
     </div>
+
+    <script>
+        let notas = JSON.parse(localStorage.getItem('notasApp')) || [];
+
+        function abrirModal(index = null) {
+            document.getElementById('modal').style.display = 'flex';
+            if (index !== null) {
+                const n = notas[index];
+                document.getElementById('data').value = n.data;
+                document.getElementById('fornecedor').value = n.fornecedor;
+                document.getElementById('nf').value = n.nf;
+                document.getElementById('valor').value = n.valor;
+                document.getElementById('status').value = n.status;
+                document.getElementById('indiceEdicao').value = index;
+            }
+        }
+
+        function fecharModal() {
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('indiceEdicao').value = "";
+            document.getElementById('tituloModal').innerText = "Nova Nota Fiscal";
+        }
+
+        function salvarNota() {
+            const nota = {
+                data: document.getElementById('data').value,
+                fornecedor: document.getElementById('fornecedor').value,
+                nf: document.getElementById('nf').value,
+                valor: parseFloat(document.getElementById('valor').value) || 0,
+                status: document.getElementById('status').value
+            };
+            const idx = document.getElementById('indiceEdicao').value;
+            if (idx === "") notas.push(nota); else notas[idx] = nota;
+            localStorage.setItem('notasApp', JSON.stringify(notas));
+            fecharModal(); renderizar();
+        }
+
+        function excluir(idx) { if(confirm("Excluir esta nota?")) { notas.splice(idx, 1); localStorage.setItem('notasApp', JSON.stringify(notas)); renderizar(); } }
+
+        function renderizar() {
+            const fStatus = document.getElementById('fStatus').value;
+            const fForn = document.getElementById('fFornecedor').value.toLowerCase();
+            const tbody = document.getElementById('corpoTabela');
+            tbody.innerHTML = '';
+            
+            let totalV = 0, cat = 0, naoCat = 0;
+            
+            notas.forEach((n, i) => {
+                if ((fStatus === "Todos" || n.status === fStatus) && n.fornecedor.toLowerCase().includes(fForn)) {
+                    tbody.innerHTML += `<tr><td>${n.data}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>R$ ${n.valor.toFixed(2)}</td><td>${n.status}</td>
+                    <td><button onclick="abrirModal(${i})">✏️</button> <button onclick="excluir(${i})">🗑️</button></td></tr>`;
+                    totalV += n.valor;
+                    n.status === 'Acatada' ? cat++ : naoCat++;
+                }
+            });
+            document.getElementById('totalNotas').innerText = notas.length;
+            document.getElementById('valorTotal').innerText = `R$ ${totalV.toFixed(2)}`;
+            document.getElementById('acatadas').innerText = cat;
+            document.getElementById('naoAcatadas').innerText = naoCat;
+        }
+        renderizar();
+    </script>
 </body>
 </html>
