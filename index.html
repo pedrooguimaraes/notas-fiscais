@@ -265,8 +265,6 @@
 function salvarNota(e) {
     e.preventDefault();
 
-    console.log("Entrou em salvarNota");
-
     const id = document.getElementById('edit-id').value;
 
     const payload = {
@@ -276,32 +274,31 @@ function salvarNota(e) {
         NF: document.getElementById('m-nf').value,
         Valor: parseFloat(document.getElementById('m-valor').value),
         Chegada: document.getElementById('m-chegada').value,
-        Saída: document.getElementById('m-saida').value,
+        "Saída": document.getElementById('m-saida').value,
         Temp: document.getElementById('m-temp').value,
         Conferente: document.getElementById('m-conferente').value,
-        Prevenção: document.getElementById('m-prevencao').value,
+        "Prevenção": document.getElementById('m-prevencao').value,
         Status: document.getElementById('m-status').value,
-        Observação: document.getElementById('m-observacao').value
+        "Observação": document.getElementById('m-observacao').value
     };
 
-    console.log(payload);
-
-    fetch(SCRIPT,{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json"
+    fetch(SCRIPT, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
         },
-        body:JSON.stringify(payload)
+        body: JSON.stringify(payload)
     })
-    .then(r=>{
-        console.log(r);
-        return r.text();
+    .then(response => response.json())
+    .then(resultado => {
+        console.log(resultado);
+
+        fecharModal();
+
+        buscarNotasDoBanco();
     })
-    .then(txt=>{
-        console.log(txt);
-    })
-    .catch(err=>{
-        console.error(err);
+    .catch(err => {
+        console.error("Erro ao salvar:", err);
     });
 }
         function excluirNota(id) {
