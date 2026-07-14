@@ -42,7 +42,11 @@
 
         <div class="filters">
             <div class="filter-grid">
-                <select id="fStatus" onchange="renderizar()"><option value="Todos">Status: Todos</option><option value="Acatada">Acatada</option><option value="Não Acatada">Não Acatada</option></select>
+                <select id="fStatus" onchange="renderizar()">
+                    <option value="Todos">Status: Todos</option>
+                    <option value="ACATADA">ACATADA</option>
+                    <option value="NÃO ACATADA">NÃO ACATADA</option>
+                </select>
                 <input type="text" id="fFornecedor" placeholder="Buscar Fornecedor" onkeyup="renderizar()">
                 <input type="text" id="fNF" placeholder="Buscar NF" onkeyup="renderizar()">
             </div>
@@ -70,7 +74,7 @@
                 <div><label>Temp.</label><input type="text" id="temp"></div>
                 <div><label>Conferente</label><input type="text" id="conferente"></div>
                 <div><label>Prevenção</label><input type="text" id="prev"></div>
-                <div><label>Status</label><select id="status"><option>Não Acatada</option><option>Acatada</option></select></div>
+                <div><label>Status</label><select id="status"><option>NÃO ACATADA</option><option>ACATADA</option></select></div>
             </div>
             <div style="margin-top: 20px; text-align: right;">
                 <button class="btn" onclick="fecharModal()">Cancelar</button>
@@ -80,7 +84,7 @@
     </div>
 
     <script>
-        const usuarioLogado = 'administrador'; // Altere para 'usuario' para testar a trava
+        const usuarioLogado = 'administrador'; 
         let notas = JSON.parse(localStorage.getItem('notasApp')) || [];
 
         function abrirModal(index = null) {
@@ -136,7 +140,7 @@
                 if ((fStatus === "Todos" || n.status === fStatus) && n.fornecedor.toLowerCase().includes(fForn) && n.nf.includes(fNF)) {
                     const d = n.data.split('-');
                     const dataFormatada = d.length === 3 ? `${d[2]}-${d[1]}-${d[0]}` : n.data;
-                    const statusClass = n.status === 'Acatada' ? 'status-acatada' : 'status-nao-acatada';
+                    const statusClass = n.status === 'ACATADA' ? 'status-acatada' : 'status-nao-acatada';
                     
                     let acoes = `<button onclick="abrirModal(${i})">✏️</button>`;
                     if(usuarioLogado === 'administrador') {
@@ -149,7 +153,7 @@
                         <td class="${statusClass}">${n.status}</td><td>${acoes}</td>
                     </tr>`;
                     totalV += n.valor;
-                    n.status === 'Acatada' ? cat++ : naoCat++;
+                    n.status === 'ACATADA' ? cat++ : naoCat++;
                 }
             });
             document.getElementById('totalNotas').innerText = notas.length;
