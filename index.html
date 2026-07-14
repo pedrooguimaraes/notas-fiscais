@@ -25,34 +25,67 @@
         <div class="header">
             <div><h1>📋 Notas Fiscais</h1><p>Gerenciamento de recebimento</p></div>
             <div>
-                <button class="btn">📄 Gerar Relatório / PDF</button>
-                <button class="btn btn-add">+ Nova Nota Fiscal</button>
+                <button class="btn" onclick="window.print()">📄 Gerar Relatório / PDF</button>
+                <button class="btn btn-add" onclick="showModal()">+ Nova Nota Fiscal</button>
             </div>
-        </div>
-        <div class="stats-grid">
-            <div class="card"><small>TOTAL DE NOTAS</small><h2>52</h2></div>
-            <div class="card"><small>VALOR TOTAL</small><h2>R$ 111.508,37</h2></div>
-            <div class="card"><small>NÃO ACATADAS</small><h2>52</h2></div>
-            <div class="card"><small>ACATADAS</small><h2>0</h2></div>
         </div>
         <div class="filters">
-            <strong>▼ Filtros de Busca</strong> <button style="float:right; border:none; background:none; cursor:pointer;">✕ Limpar</button>
+            <strong>▼ Filtros de Busca</strong>
             <div class="filter-grid">
-                <div><label>STATUS NOTA</label><br><select><option>Todos</option></select></div>
-                <div><label>FILTRAR DATA</label><br><input type="text" placeholder="Ex: 22/06/2026"></div>
-                <div><label>FORNECEDOR</label><br><input type="text" placeholder="Buscar..."></div>
-                <div><label>NÚMERO NF</label><br><input type="text" placeholder="Buscar..."></div>
-                <div><label>VALOR MÁXIMO</label><br><input type="text" placeholder="Ex: 2000"></div>
+                <select id="fStatus"><option value="">Todos Status</option><option>Acatada</option><option>Não Acatada</option></select>
+                <input type="text" id="fData" placeholder="Data (AAAA-MM-DD)">
+                <input type="text" id="fFornecedor" placeholder="Fornecedor...">
+                <input type="text" id="fNF" placeholder="Número NF...">
+                <button class="btn" onclick="applyFilters()">🔍 Filtrar</button>
             </div>
         </div>
-        <table>
+        <table id="tableNF">
             <thead>
-                <tr><th>Data</th><th>Fornecedor</th><th>NF</th><th>Valor</th><th>Chegada</th><th>Saída</th><th>Temp.</th><th>Conferente</th><th>Prevenção</th><th>Status</th><th>Observação</th><th>Ações</th></tr>
+                <tr><th>Data</th><th>Fornecedor</th><th>NF</th><th>Valor</th><th>Status</th><th>Ações</th></tr>
             </thead>
-            <tbody>
-                <tr><td>2026-07-13</td><td>CD FLV / PANIF.</td><td>252709</td><td>R$ 0,00</td><td>20:30</td><td>20:30</td><td>-</td><td>-</td><td>Marcos</td><td><span class="status-tag">NÃO ACATADA</span></td><td>-</td><td>✏️ 🗑️</td></tr>
-            </tbody>
+            <tbody id="tbodyNF"></tbody>
         </table>
     </div>
+
+    <script>
+        let notas = JSON.parse(localStorage.getItem('notas')) || [];
+
+        function renderTable(data = notas) {
+            const tbody = document.getElementById('tbodyNF');
+            tbody.innerHTML = '';
+            data.forEach((n, index) => {
+                tbody.innerHTML += `<tr>
+                    <td>${n.data}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>${n.valor}</td>
+                    <td><span class="status-tag">${n.status}</span></td>
+                    <td><button onclick="editNF(${index})">✏️</button> <button onclick="deleteNF(${index})">🗑️</button></td>
+                </tr>`;
+            });
+        }
+
+        function showModal() {
+            const fornecedor = prompt("Fornecedor:");
+            if (fornecedor) {
+                notas.push({data: '2026-07-14', fornecedor, nf: '000', valor: 'R$ 0,00', status: 'Não Acatada'});
+                localStorage.setItem('notas', JSON.stringify(notas));
+                renderTable();
+            }
+        }
+
+        function deleteNF(index) {
+            if(confirm("Excluir?")) {
+                notas.splice(index, 1);
+                localStorage.setItem('notas', JSON.stringify(notas));
+                renderTable();
+            }
+        }
+
+        function applyFilters() {
+            const fStatus = document.getElementById('fStatus').value;
+            const filtered = notas.filter(n => !fStatus || n.status === fStatus);
+            renderTable(filtered);
+        }
+
+        renderTable();
+    </script>
 </body>
 </html>
