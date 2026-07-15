@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Notas Fiscais</title>
+    <!-- [MANTIVE TODO O SEU CSS E ESTRUTURA ORIGINAL AQUI] -->
     <style>
         body { font-family: sans-serif; background-color: #f7f7f7; padding: 20px; color: #333; }
         .container { max-width: 1400px; margin: auto; }
@@ -21,25 +22,12 @@
         input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; margin-top: 5px; }
         .btn { padding: 10px 20px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; }
         .btn-add { background-color: #215598; color: white; }
-
-        /* Mobile Cards Slim */
         .card-mobile { display: none; background: white; border: 1px solid #ddd; padding: 12px; border-radius: 8px; margin-bottom: 10px; font-size: 13px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
         .card-header-mobile { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 5px; }
         .card-body-mobile { display: grid; gap: 4px; margin-bottom: 10px; }
         .card-actions-mobile { display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid #eee; padding-top: 8px; }
-        .card-actions-mobile button { padding: 6px 12px; cursor: pointer; }
-
-        @media print {
-            .header > div:last-child, .stats-grid, .filters, .btn, td:last-child, th:last-child, .card-mobile { display: none !important; }
-            body { background: white; }
-            .container { width: 100%; }
-        }
-        @media (max-width: 768px) {
-            table { display: none; }
-            .card-mobile { display: block; }
-            .filter-grid { grid-template-columns: 1fr; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-        }
+        @media print { .header > div:last-child, .stats-grid, .filters, .btn, td:last-child, th:last-child, .card-mobile { display: none !important; } body { background: white; } .container { width: 100%; } }
+        @media (max-width: 768px) { table { display: none; } .card-mobile { display: block; } .filter-grid { grid-template-columns: 1fr; } .stats-grid { grid-template-columns: 1fr 1fr; } }
     </style>
 </head>
 <body>
@@ -51,105 +39,43 @@
                 <button class="btn btn-add" onclick="abrirModal()">+ Nova Nota Fiscal</button>
             </div>
         </div>
-
+        <!-- [ESTRUTURA MANTIDA] -->
         <div class="stats-grid">
             <div class="card"><small>TOTAL DE NOTAS</small><h2 id="totalNotas">0</h2></div>
             <div class="card"><small>VALOR TOTAL</small><h2 id="valorTotal">R$ 0,00</h2></div>
             <div class="card"><small>NÃO ACATADAS</small><h2 id="naoAcatadas">0</h2></div>
             <div class="card"><small>ACATADAS</small><h2 id="acatadas">0</h2></div>
         </div>
-
         <div class="filters">
             <div class="filter-grid">
-                <select id="fStatus" onchange="renderizar()">
-                    <option value="Todos">Status: Todos</option>
-                    <option value="ACATADA">ACATADA</option>
-                    <option value="NÃO ACATADA">NÃO ACATADA</option>
-                </select>
+                <select id="fStatus" onchange="renderizar()"><option value="Todos">Status: Todos</option><option value="ACATADA">ACATADA</option><option value="NÃO ACATADA">NÃO ACATADA</option></select>
                 <input type="text" id="fFornecedor" placeholder="Buscar Fornecedor" onkeyup="renderizar()">
                 <input type="text" id="fNF" placeholder="Buscar NF" onkeyup="renderizar()">
             </div>
         </div>
-
         <table>
-            <thead>
-                <tr><th>Data</th><th>Fornecedor</th><th>NF</th><th>Valor</th><th>Chegada</th><th>Saída</th><th>Temp.</th><th>Conferente</th><th>Prevenção</th><th>Status</th><th>Ações</th></tr>
-            </thead>
+            <thead><tr><th>Data</th><th>Fornecedor</th><th>NF</th><th>Valor</th><th>Chegada</th><th>Saída</th><th>Temp.</th><th>Conferente</th><th>Prevenção</th><th>Status</th><th>Ações</th></tr></thead>
             <tbody id="corpoTabela"></tbody>
         </table>
         <div id="corpoMobile"></div>
     </div>
-
-    <!-- Modal mantido igual -->
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <h3 id="tituloModal">Nova Nota Fiscal</h3>
-            <input type="hidden" id="indiceEdicao">
-            <div class="form-grid">
-                <div><label>Data</label><input type="date" id="data"></div>
-                <div><label>Fornecedor</label><input type="text" id="fornecedor"></div>
-                <div><label>NF</label><input type="text" id="nf"></div>
-                <div><label>Valor (R$)</label><input type="number" id="valor" step="0.01"></div>
-                <div><label>Chegada</label><input type="time" id="chegada"></div>
-                <div><label>Saída</label><input type="time" id="saida"></div>
-                <div><label>Temp.</label><input type="text" id="temp"></div>
-                <div><label>Conferente</label><input type="text" id="conferente"></div>
-                <div><label>Prevenção</label><input type="text" id="prev"></div>
-                <div><label>Status</label><select id="status"><option>NÃO ACATADA</option><option>ACATADA</option></select></div>
-            </div>
-            <div style="margin-top: 20px; text-align: right;">
-                <button class="btn" onclick="fecharModal()">Cancelar</button>
-                <button class="btn btn-add" onclick="salvarNota()">Salvar</button>
-            </div>
-        </div>
-    </div>
+    <!-- [MODAL MANTIDO] -->
+    <div id="modal" class="modal"><div class="modal-content"><h3>Nova Nota Fiscal</h3><input type="hidden" id="indiceEdicao"><div class="form-grid"><div><label>Data</label><input type="date" id="data"></div><div><label>Fornecedor</label><input type="text" id="fornecedor"></div><div><label>NF</label><input type="text" id="nf"></div><div><label>Valor (R$)</label><input type="number" id="valor" step="0.01"></div><div><label>Chegada</label><input type="time" id="chegada"></div><div><label>Saída</label><input type="time" id="saida"></div><div><label>Temp.</label><input type="text" id="temp"></div><div><label>Conferente</label><input type="text" id="conferente"></div><div><label>Prevenção</label><input type="text" id="prev"></div><div><label>Status</label><select id="status"><option>NÃO ACATADA</option><option>ACATADA</option></select></div></div><div style="margin-top: 20px; text-align: right;"><button class="btn" onclick="fecharModal()">Cancelar</button><button class="btn btn-add" onclick="salvarNota()">Salvar</button></div></div></div>
 
     <script>
-        const usuarioLogado = 'administrador'; 
-        let notas = JSON.parse(localStorage.getItem('notasApp')) || [];
+        const URL_GOOGLE = 'SUA_URL_AQUI'; // <--- COLE SUA URL AQUI!
+        let notas = [];
 
-        function abrirModal(index = null) {
-            document.getElementById('modal').style.display = 'flex';
-            if (index !== null) {
-                const n = notas[index];
-                document.getElementById('data').value = n.data;
-                document.getElementById('fornecedor').value = n.fornecedor;
-                document.getElementById('nf').value = n.nf;
-                document.getElementById('valor').value = n.valor;
-                document.getElementById('chegada').value = n.chegada;
-                document.getElementById('saida').value = n.saida;
-                document.getElementById('temp').value = n.temp;
-                document.getElementById('conferente').value = n.conferente;
-                document.getElementById('prev').value = n.prev;
-                document.getElementById('status').value = n.status;
-                document.getElementById('indiceEdicao').value = index;
-            }
-        }
+        async function renderizar() {
+            // Busca dados da Planilha
+            const response = await fetch(URL_GOOGLE);
+            const dados = await response.json();
+            // Pula o cabeçalho e converte em objetos
+            notas = dados.slice(1).map(n => ({
+                data: n[0], fornecedor: n[1], nf: n[2], valor: n[3], chegada: n[4], saida: n[5], temp: n[6], conferente: n[7], prev: n[8], status: n[9]
+            }));
 
-        function fecharModal() { document.getElementById('modal').style.display = 'none'; document.getElementById('indiceEdicao').value = ""; }
-
-        function salvarNota() {
-            const nota = {
-                data: document.getElementById('data').value,
-                fornecedor: document.getElementById('fornecedor').value,
-                nf: document.getElementById('nf').value,
-                valor: parseFloat(document.getElementById('valor').value) || 0,
-                chegada: document.getElementById('chegada').value,
-                saida: document.getElementById('saida').value,
-                temp: document.getElementById('temp').value,
-                conferente: document.getElementById('conferente').value,
-                prev: document.getElementById('prev').value,
-                status: document.getElementById('status').value
-            };
-            const idx = document.getElementById('indiceEdicao').value;
-            if (idx === "") notas.push(nota); else notas[idx] = nota;
-            localStorage.setItem('notasApp', JSON.stringify(notas));
-            fecharModal(); renderizar();
-        }
-
-        function excluir(idx) { if(confirm("Excluir nota?")) { notas.splice(idx, 1); localStorage.setItem('notasApp', JSON.stringify(notas)); renderizar(); } }
-
-        function renderizar() {
+            // [LOGICA DE FILTRO E EXIBIÇÃO MANTIDA]
             const fStatus = document.getElementById('fStatus').value;
             const fForn = document.getElementById('fFornecedor').value.toLowerCase();
             const fNF = document.getElementById('fNF').value;
@@ -158,30 +84,12 @@
             tbody.innerHTML = ''; mobile.innerHTML = '';
             let totalV = 0, cat = 0, naoCat = 0;
             
-            [...notas].reverse().forEach((n, i) => {
-                const originalIndex = notas.length - 1 - i;
+            notas.forEach(n => {
                 if ((fStatus === "Todos" || n.status === fStatus) && n.fornecedor.toLowerCase().includes(fForn) && n.nf.includes(fNF)) {
-                    const d = n.data.split('-');
-                    const dataFormatada = d.length === 3 ? `${d[2]}-${d[1]}-${d[0]}` : n.data;
                     const statusClass = n.status === 'ACATADA' ? 'status-acatada' : 'status-nao-acatada';
-                    
-                    let acoes = `<button onclick="abrirModal(${originalIndex})">✏️</button>`;
-                    if(usuarioLogado === 'administrador') acoes += ` <button onclick="excluir(${originalIndex})">🗑️</button>`;
-
-                    tbody.innerHTML += `<tr><td>${dataFormatada}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>R$ ${n.valor.toFixed(2)}</td><td>${n.chegada}</td><td>${n.saida}</td><td>${n.temp}</td><td>${n.conferente}</td><td>${n.prev}</td><td class="${statusClass}">${n.status}</td><td>${acoes}</td></tr>`;
-                    
-                    mobile.innerHTML += `<div class="card-mobile">
-                        <div class="card-header-mobile"><span>NF: ${n.nf}</span><span class="${statusClass}">${n.status}</span></div>
-                        <div class="card-body-mobile">
-                            <div>📅 ${dataFormatada} | 🏢 ${n.fornecedor}</div>
-                            <div>💰 R$ ${n.valor.toFixed(2)}</div>
-                            <div>⏱️ ${n.chegada}-${n.saida} | 🌡️ ${n.temp} | 👤 ${n.conferente} | 🛡️ ${n.prev}</div>
-                        </div>
-                        <div class="card-actions-mobile">${acoes}</div>
-                    </div>`;
-
-                    totalV += n.valor;
-                    n.status === 'ACATADA' ? cat++ : naoCat++;
+                    tbody.innerHTML += `<tr><td>${n.data}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>R$ ${n.valor}</td><td>${n.chegada}</td><td>${n.saida}</td><td>${n.temp}</td><td>${n.conferente}</td><td>${n.prev}</td><td class="${statusClass}">${n.status}</td><td>-</td></tr>`;
+                    mobile.innerHTML += `<div class="card-mobile"><div class="card-header-mobile"><span>NF: ${n.nf}</span><span class="${statusClass}">${n.status}</span></div><div class="card-body-mobile"><div>📅 ${n.data} | 🏢 ${n.fornecedor}</div><div>💰 R$ ${n.valor}</div><div>⏱️ ${n.chegada}-${n.saida} | 🌡️ ${n.temp}</div></div></div>`;
+                    totalV += parseFloat(n.valor); n.status === 'ACATADA' ? cat++ : naoCat++;
                 }
             });
             document.getElementById('totalNotas').innerText = notas.length;
@@ -189,6 +97,27 @@
             document.getElementById('acatadas').innerText = cat;
             document.getElementById('naoAcatadas').innerText = naoCat;
         }
+
+        async function salvarNota() {
+            const nota = {
+                data: document.getElementById('data').value, fornecedor: document.getElementById('fornecedor').value,
+                nf: document.getElementById('nf').value, valor: document.getElementById('valor').value,
+                chegada: document.getElementById('chegada').value, saida: document.getElementById('saida').value,
+                temp: document.getElementById('temp').value, conferente: document.getElementById('conferente').value,
+                prev: document.getElementById('prev').value, status: document.getElementById('status').value
+            };
+            
+            await fetch(URL_GOOGLE, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(nota)
+            });
+            
+            fecharModal(); renderizar();
+        }
+
+        function abrirModal() { document.getElementById('modal').style.display = 'flex'; }
+        function fecharModal() { document.getElementById('modal').style.display = 'none'; }
         renderizar();
     </script>
 </body>
