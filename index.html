@@ -136,15 +136,18 @@
             tbody.innerHTML = '';
             let totalV = 0, cat = 0, naoCat = 0;
             
-            notas.forEach((n, i) => {
+            // Inverter a ordem para exibir novos registros no topo
+            [...notas].reverse().forEach((n, i) => {
+                const originalIndex = notas.length - 1 - i;
+                
                 if ((fStatus === "Todos" || n.status === fStatus) && n.fornecedor.toLowerCase().includes(fForn) && n.nf.includes(fNF)) {
                     const d = n.data.split('-');
                     const dataFormatada = d.length === 3 ? `${d[2]}-${d[1]}-${d[0]}` : n.data;
                     const statusClass = n.status === 'ACATADA' ? 'status-acatada' : 'status-nao-acatada';
                     
-                    let acoes = `<button onclick="abrirModal(${i})">✏️</button>`;
+                    let acoes = `<button onclick="abrirModal(${originalIndex})">✏️</button>`;
                     if(usuarioLogado === 'administrador') {
-                        acoes += ` <button onclick="excluir(${i})">🗑️</button>`;
+                        acoes += ` <button onclick="excluir(${originalIndex})">🗑️</button>`;
                     }
 
                     tbody.innerHTML += `<tr>
