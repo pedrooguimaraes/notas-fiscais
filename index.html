@@ -23,8 +23,10 @@
         .btn-add { background-color: #215598; color: white; }
         
         /* Estilos Celular (Cards Slim) */
-        .card-mobile { display: none; background: white; border: 1px solid #ddd; padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 12px; }
-        .card-mobile div { margin-bottom: 4px; }
+        .card-mobile { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 10px; font-size: 13px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .card-mobile .header-card { border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 8px; font-weight: bold; display: flex; justify-content: space-between; }
+        .card-mobile .info-card { margin-bottom: 4px; }
+        .card-mobile .divider { border-top: 1px solid #eee; margin: 10px 0; padding-top: 8px; color: #666; font-size: 12px; font-style: italic; }
 
         @media print {
             .header > div:last-child, .stats-grid, .filters, .btn, td:last-child, th:last-child, .card-mobile { display: none !important; }
@@ -32,7 +34,6 @@
         }
         @media (max-width: 768px) {
             table { display: none; }
-            .card-mobile { display: block; }
             .filter-grid { grid-template-columns: 1fr; }
             .stats-grid { grid-template-columns: 1fr 1fr; }
         }
@@ -43,7 +44,7 @@
         <div class="header">
             <div><h1>📋 Controle de Entrada de Notas Fiscais</h1></div>
             <div>
-                <button class="btn" onclick="window.print()">📄 PDF</button>
+                <button class="btn" onclick="window.print()">Gerar arquivo pdf / salvar</button>
                 <button class="btn btn-add" onclick="abrirModal()">+ Nova</button>
             </div>
         </div>
@@ -72,7 +73,6 @@
         <div id="corpoMobile"></div>
     </div>
 
-    <!-- Modal simplificado -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <h3>Nova Nota Fiscal</h3>
@@ -145,9 +145,10 @@
                     
                     tbody.innerHTML += `<tr><td>${dataFormatada}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>R$ ${n.valor.toFixed(2)}</td><td>${n.chegada}</td><td>${n.saida}</td><td>${n.temp}</td><td>${n.conferente}</td><td>${n.prev}</td><td class="${statusClass}">${n.status}</td><td>${acoes}</td></tr>`;
                     mobile.innerHTML += `<div class="card-mobile">
-                        <div><b>NF: ${n.nf}</b> | <span class="${statusClass}">${n.status}</span></div>
-                        <div>${dataFormatada} - ${n.fornecedor}</div>
-                        <div>Valor: R$ ${n.valor.toFixed(2)} | Prev: ${n.prev}</div>
+                        <div class="header-card"><span>NF: ${n.nf}</span> <span class="${statusClass}">${n.status}</span></div>
+                        <div class="info-card"><b>Data:</b> ${dataFormatada} | <b>Fornecedor:</b> ${n.fornecedor}</div>
+                        <div class="info-card"><b>Valor:</b> R$ ${n.valor.toFixed(2)}</div>
+                        <div class="divider">Chegada: ${n.chegada} | Saída: ${n.saida} | Temp: ${n.temp} | Conf: ${n.conferente} | Prev: ${n.prev}</div>
                         <div>${acoes}</div>
                     </div>`;
                     totalV += n.valor; n.status === 'ACATADA' ? cat++ : naoCat++;
