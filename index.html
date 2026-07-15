@@ -22,12 +22,14 @@
         .btn { padding: 10px 20px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; }
         .btn-add { background-color: #215598; color: white; }
         
-        /* Ajuste para Cards Compactos Mobile */
-        .card-mobile { display: none; background: white; border: 1px solid #ddd; padding: 10px; border-radius: 8px; margin-bottom: 8px; font-size: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .card-header-compacto { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
-        .badge-status { padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 10px; text-transform: uppercase; }
-        .bg-acatada { background: #d4edda; color: #155724; }
-        .bg-nao-acatada { background: #f8d7da; color: #721c24; }
+        /* CSS ESPECÍFICO PARA MOBILE (Cards) */
+        .card-mobile { display: none; background: white; border: 1px solid #e0e0e0; padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .badge-mobile { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; margin-bottom: 12px; text-transform: uppercase; }
+        .badge-acatada { background: #d4edda; color: #155724; }
+        .badge-nao-acatada { background: #f8d7da; color: #721c24; }
+        .grid-info-mobile { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .label-mobile { color: #888; font-size: 12px; display: block; margin-bottom: 2px; }
+        .value-mobile { font-size: 14px; font-weight: 500; color: #333; }
 
         @media print { .header > div:last-child, .stats-grid, .filters, .btn, td:last-child, th:last-child, .card-mobile { display: none !important; } body { background: white; } .container { width: 100%; } }
         @media (max-width: 768px) { table { display: none; } .card-mobile { display: block; } .filter-grid { grid-template-columns: 1fr; } .stats-grid { grid-template-columns: 1fr 1fr; } }
@@ -62,6 +64,7 @@
         <div id="corpoMobile"></div>
     </div>
 
+    <!-- [Modal mantido igual] -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <h3>Nova Nota Fiscal</h3>
@@ -122,24 +125,25 @@
                 notas.forEach(n => {
                     if ((fStatus === "Todos" || n.status === fStatus) && (n.fornecedor || "").toLowerCase().includes(fForn) && (n.nf || "").includes(fNF)) {
                         const statusClass = n.status === 'ACATADA' ? 'status-acatada' : 'status-nao-acatada';
-                        const badgeClass = n.status === 'ACATADA' ? 'bg-acatada' : 'bg-nao-acatada';
+                        const badgeClass = n.status === 'ACATADA' ? 'badge-acatada' : 'badge-nao-acatada';
                         const dataEx = formatarData(n.data);
                         const ch = formatarHora(n.chegada);
                         const sa = formatarHora(n.saida);
 
+                        // Tabela (Desktop permanece igual)
                         tbody.innerHTML += `<tr><td>${dataEx}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>R$ ${n.valor}</td><td>${ch}</td><td>${sa}</td><td>${n.temp}</td><td>${n.conferente}</td><td>${n.prev}</td><td class="${statusClass}">${n.status}</td><td>-</td></tr>`;
                         
+                        // Mobile (Cards novo visual)
                         mobile.innerHTML += `
                         <div class="card-mobile">
-                            <div class="card-header-compacto">
-                                <span style="font-weight: bold;">${n.fornecedor}</span>
-                                <span class="badge-status ${badgeClass}">${n.status}</span>
+                            <div class="badge-mobile ${badgeClass}">${n.status}</div>
+                            <div style="font-weight: bold; font-size: 16px; margin-bottom: 15px;">${n.fornecedor.toUpperCase()}</div>
+                            <div class="grid-info-mobile">
+                                <div><span class="label-mobile">Data</span><span class="value-mobile">${dataEx}</span></div>
+                                <div><span class="label-mobile">NF</span><span class="value-mobile">${n.nf}</span></div>
+                                <div><span class="label-mobile">Valor</span><span class="value-mobile">R$ ${n.valor}</span></div>
+                                <div><span class="label-mobile">Chegada/Saída</span><span class="value-mobile">${ch} - ${sa}</span></div>
                             </div>
-                            <div style="display: flex; justify-content: space-between; color: #555; margin-top: 5px;">
-                                <span>NF: ${n.nf}</span>
-                                <span>${dataEx}</span>
-                            </div>
-                            <div style="margin-top: 5px; font-weight: bold; color: #215598;">R$ ${n.valor}</div>
                         </div>`;
                         
                         totalV += parseFloat(n.valor) || 0; 
@@ -153,18 +157,10 @@
             } catch (error) { console.error("Erro ao renderizar:", error); }
         }
 
-        async function salvarNota() {
-            const nota = {
-                data: document.getElementById('data').value, fornecedor: document.getElementById('fornecedor').value,
-                nf: document.getElementById('nf').value, valor: document.getElementById('valor').value,
-                chegada: document.getElementById('chegada').value, saida: document.getElementById('saida').value,
-                temp: document.getElementById('temp').value, conferente: document.getElementById('conferente').value,
-                prev: document.getElementById('prev').value, status: document.getElementById('status').value
-            };
+        async function salvarNota() { /* mantida igual */ 
+            const nota = { data: document.getElementById('data').value, fornecedor: document.getElementById('fornecedor').value, nf: document.getElementById('nf').value, valor: document.getElementById('valor').value, chegada: document.getElementById('chegada').value, saida: document.getElementById('saida').value, temp: document.getElementById('temp').value, conferente: document.getElementById('conferente').value, prev: document.getElementById('prev').value, status: document.getElementById('status').value };
             await fetch(URL_GOOGLE, { method: 'POST', mode: 'no-cors', body: JSON.stringify(nota) });
-            document.getElementById('formNota').reset();
-            fecharModal();
-            setTimeout(renderizar, 1500);
+            document.getElementById('formNota').reset(); fecharModal(); setTimeout(renderizar, 1500);
         }
 
         function abrirModal() { document.getElementById('modal').style.display = 'flex'; }
