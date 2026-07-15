@@ -61,7 +61,7 @@
     <div id="modal" class="modal"><div class="modal-content"><h3>Nova Nota Fiscal</h3><input type="hidden" id="indiceEdicao"><div class="form-grid"><div><label>Data</label><input type="date" id="data"></div><div><label>Fornecedor</label><input type="text" id="fornecedor"></div><div><label>NF</label><input type="text" id="nf"></div><div><label>Valor (R$)</label><input type="number" id="valor" step="0.01"></div><div><label>Chegada</label><input type="time" id="chegada"></div><div><label>Saída</label><input type="time" id="saida"></div><div><label>Temp.</label><input type="text" id="temp"></div><div><label>Conferente</label><input type="text" id="conferente"></div><div><label>Prevenção</label><input type="text" id="prev"></div><div><label>Status</label><select id="status"><option>NÃO ACATADA</option><option>ACATADA</option></select></div></div><div style="margin-top: 20px; text-align: right;"><button class="btn" onclick="fecharModal()">Cancelar</button><button class="btn btn-add" onclick="salvarNota()">Salvar</button></div></div></div>
 
     <script>
-        const URL_GOOGLE = 'https://script.google.com/macros/s/AKfycbwTQ7qSlQmJKVIKxLQ0ZbEnqtMgI7LD9fk0H7K0x9BZ0RJy9p2vxOGd7w4ORDIKTk2e/exec'; 
+        const URL_GOOGLE = 'https://script.google.com/macros/s/AKfycbxJNhi1AY83G_AFdS1psw9g8wFe2BLS_AFU-8tZetXkMaTRnO81G5HV6RF1udYIrpBw/exec'; 
         let notas = [];
 
         async function renderizar() {
