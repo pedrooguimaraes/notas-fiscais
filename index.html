@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Sistema de Notas Fiscais</title>
+    <title>Notas Fiscais</title>
     <style>
         body { font-family: sans-serif; background-color: #f7f7f7; padding: 20px; color: #333; }
         .container { max-width: 1400px; margin: auto; }
@@ -21,12 +21,19 @@
         input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; margin-top: 5px; }
         .btn { padding: 10px 20px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; }
         .btn-add { background-color: #215598; color: white; }
+
+        /* Estilo para impressão */
+        @media print {
+            .header > div:last-child, .stats-grid, .filters, .btn, td:last-child, th:last-child { display: none !important; }
+            body { background: white; }
+            .container { width: 100%; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <div><h1>📋 Controle de Entrada de Notas Fiscais</h1><p>Gerenciamento de recebimento</p></div>
+            <div><h1>📋 Controle de Entrada de Notas Fiscais</h1></div>
             <div>
                 <button class="btn" onclick="window.print()">📄 Gerar Relatório / PDF</button>
                 <button class="btn btn-add" onclick="abrirModal()">+ Nova Nota Fiscal</button>
@@ -136,10 +143,8 @@
             tbody.innerHTML = '';
             let totalV = 0, cat = 0, naoCat = 0;
             
-            // Inverter a ordem para exibir novos registros no topo
             [...notas].reverse().forEach((n, i) => {
                 const originalIndex = notas.length - 1 - i;
-                
                 if ((fStatus === "Todos" || n.status === fStatus) && n.fornecedor.toLowerCase().includes(fForn) && n.nf.includes(fNF)) {
                     const d = n.data.split('-');
                     const dataFormatada = d.length === 3 ? `${d[2]}-${d[1]}-${d[0]}` : n.data;
