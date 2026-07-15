@@ -22,11 +22,23 @@
         .btn { padding: 10px 20px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; }
         .btn-add { background-color: #215598; color: white; }
 
-        /* Estilo para impressão */
+        /* Mobile Cards Slim */
+        .card-mobile { display: none; background: white; border: 1px solid #ddd; padding: 12px; border-radius: 8px; margin-bottom: 10px; font-size: 13px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .card-header-mobile { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .card-body-mobile { display: grid; gap: 4px; margin-bottom: 10px; }
+        .card-actions-mobile { display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid #eee; padding-top: 8px; }
+        .card-actions-mobile button { padding: 6px 12px; cursor: pointer; }
+
         @media print {
-            .header > div:last-child, .stats-grid, .filters, .btn, td:last-child, th:last-child { display: none !important; }
+            .header > div:last-child, .stats-grid, .filters, .btn, td:last-child, th:last-child, .card-mobile { display: none !important; }
             body { background: white; }
             .container { width: 100%; }
+        }
+        @media (max-width: 768px) {
+            table { display: none; }
+            .card-mobile { display: block; }
+            .filter-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
@@ -35,7 +47,7 @@
         <div class="header">
             <div><h1>📋 Controle de Entrada de Notas Fiscais</h1></div>
             <div>
-                <button class="btn" onclick="window.print()">📄 Gerar Relatório / PDF</button>
+                <button class="btn" onclick="window.print()">Gerar arquivo pdf / salvar</button>
                 <button class="btn btn-add" onclick="abrirModal()">+ Nova Nota Fiscal</button>
             </div>
         </div>
@@ -65,8 +77,10 @@
             </thead>
             <tbody id="corpoTabela"></tbody>
         </table>
+        <div id="corpoMobile"></div>
     </div>
 
+    <!-- Modal mantido igual -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <h3 id="tituloModal">Nova Nota Fiscal</h3>
@@ -140,7 +154,8 @@
             const fForn = document.getElementById('fFornecedor').value.toLowerCase();
             const fNF = document.getElementById('fNF').value;
             const tbody = document.getElementById('corpoTabela');
-            tbody.innerHTML = '';
+            const mobile = document.getElementById('corpoMobile');
+            tbody.innerHTML = ''; mobile.innerHTML = '';
             let totalV = 0, cat = 0, naoCat = 0;
             
             [...notas].reverse().forEach((n, i) => {
@@ -151,15 +166,20 @@
                     const statusClass = n.status === 'ACATADA' ? 'status-acatada' : 'status-nao-acatada';
                     
                     let acoes = `<button onclick="abrirModal(${originalIndex})">✏️</button>`;
-                    if(usuarioLogado === 'administrador') {
-                        acoes += ` <button onclick="excluir(${originalIndex})">🗑️</button>`;
-                    }
+                    if(usuarioLogado === 'administrador') acoes += ` <button onclick="excluir(${originalIndex})">🗑️</button>`;
 
-                    tbody.innerHTML += `<tr>
-                        <td>${dataFormatada}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>R$ ${n.valor.toFixed(2)}</td>
-                        <td>${n.chegada}</td><td>${n.saida}</td><td>${n.temp}</td><td>${n.conferente}</td><td>${n.prev}</td>
-                        <td class="${statusClass}">${n.status}</td><td>${acoes}</td>
-                    </tr>`;
+                    tbody.innerHTML += `<tr><td>${dataFormatada}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>R$ ${n.valor.toFixed(2)}</td><td>${n.chegada}</td><td>${n.saida}</td><td>${n.temp}</td><td>${n.conferente}</td><td>${n.prev}</td><td class="${statusClass}">${n.status}</td><td>${acoes}</td></tr>`;
+                    
+                    mobile.innerHTML += `<div class="card-mobile">
+                        <div class="card-header-mobile"><span>NF: ${n.nf}</span><span class="${statusClass}">${n.status}</span></div>
+                        <div class="card-body-mobile">
+                            <div>📅 ${dataFormatada} | 🏢 ${n.fornecedor}</div>
+                            <div>💰 R$ ${n.valor.toFixed(2)}</div>
+                            <div>⏱️ ${n.chegada}-${n.saida} | 🌡️ ${n.temp} | 👤 ${n.conferente} | 🛡️ ${n.prev}</div>
+                        </div>
+                        <div class="card-actions-mobile">${acoes}</div>
+                    </div>`;
+
                     totalV += n.valor;
                     n.status === 'ACATADA' ? cat++ : naoCat++;
                 }
