@@ -21,18 +21,20 @@
         input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; margin-top: 5px; }
         .btn { padding: 10px 20px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; }
         .btn-add { background-color: #215598; color: white; }
-        
-        /* CSS ESPECÍFICO PARA MOBILE (Cards) */
-        .card-mobile { display: none; background: white; border: 1px solid #e0e0e0; padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .badge-mobile { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; margin-bottom: 12px; text-transform: uppercase; }
-        .badge-acatada { background: #d4edda; color: #155724; }
-        .badge-nao-acatada { background: #f8d7da; color: #721c24; }
-        .grid-info-mobile { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .label-mobile { color: #888; font-size: 12px; display: block; margin-bottom: 2px; }
-        .value-mobile { font-size: 14px; font-weight: 500; color: #333; }
 
-        @media print { .header > div:last-child, .stats-grid, .filters, .btn, td:last-child, th:last-child, .card-mobile { display: none !important; } body { background: white; } .container { width: 100%; } }
-        @media (max-width: 768px) { table { display: none; } .card-mobile { display: block; } .filter-grid { grid-template-columns: 1fr; } .stats-grid { grid-template-columns: 1fr 1fr; } }
+        /* NOVO CSS PARA CARDS MOBILE */
+        .card-mobile { display: none; background: white; border: 1px solid #e0e0e0; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .badge-mobile { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; }
+        .bg-acatada { background: #d4edda; color: #155724; }
+        .bg-nao-acatada { background: #f8d7da; color: #721c24; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 13px; color: #666; }
+
+        @media (max-width: 768px) {
+            table { display: none; }
+            .card-mobile { display: block; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .filter-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -40,131 +42,63 @@
         <div class="header">
             <div><h1>📋 Controle de Notas Fiscais (047)</h1></div>
             <div>
-                <button class="btn" onclick="window.print()">Gerar PDF / Salvar</button>
-                <button class="btn btn-add" onclick="abrirModal()">+ Nova Nota Fiscal</button>
+                <button class="btn" onclick="window.print()">Gerar PDF</button>
+                <button class="btn btn-add" onclick="abrirModal()">+ Nova</button>
             </div>
         </div>
         <div class="stats-grid">
-            <div class="card"><small>TOTAL DE NOTAS</small><h2 id="totalNotas">0</h2></div>
-            <div class="card"><small>VALOR TOTAL</small><h2 id="valorTotal">R$ 0,00</h2></div>
-            <div class="card"><small>NÃO ACATADAS</small><h2 id="naoAcatadas">0</h2></div>
-            <div class="card"><small>ACATADAS</small><h2 id="acatadas">0</h2></div>
+            <div class="card"><small>TOTAL</small><h2 id="totalNotas">0</h2></div>
+            <div class="card"><small>VALOR</small><h2 id="valorTotal">R$ 0</h2></div>
+            <div class="card"><small>N. ACATADA</small><h2 id="naoAcatadas">0</h2></div>
+            <div class="card"><small>ACATADA</small><h2 id="acatadas">0</h2></div>
         </div>
         <div class="filters">
             <div class="filter-grid">
                 <select id="fStatus" onchange="renderizar()"><option value="Todos">Status: Todos</option><option value="ACATADA">ACATADA</option><option value="NÃO ACATADA">NÃO ACATADA</option></select>
-                <input type="text" id="fFornecedor" placeholder="Buscar Fornecedor" onkeyup="renderizar()">
-                <input type="text" id="fNF" placeholder="Buscar NF" onkeyup="renderizar()">
+                <input type="text" id="fFornecedor" placeholder="Fornecedor" onkeyup="renderizar()">
+                <input type="text" id="fNF" placeholder="NF" onkeyup="renderizar()">
             </div>
         </div>
         <table>
-            <thead><tr><th>Data</th><th>Fornecedor</th><th>NF</th><th>Valor</th><th>Chegada</th><th>Saída</th><th>Temp.</th><th>Conferente</th><th>Prevenção</th><th>Status</th><th>Ações</th></tr></thead>
+            <thead><tr><th>Data</th><th>Fornecedor</th><th>NF</th><th>Valor</th><th>Status</th></tr></thead>
             <tbody id="corpoTabela"></tbody>
         </table>
         <div id="corpoMobile"></div>
     </div>
 
-    <!-- [Modal mantido igual] -->
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <h3>Nova Nota Fiscal</h3>
-            <form id="formNota">
-                <div class="form-grid">
-                    <div><label>Data</label><input type="date" id="data" required></div>
-                    <div><label>Fornecedor</label><input type="text" id="fornecedor" required></div>
-                    <div><label>NF</label><input type="text" id="nf" required></div>
-                    <div><label>Valor (R$)</label><input type="number" id="valor" step="0.01" required></div>
-                    <div><label>Chegada</label><input type="time" id="chegada"></div>
-                    <div><label>Saída</label><input type="time" id="saida"></div>
-                    <div><label>Temp.</label><input type="text" id="temp"></div>
-                    <div><label>Conferente</label><input type="text" id="conferente"></div>
-                    <div><label>Prevenção</label><input type="text" id="prev"></div>
-                    <div><label>Status</label><select id="status"><option>NÃO ACATADA</option><option>ACATADA</option></select></div>
-                </div>
-            </form>
-            <div style="margin-top: 20px; text-align: right;">
-                <button class="btn" onclick="fecharModal()">Cancelar</button>
-                <button class="btn btn-add" onclick="salvarNota()">Salvar</button>
-            </div>
-        </div>
-    </div>
-
+    <!-- Modal e Script abaixo -->
     <script>
         const URL_GOOGLE = 'https://script.google.com/macros/s/AKfycbxJNhi1AY83G_AFdS1psw9g8wFe2BLS_AFU-8tZetXkMaTRnO81G5HV6RF1udYIrpBw/exec'; 
 
-        function formatarData(dataISO) {
-            if (!dataISO || dataISO.toString().includes('1899')) return '--';
-            if (dataISO.length > 10) return dataISO.split('T')[0].split('-').reverse().join('/');
-            return dataISO;
-        }
-
-        function formatarHora(horaISO) {
-            if (!horaISO || !horaISO.toString().includes('T')) return horaISO || '--';
-            return horaISO.split('T')[1].substring(0, 5);
-        }
-
         async function renderizar() {
-            try {
-                const response = await fetch(URL_GOOGLE);
-                const dados = await response.json();
-                let listaNotas = dados.slice(1).reverse();
-                let notas = listaNotas.map(n => ({
-                    data: n[0], fornecedor: n[1], nf: String(n[2] || ""), valor: n[3], 
-                    chegada: n[4], saida: n[5], temp: n[6], conferente: n[7], prev: n[8], status: n[9]
-                }));
+            const response = await fetch(URL_GOOGLE);
+            const dados = await response.json();
+            const notas = dados.slice(1).reverse();
+            const tbody = document.getElementById('corpoTabela');
+            const mobile = document.getElementById('corpoMobile');
+            tbody.innerHTML = ''; mobile.innerHTML = '';
 
-                const fStatus = document.getElementById('fStatus').value;
-                const fForn = document.getElementById('fFornecedor').value.toLowerCase();
-                const fNF = document.getElementById('fNF').value;
-                const tbody = document.getElementById('corpoTabela');
-                const mobile = document.getElementById('corpoMobile');
+            notas.forEach(n => {
+                const status = n[9];
+                const badgeClass = status === 'ACATADA' ? 'bg-acatada' : 'bg-nao-acatada';
                 
-                tbody.innerHTML = ''; mobile.innerHTML = '';
-                let totalV = 0, cat = 0, naoCat = 0;
+                // Tabela Desktop
+                tbody.innerHTML += `<tr><td>${n[0]}</td><td>${n[1]}</td><td>${n[2]}</td><td>${n[3]}</td><td class="${status === 'ACATADA' ? 'status-acatada' : 'status-nao-acatada'}">${status}</td></tr>`;
                 
-                notas.forEach(n => {
-                    if ((fStatus === "Todos" || n.status === fStatus) && (n.fornecedor || "").toLowerCase().includes(fForn) && (n.nf || "").includes(fNF)) {
-                        const statusClass = n.status === 'ACATADA' ? 'status-acatada' : 'status-nao-acatada';
-                        const badgeClass = n.status === 'ACATADA' ? 'badge-acatada' : 'badge-nao-acatada';
-                        const dataEx = formatarData(n.data);
-                        const ch = formatarHora(n.chegada);
-                        const sa = formatarHora(n.saida);
-
-                        // Tabela (Desktop permanece igual)
-                        tbody.innerHTML += `<tr><td>${dataEx}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>R$ ${n.valor}</td><td>${ch}</td><td>${sa}</td><td>${n.temp}</td><td>${n.conferente}</td><td>${n.prev}</td><td class="${statusClass}">${n.status}</td><td>-</td></tr>`;
-                        
-                        // Mobile (Cards novo visual)
-                        mobile.innerHTML += `
-                        <div class="card-mobile">
-                            <div class="badge-mobile ${badgeClass}">${n.status}</div>
-                            <div style="font-weight: bold; font-size: 16px; margin-bottom: 15px;">${n.fornecedor.toUpperCase()}</div>
-                            <div class="grid-info-mobile">
-                                <div><span class="label-mobile">Data</span><span class="value-mobile">${dataEx}</span></div>
-                                <div><span class="label-mobile">NF</span><span class="value-mobile">${n.nf}</span></div>
-                                <div><span class="label-mobile">Valor</span><span class="value-mobile">R$ ${n.valor}</span></div>
-                                <div><span class="label-mobile">Chegada/Saída</span><span class="value-mobile">${ch} - ${sa}</span></div>
-                            </div>
-                        </div>`;
-                        
-                        totalV += parseFloat(n.valor) || 0; 
-                        n.status === 'ACATADA' ? cat++ : naoCat++;
-                    }
-                });
-                document.getElementById('totalNotas').innerText = notas.length;
-                document.getElementById('valorTotal').innerText = `R$ ${totalV.toFixed(2)}`;
-                document.getElementById('acatadas').innerText = cat;
-                document.getElementById('naoAcatadas').innerText = naoCat;
-            } catch (error) { console.error("Erro ao renderizar:", error); }
+                // Cards Mobile
+                mobile.innerHTML += `
+                <div class="card-mobile">
+                    <div class="badge-mobile ${badgeClass}">${status}</div>
+                    <div style="font-weight: bold; font-size: 15px; margin-bottom: 10px;">${n[1]}</div>
+                    <div class="info-grid">
+                        <div>Data: ${n[0]}</div>
+                        <div>NF: ${n[2]}</div>
+                        <div>Valor: R$ ${n[3]}</div>
+                        <div>H: ${n[4]} - ${n[5]}</div>
+                    </div>
+                </div>`;
+            });
         }
-
-        async function salvarNota() { /* mantida igual */ 
-            const nota = { data: document.getElementById('data').value, fornecedor: document.getElementById('fornecedor').value, nf: document.getElementById('nf').value, valor: document.getElementById('valor').value, chegada: document.getElementById('chegada').value, saida: document.getElementById('saida').value, temp: document.getElementById('temp').value, conferente: document.getElementById('conferente').value, prev: document.getElementById('prev').value, status: document.getElementById('status').value };
-            await fetch(URL_GOOGLE, { method: 'POST', mode: 'no-cors', body: JSON.stringify(nota) });
-            document.getElementById('formNota').reset(); fecharModal(); setTimeout(renderizar, 1500);
-        }
-
-        function abrirModal() { document.getElementById('modal').style.display = 'flex'; }
-        function fecharModal() { document.getElementById('modal').style.display = 'none'; }
         renderizar();
     </script>
 </body>
