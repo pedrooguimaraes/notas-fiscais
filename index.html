@@ -35,7 +35,14 @@
         .card-header-mobile { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 8px; }
         .card-body-mobile { display: grid; gap: 6px; font-size: 13px; }
         
-        @media print { .header > div:last-child, .stats-grid, .filters, .btn, td:last-child, th:last-child, .card-mobile { display: none !important; } body { background: white; } .container { width: 100%; } }
+        @media print { 
+            .header > div:last-child, .stats-grid, .filters, .btn, td:last-child, th:last-child { display: none !important; } 
+            body { background: white; padding: 0; } 
+            .container { width: 100%; } 
+            .card-mobile { display: block !important; border: 1px solid #ccc !important; box-shadow: none !important; }
+            .card-mobile { font-size: 12px; }
+        }
+
         @media (max-width: 768px) { 
             table { display: none; } 
             .card-mobile { display: block; } 
@@ -58,7 +65,7 @@
         <div class="stats-grid">
             <div class="card"><small>TOTAL</small><h2 id="totalNotas">0</h2></div>
             <div class="card"><small>VALOR</small><h2 id="valorTotal">R$ 0,00</h2></div>
-            <div class="card"><small>NÃO ACATADA.</small><h2 id="naoAcatadas">0</h2></div>
+            <div class="card"><small>NÃO ACATADA</small><h2 id="naoAcatadas">0</h2></div>
             <div class="card"><small>ACATADAS</small><h2 id="acatadas">0</h2></div>
         </div>
         <div class="filters">
@@ -75,7 +82,6 @@
         <div id="corpoMobile"></div>
     </div>
 
-    <!-- Modal e Script permanecem intactos conforme sua solicitação -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <h3>Nova Nota Fiscal</h3>
