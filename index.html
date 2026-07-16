@@ -35,14 +35,14 @@
         .card-header-mobile { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 8px; }
         .card-body-mobile { display: grid; gap: 6px; font-size: 13px; }
         
+        /* Corrigido: Impressão usa Tabela e ignora Cards Mobile */
         @media print { 
-            .header > div:last-child, .stats-grid, .filters, .btn, td:last-child, th:last-child { display: none !important; } 
+            .header > div:last-child, .stats-grid, .filters, .btn, .card-mobile { display: none !important; } 
             body { background: white; padding: 0; } 
             .container { width: 100%; } 
-            .card-mobile { display: block !important; border: 1px solid #ccc !important; box-shadow: none !important; }
-            .card-mobile { font-size: 12px; }
+            table { display: table !important; width: 100%; }
         }
-
+        
         @media (max-width: 768px) { 
             table { display: none; } 
             .card-mobile { display: block; } 
