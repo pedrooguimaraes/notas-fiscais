@@ -90,16 +90,9 @@
     <script>
         const URL_GOOGLE = 'https://script.google.com/macros/s/AKfycbxJNhi1AY83G_AFdS1psw9g8wFe2BLS_AFU-8tZetXkMaTRnO81G5HV6RF1udYIrpBw/exec'; 
 
-        function formatarData(dataISO) {
-            if (!dataISO || dataISO.toString().includes('1899')) return '--';
-            if (dataISO.length > 10) return dataISO.split('T')[0].split('-').reverse().join('/');
-            return dataISO;
-        }
-
-        function formatarHora(horaISO) {
-            if (!horaISO || !horaISO.toString().includes('T')) return horaISO || '--';
-            return horaISO.split('T')[1].substring(0, 5);
-        }
+        // Agora exibimos o valor bruto vindo da planilha como string, sem tentar converter fuso horário
+        function formatarData(data) { return data || '--'; }
+        function formatarHora(hora) { return hora || '--'; }
 
         async function renderizar() {
             try {
@@ -131,12 +124,9 @@
                         nfUpper.includes(fNF)) {
                         
                         const statusClass = n.status === 'ACATADA' ? 'status-acatada' : 'status-nao-acatada';
-                        const dataExibicao = formatarData(n.data);
-                        const chegadaExibicao = formatarHora(n.chegada);
-                        const saidaExibicao = formatarHora(n.saida);
 
-                        tbody.innerHTML += `<tr><td>${dataExibicao}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>R$ ${n.valor}</td><td>${chegadaExibicao}</td><td>${saidaExibicao}</td><td>${n.temp}</td><td>${n.conferente}</td><td>${n.prev}</td><td class="${statusClass}">${n.status}</td><td>-</td></tr>`;
-                        mobile.innerHTML += `<div class="card-mobile"><div class="card-header-mobile"><span>NF: ${n.nf}</span><span class="${statusClass}">${n.status}</span></div><div class="card-body-mobile"><div><strong>Fornecedor:</strong> ${n.fornecedor}</div><div>📅 ${dataExibicao} | 💰 R$ ${n.valor}</div><div>⏱️ ${chegadaExibicao}-${saidaExibicao} | 🌡️ ${n.temp}</div></div></div>`;
+                        tbody.innerHTML += `<tr><td>${n.data}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>R$ ${n.valor}</td><td>${n.chegada}</td><td>${n.saida}</td><td>${n.temp}</td><td>${n.conferente}</td><td>${n.prev}</td><td class="${statusClass}">${n.status}</td><td>-</td></tr>`;
+                        mobile.innerHTML += `<div class="card-mobile"><div class="card-header-mobile"><span>NF: ${n.nf}</span><span class="${statusClass}">${n.status}</span></div><div class="card-body-mobile"><div><strong>Fornecedor:</strong> ${n.fornecedor}</div><div>📅 ${n.data} | 💰 R$ ${n.valor}</div><div>⏱️ ${n.chegada}-${n.saida} | 🌡️ ${n.temp}</div></div></div>`;
                         
                         totalV += parseFloat(n.valor) || 0; 
                         n.status === 'ACATADA' ? cat++ : naoCat++;
@@ -150,16 +140,14 @@
         }
 
         async function salvarNota() {
-            // Garante o formato YYYY-MM-DD explícito para o Google Sheets
-            const dataRaw = document.getElementById('data').value;
-            
+            // Adicionamos um apóstrofo antes da data/hora para forçar o Google Sheets a tratar como TEXTO (mantendo o valor original)
             const nota = {
-                data: dataRaw, // Já vem no formato YYYY-MM-DD do input type="date"
+                data: "'" + document.getElementById('data').value,
                 fornecedor: document.getElementById('fornecedor').value.toUpperCase(),
                 nf: document.getElementById('nf').value.toUpperCase(),
                 valor: document.getElementById('valor').value,
-                chegada: document.getElementById('chegada').value,
-                saida: document.getElementById('saida').value,
+                chegada: "'" + document.getElementById('chegada').value,
+                saida: "'" + document.getElementById('saida').value,
                 temp: document.getElementById('temp').value.toUpperCase(),
                 conferente: document.getElementById('conferente').value.toUpperCase(),
                 prev: document.getElementById('prev').value.toUpperCase(),
