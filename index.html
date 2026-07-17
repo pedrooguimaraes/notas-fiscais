@@ -35,7 +35,6 @@
         .card-header-mobile { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 8px; }
         .card-body-mobile { display: grid; gap: 6px; font-size: 13px; }
         
-        /* Corrigido: Impressão usa Tabela e ignora Cards Mobile */
         @media print { 
             .header > div:last-child, .stats-grid, .filters, .btn, .card-mobile { display: none !important; } 
             body { background: white; padding: 0; } 
@@ -131,18 +130,24 @@
                 }));
 
                 const fStatus = document.getElementById('fStatus').value;
-                const fForn = document.getElementById('fFornecedor').value.toLowerCase();
-                const fNF = document.getElementById('fNF').value;
+                const fForn = document.getElementById('fFornecedor').value.toUpperCase();
+                const fNF = document.getElementById('fNF').value.toUpperCase();
                 const tbody = document.getElementById('corpoTabela');
                 const mobile = document.getElementById('corpoMobile');
                 
-                tbody.innerHTML = ''; mobile.innerHTML = '';
+                // Limpeza explícita para evitar duplicidade
+                tbody.innerHTML = ''; 
+                mobile.innerHTML = '';
+                
                 let totalV = 0, cat = 0, naoCat = 0;
                 
                 notas.forEach(n => {
+                    const fornecedorUpper = (n.fornecedor || "").toUpperCase();
+                    const nfUpper = (n.nf || "").toUpperCase();
+
                     if ((fStatus === "Todos" || n.status === fStatus) && 
-                        (n.fornecedor || "").toLowerCase().includes(fForn) && 
-                        (n.nf || "").includes(fNF)) {
+                        fornecedorUpper.includes(fForn) && 
+                        nfUpper.includes(fNF)) {
                         
                         const statusClass = n.status === 'ACATADA' ? 'status-acatada' : 'status-nao-acatada';
                         const dataExibicao = formatarData(n.data);
@@ -150,7 +155,6 @@
                         const saidaExibicao = formatarHora(n.saida);
 
                         tbody.innerHTML += `<tr><td>${dataExibicao}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>R$ ${n.valor}</td><td>${chegadaExibicao}</td><td>${saidaExibicao}</td><td>${n.temp}</td><td>${n.conferente}</td><td>${n.prev}</td><td class="${statusClass}">${n.status}</td><td>-</td></tr>`;
-                        
                         mobile.innerHTML += `<div class="card-mobile"><div class="card-header-mobile"><span>NF: ${n.nf}</span><span class="${statusClass}">${n.status}</span></div><div class="card-body-mobile"><div><strong>Fornecedor:</strong> ${n.fornecedor}</div><div>📅 ${dataExibicao} | 💰 R$ ${n.valor}</div><div>⏱️ ${chegadaExibicao}-${saidaExibicao} | 🌡️ ${n.temp}</div></div></div>`;
                         
                         totalV += parseFloat(n.valor) || 0; 
@@ -166,16 +170,21 @@
 
         async function salvarNota() {
             const nota = {
-                data: document.getElementById('data').value, fornecedor: document.getElementById('fornecedor').value,
-                nf: document.getElementById('nf').value, valor: document.getElementById('valor').value,
-                chegada: document.getElementById('chegada').value, saida: document.getElementById('saida').value,
-                temp: document.getElementById('temp').value, conferente: document.getElementById('conferente').value,
-                prev: document.getElementById('prev').value, status: document.getElementById('status').value
+                data: document.getElementById('data').value,
+                fornecedor: document.getElementById('fornecedor').value.toUpperCase(),
+                nf: document.getElementById('nf').value.toUpperCase(),
+                valor: document.getElementById('valor').value,
+                chegada: document.getElementById('chegada').value,
+                saida: document.getElementById('saida').value,
+                temp: document.getElementById('temp').value.toUpperCase(),
+                conferente: document.getElementById('conferente').value.toUpperCase(),
+                prev: document.getElementById('prev').value.toUpperCase(),
+                status: document.getElementById('status').value
             };
             await fetch(URL_GOOGLE, { method: 'POST', mode: 'no-cors', body: JSON.stringify(nota) });
             document.getElementById('formNota').reset();
             fecharModal();
-            setTimeout(renderizar, 1500);
+            setTimeout(renderizar, 1000);
         }
 
         function abrirModal() { document.getElementById('modal').style.display = 'flex'; }
