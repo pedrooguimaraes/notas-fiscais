@@ -5,377 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notas Fiscais</title>
     <style>
-        /* Variáveis de Cores e Layout */
-        :root {
-            --cor-primaria: #215598;
-            --cor-secundaria: #333;
-            --cor-fundo: #f7f7f7;
-            --cor-branco: #ffffff;
-            --cor-borda: #e0e0e0;
-            --cor-sucesso: #2e7d32; /* Verde mais profissional */
-            --cor-erro: #c62828;   /* Vermelho mais profissional */
-            --sombra-card: 0 2px 4px rgba(0,0,0,0.05);
-            --border-radius-card: 12px;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--cor-fundo);
-            padding: 15px;
-            color: var(--cor-secundaria);
-            margin: 0;
-        }
-
-        .container {
-            max-width: 1200px; /* Reduzido para algo mais compacto */
-            margin: auto;
-        }
-
-        /* Cabeçalho Principal */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .header h1 {
-            font-size: 1.5rem; /* Ligeiramente maior para destaque */
-            margin: 0;
-            line-height: 1.2;
-            color: var(--cor-primaria);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        /* Grid de Estatísticas */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px; /* Espaçamento reduzido */
-            margin-bottom: 20px;
-        }
-
-        .card {
-            background: var(--cor-branco);
-            padding: 15px; /* Padding reduzido */
-            border-radius: var(--border-radius-card);
-            border: 1px solid var(--cor-borda);
-            box-shadow: var(--sombra-card);
-        }
-
-        .card small {
-            font-size: 11px;
-            color: #888;
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .card h2 {
-            margin: 0;
-            font-size: 20px; /* Reduzido */
-            font-weight: 600;
-            color: var(--cor-primaria);
-        }
-
-        /* Área de Filtros */
-        .filters {
-            background: var(--cor-branco);
-            padding: 15px; /* Reduzido */
-            border-radius: var(--border-radius-card);
-            border: 1px solid var(--cor-borda);
-            margin-bottom: 20px;
-        }
-
-        .filter-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* Ajustado para 3 colunas principales */
-            gap: 10px;
-        }
-
-        /* Estilização de Campos de Formulário e Selects */
-        input, select {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 13px;
-            transition: border-color 0.2s;
-        }
-        input:focus, select:focus {
-            border-color: var(--cor-primaria);
-            outline: none;
-        }
-
-        /* Estilização de Botões */
-        .btn {
-            padding: 8px 16px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 13px;
-            transition: background-color 0.2s, box-shadow 0.2s;
-        }
-
-        .btn:active {
-            transform: translateY(1px);
-        }
-
-        .btn-add {
-            background-color: var(--cor-primaria);
-            color: var(--cor-branco);
-        }
-        .btn-add:hover {
-            background-color: #1a447a;
-        }
-
-        .btn-secondary {
-            background-color: #f0f0f0;
-            color: var(--cor-secundaria);
-        }
-        .btn-secondary:hover {
-            background-color: #e0e0e0;
-        }
-
-        /* Estilização da Tabela (Desktop) */
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 5px; /* Espaçamento entre linhas */
-            background: transparent;
-            margin-top: -5px; /* Compensar o border-spacing */
-        }
-
-        th, td {
-            padding: 10px 12px; /* Padding ajustado */
-            text-align: left;
-            font-size: 13px;
-            background: var(--cor-branco);
-            border: none;
-        }
-
-        th {
-            background-color: var(--cor-primaria);
-            color: var(--cor-branco);
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 11px;
-            letter-spacing: 0.5px;
-        }
-
-        /* Arredondamento dos cantos da primeira e última coluna da tabela */
-        tr td:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
-        tr td:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
-        
-        /* Estilização de Status (Baseada na imagem) */
-        .status-badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .status-acatada {
-            color: var(--cor-sucesso);
-            background-color: #e8f5e9; /* Fundo verde claro */
-        }
-
-        .status-nao-acatada {
-            color: var(--cor-erro);
-            background-color: #ffebee; /* Fundo vermelho claro */
-        }
-
-        /* Estilização do Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6); /* Fundo mais escuro */
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(2px); /* Efeito de desfoque no fundo */
-        }
-
-        .modal-content {
-            background: var(--cor-branco);
-            padding: 30px;
-            border-radius: 16px;
-            width: 600px;
-            max-width: 90%;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-
-        .modal-content h3 { margin: 0 0 20px 0; font-size: 1.25rem; color: var(--cor-primaria); }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        .form-group { margin-bottom: 10px; }
-        .form-group label { font-size: 12px; font-weight: 600; color: #666; display: block; margin-bottom: 4px; }
-
-        /* Card Mobile (Estilizado conforme solicitado) */
-        .card-mobile {
-            display: none;
-            background: var(--cor-branco);
-            border: 1px solid var(--cor-borda);
-            padding: 15px;
-            border-radius: var(--border-radius-card);
-            margin-bottom: 12px;
-            box-shadow: var(--sombra-card);
-        }
-
-        .card-header-mobile {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            font-weight: 700;
-            border-bottom: 1px solid #f0f0f0;
-            padding-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .card-body-mobile {
-            display: grid;
-            gap: 8px;
-            font-size: 13px;
-        }
-
-        .card-body-mobile div {
-            display: flex;
-            justify-content: space-between;
-            color: #555;
-        }
-
-        .card-body-mobile strong { color: #333; }
-
-        /* Media Queries para Impressão e Responsividade */
-        @media print {
-            body { background: var(--cor-branco); padding: 0; color: var(--cor-secundaria); }
-            .container { width: 100%; max-width: none; }
-            .header > div:last-child, .stats-grid, .filters, .btn, .card-mobile, .modal { display: none !important; }
-            .header { margin-bottom: 10px; }
-            .header h1 { font-size: 1.2rem; }
-            table { display: table !important; width: 100%; border-collapse: collapse; border-spacing: 0; margin-top: 10px; }
-            th, td { border: 1px solid #ccc; padding: 6px; }
-            th { background-color: #f0f0f0 !important; color: var(--cor-secundaria); }
-            .status-badge { background: none !important; padding: 0; }
-        }
-
-        @media (max-width: 768px) {
-            table { display: none; }
-            .card-mobile { display: block; }
-            .filter-grid { grid-template-columns: 1fr; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .header { flex-direction: column; align-items: flex-start; }
-            .header h1 { font-size: 1.2rem; margin-bottom: 10px; }
-            .header-actions { width: 100%; justify-content: space-between; }
-            .btn { flex-grow: 1; text-align: center; }
-            .modal-content { width: 95%; padding: 20px; }
-            .form-grid { grid-template-columns: 1fr; gap: 10px; }
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f7f7f7; padding: 15px; color: #333; }
+        .container { max-width: 1400px; margin: auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 10px; }
+        .header h1 { font-size: 1.25rem; margin: 0; line-height: 1.2; }
+        .header-actions { display: flex; gap: 8px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 20px; }
+        .card { background: white; padding: 20px; border-radius: 12px; border: 1px solid #e0e0e0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .card small { font-size: 11px; color: #888; text-transform: uppercase; font-weight: bold; }
+        .card h2 { margin: 5px 0 0 0; font-size: 22px; }
+        .filters { background: white; padding: 20px; border-radius: 12px; border: 1px solid #e0e0e0; margin-bottom: 20px; }
+        .filter-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+        table { width: 100%; border-collapse: collapse; background: white; border: 1px solid #e0e0e0; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; font-size: 13px; }
+        th { background-color: #215598; color: white; }
+        .status-acatada { color: green; font-weight: bold; }
+        .status-nao-acatada { color: red; font-weight: bold; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; padding: 25px; border-radius: 8px; width: 600px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; margin-top: 5px; }
+        .btn { padding: 8px 12px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; font-size: 12px; }
+        .btn-add { background-color: #215598; color: white; }
+        .card-mobile { display: none; background: white; border: 1px solid #ddd; padding: 15px; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .card-header-mobile { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+        .card-body-mobile { display: grid; gap: 6px; font-size: 13px; }
+        @media print { .header > div:last-child, .stats-grid, .filters, .btn, .card-mobile { display: none !important; } body { background: white; padding: 0; } .container { width: 100%; } table { display: table !important; width: 100%; } }
+        @media (max-width: 768px) { table { display: none; } .card-mobile { display: block; } .filter-grid { grid-template-columns: 1fr; } .stats-grid { grid-template-columns: 1fr 1fr; } .header { flex-direction: column; align-items: flex-start; } .header h1 { font-size: 1.1rem; } }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>📋 CONTROLE DE NFs. E TEMPERATURA°C</h1>
+            <h1>📋 CONTROLE DE NFs. e TEMPERATURA°C</h1>
             <div class="header-actions">
-                <button class="btn btn-secondary" onclick="window.print()">Gerar PDF/Salvar</button>
+                <button class="btn" onclick="window.print()">Gerar PDF/Salvar</button>
                 <button class="btn btn-add" onclick="abrirModal()">+ Nova Nota Fiscal</button>
             </div>
         </div>
-
         <div class="stats-grid">
             <div class="card"><small>TOTAL</small><h2 id="totalNotas">0</h2></div>
             <div class="card"><small>VALOR</small><h2 id="valorTotal">R$ 0,00</h2></div>
             <div class="card"><small>NÃO ACATADA</small><h2 id="naoAcatadas">0</h2></div>
             <div class="card"><small>ACATADAS</small><h2 id="acatadas">0</h2></div>
         </div>
-
         <div class="filters">
             <div class="filter-grid">
-                <select id="fStatus" onchange="renderizar()">
-                    <option value="Todos">Status: Todos</option>
-                    <option value="ACATADA">ACATADA</option>
-                    <option value="NÃO ACATADA">NÃO ACATADA</option>
-                </select>
-                <input type="text" id="fFornecedor" placeholder="🔎 Buscar Fornecedor" onkeyup="renderizar()">
-                <input type="text" id="fNF" placeholder="🔎 Buscar NF" onkeyup="renderizar()">
+                <select id="fStatus" onchange="renderizar()"><option value="Todos">Status: Todos</option><option value="ACATADA">ACATADA</option><option value="NÃO ACATADA">NÃO ACATADA</option></select>
+                <input type="text" id="fFornecedor" placeholder="Buscar Fornecedor" onkeyup="renderizar()">
+                <input type="text" id="fNF" placeholder="Buscar NF" onkeyup="renderizar()">
             </div>
         </div>
-
-        <table id="tabelaNotas">
-            <thead>
-                <tr>
-                    <th>Data</th>
-                    <th>Fornecedor</th>
-                    <th>NF</th>
-                    <th>Valor</th>
-                    <th>Chegada</th>
-                    <th>Saída</th>
-                    <th>Temp.</th>
-                    <th>Conferente</th>
-                    <th>Prevenção</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
+        <table>
+            <thead><tr><th>Data</th><th>Fornecedor</th><th>NF</th><th>Valor</th><th>Chegada</th><th>Saída</th><th>Temp.</th><th>Conferente</th><th>Prevenção</th><th>Status</th><th>Ações</th></tr></thead>
             <tbody id="corpoTabela"></tbody>
         </table>
-        
         <div id="corpoMobile"></div>
     </div>
 
-    <!-- Modal de Cadastro -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <h3>Nova Nota Fiscal</h3>
             <form id="formNota">
                 <div class="form-grid">
-                    <div class="form-group"><label>Data</label><input type="date" id="data" required></div>
-                    <div class="form-group"><label>Fornecedor</label><input type="text" id="fornecedor" required></div>
-                    <div class="form-group"><label>NF</label><input type="text" id="nf" required></div>
-                    <div class="form-group"><label>Valor (R$)</label><input type="number" id="valor" step="0.01" required></div>
-                    <div class="form-group"><label>Chegada</label><input type="time" id="chegada"></div>
-                    <div class="form-group"><label>Saída</label><input type="time" id="saida"></div>
-                    <div class="form-group"><label>Temperatura (°C)</label><input type="text" id="temp"></div>
-                    <div class="form-group"><label>Conferente</label><input type="text" id="conferente"></div>
-                    <div class="form-group"><label>Prevenção</label><input type="text" id="prev"></div>
-                    <div class="form-group"><label>Status</label>
-                        <select id="status">
-                            <option value="NÃO ACATADA">NÃO ACATADA</option>
-                            <option value="ACATADA">ACATADA</option>
-                        </select>
-                    </div>
+                    <div><label>Data</label><input type="date" id="data" required></div>
+                    <div><label>Fornecedor</label><input type="text" id="fornecedor" required></div>
+                    <div><label>NF</label><input type="text" id="nf" required></div>
+                    <div><label>Valor (R$)</label><input type="number" id="valor" step="0.01" required></div>
+                    <div><label>Chegada</label><input type="time" id="chegada"></div>
+                    <div><label>Saída</label><input type="time" id="saida"></div>
+                    <div><label>Temp.</label><input type="text" id="temp"></div>
+                    <div><label>Conferente</label><input type="text" id="conferente"></div>
+                    <div><label>Prevenção</label><input type="text" id="prev"></div>
+                    <div><label>Status</label><select id="status"><option>NÃO ACATADA</option><option>ACATADA</option></select></div>
                 </div>
             </form>
-            <div style="margin-top: 25px; text-align: right; display: flex; gap: 10px; justify-content: flex-end;">
-                <button class="btn btn-secondary" onclick="fecharModal()">Cancelar</button>
-                <button class="btn btn-add" onclick="salvarNota()">Salvar Nota</button>
+            <div style="margin-top: 20px; text-align: right;">
+                <button class="btn" onclick="fecharModal()">Cancelar</button>
+                <button class="btn btn-add" onclick="salvarNota()">Salvar</button>
             </div>
         </div>
     </div>
 
     <script>
         const URL_GOOGLE = 'https://script.google.com/macros/s/AKfycbxJNhi1AY83G_AFdS1psw9g8wFe2BLS_AFU-8tZetXkMaTRnO81G5HV6RF1udYIrpBw/exec'; 
+
+        // Agora exibimos o valor bruto vindo da planilha como string, sem tentar converter fuso horário
+        function formatarData(data) { return data || '--'; }
+        function formatarHora(hora) { return hora || '--'; }
 
         async function renderizar() {
             try {
@@ -387,4 +104,65 @@
                     chegada: n[4], saida: n[5], temp: n[6], conferente: n[7], prev: n[8], status: n[9]
                 }));
 
-                const fStatus = document.getElementById('fStatus').
+                const fStatus = document.getElementById('fStatus').value;
+                const fForn = document.getElementById('fFornecedor').value.toUpperCase();
+                const fNF = document.getElementById('fNF').value.toUpperCase();
+                const tbody = document.getElementById('corpoTabela');
+                const mobile = document.getElementById('corpoMobile');
+                
+                tbody.innerHTML = ''; 
+                mobile.innerHTML = '';
+                
+                let totalV = 0, cat = 0, naoCat = 0;
+                
+                notas.forEach(n => {
+                    const fornecedorUpper = (n.fornecedor || "").toUpperCase();
+                    const nfUpper = (n.nf || "").toUpperCase();
+
+                    if ((fStatus === "Todos" || n.status === fStatus) && 
+                        fornecedorUpper.includes(fForn) && 
+                        nfUpper.includes(fNF)) {
+                        
+                        const statusClass = n.status === 'ACATADA' ? 'status-acatada' : 'status-nao-acatada';
+
+                        tbody.innerHTML += `<tr><td>${n.data}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>R$ ${n.valor}</td><td>${n.chegada}</td><td>${n.saida}</td><td>${n.temp}</td><td>${n.conferente}</td><td>${n.prev}</td><td class="${statusClass}">${n.status}</td><td>-</td></tr>`;
+                        mobile.innerHTML += `<div class="card-mobile"><div class="card-header-mobile"><span>NF: ${n.nf}</span><span class="${statusClass}">${n.status}</span></div><div class="card-body-mobile"><div><strong>Fornecedor:</strong> ${n.fornecedor}</div><div>📅 ${n.data} | 💰 R$ ${n.valor}</div><div>⏱️ ${n.chegada}-${n.saida} | 🌡️ ${n.temp}</div></div></div>`;
+                        
+                        totalV += parseFloat(n.valor) || 0; 
+                        n.status === 'ACATADA' ? cat++ : naoCat++;
+                    }
+                });
+                document.getElementById('totalNotas').innerText = notas.length;
+                document.getElementById('valorTotal').innerText = `R$ ${totalV.toFixed(2)}`;
+                document.getElementById('acatadas').innerText = cat;
+                document.getElementById('naoAcatadas').innerText = naoCat;
+            } catch (error) { console.error("Erro ao renderizar:", error); }
+        }
+
+        async function salvarNota() {
+            // Adicionamos um apóstrofo antes da data/hora para forçar o Google Sheets a tratar como TEXTO (mantendo o valor original)
+            const nota = {
+                data: "'" + document.getElementById('data').value,
+                fornecedor: document.getElementById('fornecedor').value.toUpperCase(),
+                nf: document.getElementById('nf').value.toUpperCase(),
+                valor: document.getElementById('valor').value,
+                chegada: "'" + document.getElementById('chegada').value,
+                saida: "'" + document.getElementById('saida').value,
+                temp: document.getElementById('temp').value.toUpperCase(),
+                conferente: document.getElementById('conferente').value.toUpperCase(),
+                prev: document.getElementById('prev').value.toUpperCase(),
+                status: document.getElementById('status').value
+            };
+            
+            await fetch(URL_GOOGLE, { method: 'POST', mode: 'no-cors', body: JSON.stringify(nota) });
+            document.getElementById('formNota').reset();
+            fecharModal();
+            setTimeout(renderizar, 1000);
+        }
+
+        function abrirModal() { document.getElementById('modal').style.display = 'flex'; }
+        function fecharModal() { document.getElementById('modal').style.display = 'none'; }
+        renderizar();
+    </script>
+</body>
+</html>
