@@ -59,9 +59,7 @@
         @media (max-width: 768px) { 
             table { display: none; } 
             #corpoMobile { display: block; } 
-            /* Ajuste específico para os filtros no mobile */
-            .filter-grid { grid-template-columns: 1fr; gap: 10px; } 
-            .filter-grid input, .filter-grid select { margin-top: 0; }
+            .filter-grid { grid-template-columns: 1fr; } 
             .stats-grid { grid-template-columns: 1fr 1fr; } 
             .header { flex-direction: column; align-items: flex-start; } 
             .header h1 { font-size: 1.1rem; } 
@@ -97,4 +95,125 @@
         </table>
         <div id="corpoMobile"></div>
     </div>
-...
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h3>Nova Nota Fiscal</h3>
+            <form id="formNota">
+                <div class="form-grid">
+                    <div><label>Data</label><input type="date" id="data" required></div>
+                    <div><label>Fornecedor</label><input type="text" id="fornecedor" required></div>
+                    <div><label>NF</label><input type="text" id="nf" required></div>
+                    <div><label>Valor (R$)</label><input type="number" id="valor" step="0.01" required></div>
+                    <div><label>Chegada</label><input type="time" id="chegada"></div>
+                    <div><label>Saída</label><input type="time" id="saida"></div>
+                    <div><label>Temp.</label><input type="text" id="temp"></div>
+                    <div><label>Conferente</label><input type="text" id="conferente"></div>
+                    <div><label>Prevenção</label><input type="text" id="prev"></div>
+                    <div><label>Status</label><select id="status"><option>NÃO ACATADA</option><option>ACATADA</option></select></div>
+                </div>
+            </form>
+            <div style="margin-top: 20px; text-align: right;">
+                <button class="btn" onclick="fecharModal()">Cancelar</button>
+                <button class="btn btn-add" onclick="salvarNota()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const URL_GOOGLE = 'https://script.google.com/macros/s/AKfycbxJNhi1AY83G_AFdS1psw9g8wFe2BLS_AFU-8tZetXkMaTRnO81G5HV6RF1udYIrpBw/exec'; 
+
+        function formatarMoeda(valor) {
+            return Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        async function renderizar() {
+            try {
+                const response = await fetch(URL_GOOGLE);
+                const dados = await response.json();
+                let listaNotas = dados.slice(1).reverse();
+                let notas = listaNotas.map(n => ({
+                    data: n[0], fornecedor: n[1], nf: String(n[2] || ""), valor: n[3], 
+                    chegada: n[4], saida: n[5], temp: n[6], conferente: n[7], prev: n[8], status: n[9]
+                }));
+
+                const fData = document.getElementById('fData').value;
+                const fStatus = document.getElementById('fStatus').value;
+                const fForn = document.getElementById('fFornecedor').value.toUpperCase();
+                const fNF = document.getElementById('fNF').value.toUpperCase();
+                const tbody = document.getElementById('corpoTabela');
+                const mobile = document.getElementById('corpoMobile');
+                
+                tbody.innerHTML = ''; 
+                mobile.innerHTML = '';
+                
+                let totalV = 0, cat = 0, naoCat = 0;
+                
+                notas.forEach(n => {
+                    const fornecedorUpper = (n.fornecedor || "").toUpperCase();
+                    const nfUpper = (n.nf || "").toUpperCase();
+
+                    if ((fData === "" || n.data === fData) &&
+                        (fStatus === "Todos" || n.status === fStatus) && 
+                        fornecedorUpper.includes(fForn) && 
+                        nfUpper.includes(fNF)) {
+                        
+                        const statusClass = n.status === 'ACATADA' ? 'status-acatada' : 'status-nao-acatada';
+                        const valorFormatado = formatarMoeda(n.valor);
+
+                        tbody.innerHTML += `<tr><td>${n.data}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>${valorFormatado}</td><td>${n.chegada}</td><td>${n.saida}</td><td>${n.temp}</td><td>${n.conferente}</td><td>${n.prev}</td><td><span class="status-badge ${statusClass}">${n.status}</span></td><td>-</td></tr>`;
+                        
+                        mobile.innerHTML += `
+                        <div class="card-mobile">
+                            <div class="card-header-mobile">
+                                <div>
+                                    <div class="card-title">${n.fornecedor}</div>
+                                    <div class="card-nf">NF ${n.nf}</div>
+                                </div>
+                                <span class="status-badge ${statusClass}">${n.status}</span>
+                            </div>
+                            <div class="card-body-mobile">
+                                <div><span class="label-mobile">Data</span><span class="value-mobile">${n.data}</span></div>
+                                <div><span class="label-mobile">Valor</span><span class="value-mobile">${valorFormatado}</span></div>
+                                <div><span class="label-mobile">Chegada</span><span class="value-mobile">${n.chegada}</span></div>
+                                <div><span class="label-mobile">Saída</span><span class="value-mobile">${n.saida}</span></div>
+                            </div>
+                        </div>`;
+                        
+                        totalV += parseFloat(n.valor) || 0; 
+                        n.status === 'ACATADA' ? cat++ : naoCat++;
+                    }
+                });
+                document.getElementById('totalNotas').innerText = notas.length;
+                document.getElementById('valorTotal').innerText = formatarMoeda(totalV);
+                document.getElementById('acatadas').innerText = cat;
+                document.getElementById('naoAcatadas').innerText = naoCat;
+            } catch (error) { console.error("Erro ao renderizar:", error); }
+        }
+
+        async function salvarNota() {
+            const nota = {
+                data: "'" + document.getElementById('data').value,
+                fornecedor: document.getElementById('fornecedor').value.toUpperCase(),
+                nf: document.getElementById('nf').value.toUpperCase(),
+                valor: document.getElementById('valor').value,
+                chegada: "'" + document.getElementById('chegada').value,
+                saida: "'" + document.getElementById('saida').value,
+                temp: document.getElementById('temp').value.toUpperCase(),
+                conferente: document.getElementById('conferente').value.toUpperCase(),
+                prev: document.getElementById('prev').value.toUpperCase(),
+                status: document.getElementById('status').value
+            };
+            
+            await fetch(URL_GOOGLE, { method: 'POST', mode: 'no-cors', body: JSON.stringify(nota) });
+            document.getElementById('formNota').reset();
+            fecharModal();
+            setTimeout(renderizar, 1000);
+        }
+
+        function abrirModal() { document.getElementById('modal').style.display = 'flex'; }
+        function fecharModal() { document.getElementById('modal').style.display = 'none'; }
+        renderizar();
+    </script>
+</body>
+</html>
