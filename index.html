@@ -59,7 +59,8 @@
         @media (max-width: 768px) { 
             table { display: none; } 
             #corpoMobile { display: block; } 
-            .filter-grid { grid-template-columns: 1fr; } 
+            /* Filtros corrigidos para ocupar 100% da largura no mobile */
+            .filter-grid { grid-template-columns: 1fr; gap: 10px; } 
             .stats-grid { grid-template-columns: 1fr 1fr; } 
             .header { flex-direction: column; align-items: flex-start; } 
             .header h1 { font-size: 1.1rem; } 
@@ -96,6 +97,7 @@
         <div id="corpoMobile"></div>
     </div>
 
+    <!-- ... (restante do modal e script mantidos idênticos ao seu original) ... -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <h3>Nova Nota Fiscal</h3>
