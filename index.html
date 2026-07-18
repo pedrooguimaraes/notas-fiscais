@@ -10,19 +10,18 @@
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 10px; }
         .header h1 { font-size: 1.1rem; margin: 0; }
         
-        /* Stats Grid */
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
         .card { background: white; padding: 12px; border-radius: 8px; border: 1px solid #e0e0e0; }
         .card small { font-size: 10px; color: #888; text-transform: uppercase; font-weight: bold; }
         .card h2 { margin: 4px 0 0 0; font-size: 18px; }
         
         .filters { background: white; padding: 15px; border-radius: 8px; border: 1px solid #e0e0e0; margin-bottom: 15px; }
-        .filter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; } /* Ajustado para 4 colunas */
+        .filter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        
         table { width: 100%; border-collapse: collapse; background: white; border: 1px solid #e0e0e0; }
         th, td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; font-size: 13px; }
         th { background-color: #215598; color: white; }
         
-        /* Badges */
         .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; display: inline-block; }
         .status-acatada { color: green; background-color: #e8f5e9; }
         .status-nao-acatada { color: red; background-color: #ffebee; }
@@ -34,6 +33,9 @@
         .btn { padding: 8px 12px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; font-size: 12px; }
         .btn-add { background-color: #215598; color: white; }
         
+        /* CORREÇÃO AQUI: Por padrão, esconde os cards mobile no desktop */
+        #corpoMobile { display: none; }
+        
         .card-mobile { background: white; border: 1px solid #e0e0e0; padding: 16px; border-radius: 12px; margin-bottom: 12px; }
         .card-header-mobile { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .card-title { font-size: 16px; font-weight: bold; margin: 0; }
@@ -43,7 +45,16 @@
         .value-mobile { font-weight: 500; color: #333; }
 
         @media print { .header > div:last-child, .stats-grid, .filters, .btn, .card-mobile { display: none !important; } body { background: white; padding: 0; } .container { width: 100%; } table { display: table !important; width: 100%; border-collapse: collapse; } th, td { border: 1px solid #eee; padding: 8px; } th { background-color: #215598 !important; color: white !important; -webkit-print-color-adjust: exact; } .status-badge { color: inherit; background-color: transparent; border: 1px solid #ddd; padding: 2px 4px; } .status-acatada { color: green !important; -webkit-print-color-adjust: exact; } .status-nao-acatada { color: red !important; -webkit-print-color-adjust: exact; } }
-        @media (max-width: 768px) { table { display: none; } .card-mobile { display: block; } .filter-grid { grid-template-columns: 1fr; } .stats-grid { grid-template-columns: 1fr 1fr; } .header { flex-direction: column; align-items: flex-start; } .header h1 { font-size: 1.1rem; } }
+        
+        /* CORREÇÃO AQUI: Em telas mobile, esconde a tabela e mostra o corpoMobile */
+        @media (max-width: 768px) { 
+            table { display: none; } 
+            #corpoMobile { display: block; } 
+            .filter-grid { grid-template-columns: 1fr; } 
+            .stats-grid { grid-template-columns: 1fr 1fr; } 
+            .header { flex-direction: column; align-items: flex-start; } 
+            .header h1 { font-size: 1.1rem; } 
+        }
     </style>
 </head>
 <body>
@@ -63,7 +74,6 @@
         </div>
         <div class="filters">
             <div class="filter-grid">
-                <!-- 2. Adicionado campo data -->
                 <input type="date" id="fData" onchange="renderizar()">
                 <select id="fStatus" onchange="renderizar()"><option value="Todos">Status: Todos</option><option value="ACATADA">ACATADA</option><option value="NÃO ACATADA">NÃO ACATADA</option></select>
                 <input type="text" id="fFornecedor" placeholder="Buscar Fornecedor" onkeyup="renderizar()">
@@ -134,7 +144,6 @@
                     const fornecedorUpper = (n.fornecedor || "").toUpperCase();
                     const nfUpper = (n.nf || "").toUpperCase();
 
-                    // Filtros
                     if ((fData === "" || n.data === fData) &&
                         (fStatus === "Todos" || n.status === fStatus) && 
                         fornecedorUpper.includes(fForn) && 
