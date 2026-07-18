@@ -18,6 +18,7 @@
         .filters { background: white; padding: 15px; border-radius: 8px; border: 1px solid #e0e0e0; margin-bottom: 15px; }
         .filter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
         
+        /* Tabela visível no Desktop */
         table { width: 100%; border-collapse: collapse; background: white; border: 1px solid #e0e0e0; }
         th, td { padding: 8px 5px; text-align: left; border-bottom: 1px solid #eee; font-size: 12px; }
         th { background-color: #215598; color: white; }
@@ -33,6 +34,7 @@
         .btn { padding: 8px 12px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; font-size: 12px; }
         .btn-add { background-color: #215598; color: white; }
         
+        /* Mobile: Cards */
         #corpoMobile { display: none; }
         .card-mobile { background: white; border: 1px solid #e0e0e0; padding: 16px; border-radius: 12px; margin-bottom: 12px; }
         .card-header-mobile { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
@@ -57,11 +59,12 @@
         @media (max-width: 768px) { 
             table { display: none; } 
             #corpoMobile { display: block; } 
-            .header { flex-direction: column; align-items: stretch; gap: 15px; }
-            .header-actions { display: flex; flex-direction: column; gap: 10px; }
-            .btn-add { order: -1; width: 100%; padding: 12px; font-size: 14px; }
-            .filter-grid { grid-template-columns: 1fr; gap: 8px; } 
+            /* Ajuste específico para os filtros no mobile */
+            .filter-grid { grid-template-columns: 1fr; gap: 10px; } 
+            .filter-grid input, .filter-grid select { margin-top: 0; }
             .stats-grid { grid-template-columns: 1fr 1fr; } 
+            .header { flex-direction: column; align-items: flex-start; } 
+            .header h1 { font-size: 1.1rem; } 
         }
     </style>
 </head>
@@ -70,8 +73,8 @@
         <div class="header">
             <h1>📋 CONTROLE DE NFs. e TEMPERATURA°C</h1>
             <div class="header-actions">
-                <button class="btn btn-add" onclick="abrirModal()">+ Nova Nota Fiscal</button>
                 <button class="btn" onclick="window.print()">Gerar PDF/Salvar</button>
+                <button class="btn btn-add" onclick="abrirModal()">+ Nova Nota Fiscal</button>
             </div>
         </div>
         <div class="stats-grid">
@@ -94,6 +97,4 @@
         </table>
         <div id="corpoMobile"></div>
     </div>
-    <!-- ... (restante do script e modal mantidos) ... -->
-</body>
-</html>
+...
