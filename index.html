@@ -18,12 +18,11 @@
         .filters { background: white; padding: 15px; border-radius: 8px; border: 1px solid #e0e0e0; margin-bottom: 15px; }
         .filter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
         
-        /* Tabela visível no Desktop */
         table { width: 100%; border-collapse: collapse; background: white; border: 1px solid #e0e0e0; }
-        th, td { padding: 8px 5px; text-align: left; border-bottom: 1px solid #eee; font-size: 12px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; font-size: 13px; }
         th { background-color: #215598; color: white; }
         
-        .status-badge { padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; display: inline-block; }
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; display: inline-block; }
         .status-acatada { color: green; background-color: #e8f5e9; }
         .status-nao-acatada { color: red; background-color: #ffebee; }
 
@@ -34,8 +33,9 @@
         .btn { padding: 8px 12px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; font-size: 12px; }
         .btn-add { background-color: #215598; color: white; }
         
-        /* Mobile: Cards */
+        /* CORREÇÃO AQUI: Por padrão, esconde os cards mobile no desktop */
         #corpoMobile { display: none; }
+        
         .card-mobile { background: white; border: 1px solid #e0e0e0; padding: 16px; border-radius: 12px; margin-bottom: 12px; }
         .card-header-mobile { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .card-title { font-size: 16px; font-weight: bold; margin: 0; }
@@ -44,18 +44,9 @@
         .label-mobile { color: #888; font-size: 11px; text-transform: uppercase; font-weight: bold; display: block; }
         .value-mobile { font-weight: 500; color: #333; }
 
-        @media print { 
-            .header, .stats-grid, .filters, .btn, .card-mobile { display: none !important; } 
-            body { background: white; padding: 0; margin: 0; } 
-            .container { width: 100%; padding: 0; margin: 0; } 
-            table { display: table !important; width: 100%; border-collapse: collapse; font-size: 10px; } 
-            th, td { border: 1px solid #ddd; padding: 4px 3px !important; } 
-            th { background-color: #215598 !important; color: white !important; -webkit-print-color-adjust: exact; } 
-            .status-badge { color: inherit; background-color: transparent; border: 1px solid #999; padding: 1px 3px; font-size: 9px; } 
-            .status-acatada { color: green !important; -webkit-print-color-adjust: exact; } 
-            .status-nao-acatada { color: red !important; -webkit-print-color-adjust: exact; } 
-        }
+        @media print { .header > div:last-child, .stats-grid, .filters, .btn, .card-mobile { display: none !important; } body { background: white; padding: 0; } .container { width: 100%; } table { display: table !important; width: 100%; border-collapse: collapse; } th, td { border: 1px solid #eee; padding: 8px; } th { background-color: #215598 !important; color: white !important; -webkit-print-color-adjust: exact; } .status-badge { color: inherit; background-color: transparent; border: 1px solid #ddd; padding: 2px 4px; } .status-acatada { color: green !important; -webkit-print-color-adjust: exact; } .status-nao-acatada { color: red !important; -webkit-print-color-adjust: exact; } }
         
+        /* CORREÇÃO AQUI: Em telas mobile, esconde a tabela e mostra o corpoMobile */
         @media (max-width: 768px) { 
             table { display: none; } 
             #corpoMobile { display: block; } 
