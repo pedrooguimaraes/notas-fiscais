@@ -10,14 +10,14 @@
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 10px; }
         .header h1 { font-size: 1.1rem; margin: 0; }
         
-        /* 1. Stats Grid mais compacto */
+        /* Stats Grid */
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
         .card { background: white; padding: 12px; border-radius: 8px; border: 1px solid #e0e0e0; }
         .card small { font-size: 10px; color: #888; text-transform: uppercase; font-weight: bold; }
         .card h2 { margin: 4px 0 0 0; font-size: 18px; }
         
         .filters { background: white; padding: 15px; border-radius: 8px; border: 1px solid #e0e0e0; margin-bottom: 15px; }
-        .filter-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+        .filter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; } /* Ajustado para 4 colunas */
         table { width: 100%; border-collapse: collapse; background: white; border: 1px solid #e0e0e0; }
         th, td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; font-size: 13px; }
         th { background-color: #215598; color: white; }
@@ -58,12 +58,13 @@
         <div class="stats-grid">
             <div class="card"><small>TOTAL</small><h2 id="totalNotas">0</h2></div>
             <div class="card"><small>VALOR</small><h2 id="valorTotal">R$ 0,00</h2></div>
-            <!-- 2. Atualizado para receber classes de badge -->
             <div class="card"><small>NÃO ACATADA</small><h2 id="naoAcatadas" class="status-badge status-nao-acatada" style="margin-top: 10px;">0</h2></div>
             <div class="card"><small>ACATADAS</small><h2 id="acatadas" class="status-badge status-acatada" style="margin-top: 10px;">0</h2></div>
         </div>
         <div class="filters">
             <div class="filter-grid">
+                <!-- 2. Adicionado campo data -->
+                <input type="date" id="fData" onchange="renderizar()">
                 <select id="fStatus" onchange="renderizar()"><option value="Todos">Status: Todos</option><option value="ACATADA">ACATADA</option><option value="NÃO ACATADA">NÃO ACATADA</option></select>
                 <input type="text" id="fFornecedor" placeholder="Buscar Fornecedor" onkeyup="renderizar()">
                 <input type="text" id="fNF" placeholder="Buscar NF" onkeyup="renderizar()">
@@ -103,6 +104,10 @@
     <script>
         const URL_GOOGLE = 'https://script.google.com/macros/s/AKfycbxJNhi1AY83G_AFdS1psw9g8wFe2BLS_AFU-8tZetXkMaTRnO81G5HV6RF1udYIrpBw/exec'; 
 
+        function formatarMoeda(valor) {
+            return Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
         async function renderizar() {
             try {
                 const response = await fetch(URL_GOOGLE);
@@ -113,6 +118,7 @@
                     chegada: n[4], saida: n[5], temp: n[6], conferente: n[7], prev: n[8], status: n[9]
                 }));
 
+                const fData = document.getElementById('fData').value;
                 const fStatus = document.getElementById('fStatus').value;
                 const fForn = document.getElementById('fFornecedor').value.toUpperCase();
                 const fNF = document.getElementById('fNF').value.toUpperCase();
@@ -128,13 +134,16 @@
                     const fornecedorUpper = (n.fornecedor || "").toUpperCase();
                     const nfUpper = (n.nf || "").toUpperCase();
 
-                    if ((fStatus === "Todos" || n.status === fStatus) && 
+                    // Filtros
+                    if ((fData === "" || n.data === fData) &&
+                        (fStatus === "Todos" || n.status === fStatus) && 
                         fornecedorUpper.includes(fForn) && 
                         nfUpper.includes(fNF)) {
                         
                         const statusClass = n.status === 'ACATADA' ? 'status-acatada' : 'status-nao-acatada';
+                        const valorFormatado = formatarMoeda(n.valor);
 
-                        tbody.innerHTML += `<tr><td>${n.data}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>R$ ${n.valor}</td><td>${n.chegada}</td><td>${n.saida}</td><td>${n.temp}</td><td>${n.conferente}</td><td>${n.prev}</td><td><span class="status-badge ${statusClass}">${n.status}</span></td><td>-</td></tr>`;
+                        tbody.innerHTML += `<tr><td>${n.data}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>${valorFormatado}</td><td>${n.chegada}</td><td>${n.saida}</td><td>${n.temp}</td><td>${n.conferente}</td><td>${n.prev}</td><td><span class="status-badge ${statusClass}">${n.status}</span></td><td>-</td></tr>`;
                         
                         mobile.innerHTML += `
                         <div class="card-mobile">
@@ -147,7 +156,7 @@
                             </div>
                             <div class="card-body-mobile">
                                 <div><span class="label-mobile">Data</span><span class="value-mobile">${n.data}</span></div>
-                                <div><span class="label-mobile">Valor</span><span class="value-mobile">R$ ${n.valor}</span></div>
+                                <div><span class="label-mobile">Valor</span><span class="value-mobile">${valorFormatado}</span></div>
                                 <div><span class="label-mobile">Chegada</span><span class="value-mobile">${n.chegada}</span></div>
                                 <div><span class="label-mobile">Saída</span><span class="value-mobile">${n.saida}</span></div>
                             </div>
@@ -158,7 +167,7 @@
                     }
                 });
                 document.getElementById('totalNotas').innerText = notas.length;
-                document.getElementById('valorTotal').innerText = `R$ ${totalV.toFixed(2)}`;
+                document.getElementById('valorTotal').innerText = formatarMoeda(totalV);
                 document.getElementById('acatadas').innerText = cat;
                 document.getElementById('naoAcatadas').innerText = naoCat;
             } catch (error) { console.error("Erro ao renderizar:", error); }
