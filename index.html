@@ -8,7 +8,9 @@
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f7f7f7; padding: 15px; color: #333; }
         .container { max-width: 1400px; margin: auto; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 10px; }
+        .header-main { display: flex; flex-direction: column; }
         .header h1 { font-size: 1.1rem; margin: 0; }
+        .subtitle { font-size: 0.85rem; color: #555; margin: 5px 0 0 0; font-weight: normal; }
         
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
         .card { background: white; padding: 12px; border-radius: 8px; border: 1px solid #e0e0e0; }
@@ -57,35 +59,21 @@
         @media (max-width: 768px) { 
             table { display: none; } 
             #corpoMobile { display: block; } 
-            
             .filter-grid { grid-template-columns: 1fr; gap: 8px; } 
-            
-            .filter-grid input, .filter-grid select { 
-                padding: 12px; 
-                font-size: 16px; 
-                width: 100%;
-                -webkit-appearance: none;
-                appearance: none;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-                background-color: white;
-            }
-
-            input[type="date"] {
-                display: block;
-                min-height: 44px;
-            }
-
+            .filter-grid input, .filter-grid select { padding: 12px; font-size: 16px; width: 100%; -webkit-appearance: none; appearance: none; border: 1px solid #ccc; border-radius: 4px; background-color: white; }
+            input[type="date"] { display: block; min-height: 44px; }
             .stats-grid { grid-template-columns: 1fr 1fr; } 
             .header { flex-direction: column; align-items: flex-start; } 
-            .header h1 { font-size: 1.1rem; } 
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>📋 CONTROLE DE NFs. e TEMPERATURA°C</h1>
+            <div class="header-main">
+                <h1>📋 CONTROLE DE NFs. e TEMPERATURA°C</h1>
+                <p class="subtitle">Resfriados de 0° C a 15° C / Congelados de -18° C a -22° C</p>
+            </div>
             <div class="header-actions">
                 <button class="btn" onclick="window.print()">Gerar PDF/Salvar</button>
                 <button class="btn btn-add" onclick="abrirModal()">+ Nova Nota Fiscal</button>
@@ -112,6 +100,7 @@
         <div id="corpoMobile"></div>
     </div>
 
+    <!-- Modal e Script mantidos conforme solicitado anteriormente -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <h3>Nova Nota Fiscal</h3>
