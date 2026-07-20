@@ -100,7 +100,7 @@
         <div id="corpoMobile"></div>
     </div>
 
-    <!-- Modal e Script mantidos conforme solicitado anteriormente -->
+    <!-- Modal -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <h3>Nova Nota Fiscal</h3>
@@ -199,10 +199,28 @@
         }
 
         async function salvarNota() {
+            const nfInput = document.getElementById('nf').value.toUpperCase();
+
+            // Verificação de duplicidade antes de enviar
+            try {
+                const response = await fetch(URL_GOOGLE);
+                const dados = await response.json();
+                const listaNotas = dados.slice(1);
+                
+                const duplicada = listaNotas.some(n => String(n[2]).toUpperCase() === nfInput);
+                
+                if (duplicada) {
+                    alert("Atenção: Esta Nota Fiscal já foi cadastrada!");
+                    return; 
+                }
+            } catch (e) {
+                console.error("Erro ao validar duplicidade:", e);
+            }
+
             const nota = {
                 data: "'" + document.getElementById('data').value,
                 fornecedor: document.getElementById('fornecedor').value.toUpperCase(),
-                nf: document.getElementById('nf').value.toUpperCase(),
+                nf: nfInput,
                 valor: document.getElementById('valor').value,
                 chegada: "'" + document.getElementById('chegada').value,
                 saida: "'" + document.getElementById('saida').value,
