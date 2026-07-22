@@ -207,6 +207,10 @@
         }
 
         async function salvarNota() {
+            const btnSalvar = document.querySelector('.modal-content .btn-add');
+            btnSalvar.disabled = true;
+            btnSalvar.style.opacity = '0.6';
+
             const nfInput = document.getElementById('nf').value.toUpperCase();
 
             // Verificação de duplicidade antes de enviar
@@ -219,6 +223,8 @@
                 
                 if (duplicada) {
                     alert("Atenção: Esta Nota Fiscal já foi cadastrada!");
+                    btnSalvar.disabled = false;
+                    btnSalvar.style.opacity = '1';
                     return; 
                 }
             } catch (e) {
@@ -238,10 +244,17 @@
                 status: document.getElementById('status').value
             };
             
-            await fetch(URL_GOOGLE, { method: 'POST', mode: 'no-cors', body: JSON.stringify(nota) });
-            document.getElementById('formNota').reset();
-            fecharModal();
-            setTimeout(renderizar, 1000);
+            try {
+                await fetch(URL_GOOGLE, { method: 'POST', mode: 'no-cors', body: JSON.stringify(nota) });
+                document.getElementById('formNota').reset();
+                fecharModal();
+                setTimeout(renderizar, 1500);
+            } catch (err) {
+                console.error("Erro ao salvar:", err);
+            } finally {
+                btnSalvar.disabled = false;
+                btnSalvar.style.opacity = '1';
+            }
         }
 
         function abrirModal() { document.getElementById('modal').style.display = 'flex'; }
