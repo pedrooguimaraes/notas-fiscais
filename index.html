@@ -12,6 +12,9 @@
         .header h1 { font-size: 1.1rem; margin: 0; }
         .subtitle { font-size: 0.85rem; color: #555; margin: 5px 0 0 0; font-weight: normal; }
         
+        /* Estilo para exibir a versão no cabeçalho */
+        .header-version { font-size: 11px; color: #777; font-weight: bold; margin-top: 3px; }
+
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
         .card { background: white; padding: 12px; border-radius: 8px; border: 1px solid #e0e0e0; }
         .card small { font-size: 10px; color: #888; text-transform: uppercase; font-weight: bold; }
@@ -76,6 +79,8 @@
             <div class="header-main">
                 <h1>📋 CONTROLE DE NFs. e TEMPERATURA°C</h1>
                 <p class="subtitle">Resfriados: 0°C a 15°C / Congelados: -18°C a -22°C</p>
+                <!-- Versão adicionada no cabeçalho -->
+                <div class="header-version">Versão: 26.07.02</div>
             </div>
             <div class="header-actions">
                 <button class="btn" onclick="window.print()">Gerar PDF/Salvar</button>
@@ -104,7 +109,7 @@
 
         <!-- Rodapé com indicação de versão -->
         <footer class="footer">
-            Versão: 26.07.01
+            Versão: 26.07.02
         </footer>
     </div>
 
@@ -122,18 +127,16 @@
                     <div><label>Saída</label><input type="time" id="saida"></div>
                     <div><label>Temp.</label><input type="text" id="temp"></div>
                     
-                    <!-- Campo Conferente transformado em select -->
                     <div>
                         <label>Conferente</label>
                         <select id="conferente">
                             <option value="">Selecione...</option>
                             <option value="AMANDA">AMANDA</option>
-                            <option value="GUSTAVO 🦾">GUSTAVO 🦾</option>
+                            <option value="GUSTAVO">GUSTAVO</option>
                             <option value="RODRIGO">RODRIGO</option>
                         </select>
                     </div>
 
-                    <!-- Campo Prevenção transformado em select -->
                     <div>
                         <label>Prevenção</label>
                         <select id="prev">
