@@ -117,7 +117,8 @@
                     <div><label>Data</label><input type="date" id="data" required></div>
                     <div><label>Fornecedor</label><input type="text" id="fornecedor" required></div>
                     <div><label>NF</label><input type="text" id="nf" required></div>
-                    <div><label>Valor (R$)</label><input type="number" id="valor" step="0.01" required></div>
+                    <!-- Alterado para type="text" com inputmask em JS -->
+                    <div><label>Valor (R$)</label><input type="text" id="valor" placeholder="0,00" required oninput="mascaraMoeda(this)"></div>
                     <div><label>Chegada</label><input type="time" id="chegada"></div>
                     <div><label>Saída</label><input type="time" id="saida"></div>
                     <div><label>Temp.</label><input type="text" id="temp"></div>
@@ -138,6 +139,15 @@
 
         function formatarMoeda(valor) {
             return Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        // Função que aplica a máscara de moeda enquanto digita
+        function mascaraMoeda(i) {
+            let v = i.value.replace(/\D/g, '');
+            v = (v / 100).toFixed(2) + '';
+            v = v.replace(".", ",");
+            v = v.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            i.value = v;
         }
 
         async function renderizar() {
@@ -231,11 +241,15 @@
                 console.error("Erro ao validar duplicidade:", e);
             }
 
+            // Converter o valor mascarado (ex: "1.234,56") para formato numérico americano correto ("1234.56") para salvar na planilha
+            const valorFormatadoInput = document.getElementById('valor').value;
+            const valorNumerico = valorFormatadoInput.replace(/\./g, '').replace(',', '.');
+
             const nota = {
                 data: "'" + document.getElementById('data').value,
                 fornecedor: document.getElementById('fornecedor').value.toUpperCase(),
                 nf: nfInput,
-                valor: document.getElementById('valor').value,
+                valor: valorNumerico,
                 chegada: "'" + document.getElementById('chegada').value,
                 saida: "'" + document.getElementById('saida').value,
                 temp: document.getElementById('temp').value.toUpperCase(),
