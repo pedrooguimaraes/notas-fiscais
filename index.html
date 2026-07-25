@@ -12,7 +12,6 @@
         .header h1 { font-size: 1.1rem; margin: 0; }
         .subtitle { font-size: 0.85rem; color: #555; margin: 5px 0 0 0; font-weight: normal; }
         
-        /* Estilo para exibir a versão no cabeçalho */
         .header-version { font-size: 11px; color: #777; font-weight: bold; margin-top: 3px; }
 
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
@@ -32,7 +31,7 @@
         .status-nao-acatada { color: red; background-color: #ffebee; }
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: white; padding: 25px; border-radius: 8px; width: 600px; }
+        .modal-content { background: white; padding: 25px; border-radius: 8px; width: 600px; max-width: 95%; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; margin-top: 5px; }
         .btn { padding: 8px 12px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; font-size: 12px; }
@@ -47,7 +46,6 @@
         .label-mobile { color: #888; font-size: 11px; text-transform: uppercase; font-weight: bold; display: block; }
         .value-mobile { font-weight: 500; color: #333; }
 
-        /* Estilo do Rodapé */
         .footer { text-align: center; margin-top: 25px; padding-top: 15px; border-top: 1px solid #e0e0e0; font-size: 11px; color: #777; }
 
         @media print { 
@@ -79,12 +77,12 @@
             <div class="header-main">
                 <h1>📋 CONTROLE DE NFs. e TEMPERATURA°C</h1>
                 <p class="subtitle">Resfriados: 0°C a 15°C / Congelados: -18°C a -22°C</p>
-                <!-- Versão adicionada no cabeçalho -->
-                <div class="header-version">Versão: 26.07.02</div>
+                <div class="header-version">Versão: 26.07.03</div>
             </div>
             <div class="header-actions">
                 <button class="btn" onclick="window.print()">Gerar PDF/Salvar</button>
                 <button class="btn btn-add" onclick="abrirModal()">+ Nova Nota Fiscal</button>
+                <button class="btn" onclick="carregarDados(true)" title="Atualizar dados da planilha">🔄 Atualizar</button>
             </div>
         </div>
         <div class="stats-grid">
@@ -95,10 +93,10 @@
         </div>
         <div class="filters">
             <div class="filter-grid">
-                <input type="date" id="fData" onchange="renderizar()">
-                <select id="fStatus" onchange="renderizar()"><option value="Todos">Status: Todos</option><option value="ACATADA">ACATADA</option><option value="NÃO ACATADA">NÃO ACATADA</option></select>
-                <input type="text" id="fFornecedor" placeholder="Fornecedor (use ; para vários)" onkeyup="renderizar()">
-                <input type="text" id="fNF" placeholder="Buscar NF" onkeyup="renderizar()">
+                <input type="date" id="fData" onchange="aplicarFiltros()">
+                <select id="fStatus" onchange="aplicarFiltros()"><option value="Todos">Status: Todos</option><option value="ACATADA">ACATADA</option><option value="NÃO ACATADA">NÃO ACATADA</option></select>
+                <input type="text" id="fFornecedor" placeholder="Fornecedor (use ; para vários)" oninput="debouncedFiltrar()">
+                <input type="text" id="fNF" placeholder="Buscar NF" oninput="debouncedFiltrar()">
             </div>
         </div>
         <table>
@@ -107,9 +105,8 @@
         </table>
         <div id="corpoMobile"></div>
 
-        <!-- Rodapé com indicação de versão -->
         <footer class="footer">
-            Versão: 26.07.02
+            Versão: 26.07.03
         </footer>
     </div>
 
@@ -120,7 +117,6 @@
             <form id="formNota">
                 <div class="form-grid">
                     <div><label>Data</label><input type="date" id="data" required></div>
-                    
                     <div>
                         <label>Fornecedor</label>
                         <select id="fornecedor" required>
@@ -166,12 +162,10 @@
                             <option value="VIGOR">VIGOR</option>
                         </select>
                     </div>
-
                     <div><label>NF</label><input type="text" id="nf" required></div>
                     <div><label>Valor (R$)</label><input type="text" id="valor" placeholder="0,00" required oninput="mascaraMoeda(this)"></div>
                     <div><label>Chegada</label><input type="time" id="chegada"></div>
                     <div><label>Saída</label><input type="time" id="saida"></div>
-                    
                     <div>
                         <label>Temp.</label>
                         <select id="temp">
@@ -183,7 +177,6 @@
                             </script>
                         </select>
                     </div>
-                    
                     <div>
                         <label>Conferente</label>
                         <select id="conferente">
@@ -195,7 +188,6 @@
                             <option value="RODRIGO">RODRIGO</option>
                         </select>
                     </div>
-
                     <div>
                         <label>Prevenção</label>
                         <select id="prev">
@@ -208,7 +200,6 @@
                             <option value="PEDRO">PEDRO</option>
                         </select>
                     </div>
-
                     <div><label>Status</label><select id="status"><option>NÃO ACATADA</option><option>ACATADA</option></select></div>
                 </div>
             </form>
@@ -221,6 +212,8 @@
 
     <script>
         const URL_GOOGLE = 'https://script.google.com/macros/s/AKfycbxJNhi1AY83G_AFdS1psw9g8wFe2BLS_AFU-8tZetXkMaTRnO81G5HV6RF1udYIrpBw/exec'; 
+        let cacheNotas = [];
+        let timeoutFiltro = null;
 
         function formatarMoeda(valor) {
             let numero = parseFloat(String(valor).replace(',', '.')) || 0;
@@ -235,71 +228,96 @@
             i.value = v;
         }
 
-        async function renderizar() {
+        // Carrega os dados da planilha e guarda em cache local
+        async function carregarDados(forcarAtualizacao = false) {
             try {
+                const tbody = document.getElementById('corpoTabela');
+                tbody.innerHTML = `<tr><td colspan="11" style="text-align:center; padding: 20px;">Carregando dados...</td></tr>`;
+                
                 const response = await fetch(URL_GOOGLE);
                 const dados = await response.json();
                 let listaNotas = dados.slice(1).reverse();
-                let notas = listaNotas.map(n => ({
+                
+                cacheNotas = listaNotas.map(n => ({
                     data: n[0], fornecedor: n[1], nf: String(n[2] || ""), valor: n[3], 
                     chegada: n[4], saida: n[5], temp: n[6], conferente: n[7], prev: n[8], status: n[9]
                 }));
 
-                const fData = document.getElementById('fData').value;
-                const fStatus = document.getElementById('fStatus').value;
-                const fFornInput = document.getElementById('fFornecedor').value.toUpperCase();
-                const fFornArray = fFornInput.split(';').map(item => item.trim()).filter(item => item !== "");
-                const fNF = document.getElementById('fNF').value.toUpperCase();
-                const tbody = document.getElementById('corpoTabela');
-                const mobile = document.getElementById('corpoMobile');
-                
-                tbody.innerHTML = ''; 
-                mobile.innerHTML = '';
-                
-                let totalV = 0, cat = 0, naoCat = 0;
-                
-                notas.forEach(n => {
-                    const fornecedorUpper = (n.fornecedor || "").toUpperCase();
-                    const nfUpper = (n.nf || "").toUpperCase();
-                    const atendeFornecedor = fFornArray.length === 0 || fFornArray.some(termo => fornecedorUpper.includes(termo));
+                aplicarFiltros();
+                if(forcarAtualizacao) alert("Dados atualizados com sucesso!");
+            } catch (error) { 
+                console.error("Erro ao carregar dados:", error);
+                document.getElementById('corpoTabela').innerHTML = `<tr><td colspan="11" style="text-align:center; color:red; padding: 20px;">Erro ao carregar dados. Tente atualizar.</td></tr>`;
+            }
+        }
 
-                    if ((fData === "" || n.data === fData) &&
-                        (fStatus === "Todos" || n.status === fStatus) && 
-                        atendeFornecedor && 
-                        nfUpper.includes(fNF)) {
-                        
-                        const statusClass = n.status === 'ACATADA' ? 'status-acatada' : 'status-nao-acatada';
-                        const valorFormatado = formatarMoeda(n.valor);
+        // Aplica os filtros localmente em milissegundos, sem gastar requisição de rede
+        function aplicarFiltros() {
+            const fData = document.getElementById('fData').value;
+            const fStatus = document.getElementById('fStatus').value;
+            const fFornInput = document.getElementById('fFornecedor').value.toUpperCase();
+            const fFornArray = fFornInput.split(';').map(item => item.trim()).filter(item => item !== "");
+            const fNF = document.getElementById('fNF').value.toUpperCase();
+            
+            const tbody = document.getElementById('corpoTabela');
+            const mobile = document.getElementById('corpoMobile');
+            
+            let htmlTabela = '';
+            let htmlMobile = '';
+            
+            let totalV = 0, cat = 0, naoCat = 0;
+            
+            cacheNotas.forEach(n => {
+                const fornecedorUpper = (n.fornecedor || "").toUpperCase();
+                const nfUpper = (n.nf || "").toUpperCase();
+                const atendeFornecedor = fFornArray.length === 0 || fFornArray.some(termo => fornecedorUpper.includes(termo));
 
-                        tbody.innerHTML += `<tr><td>${n.data}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>${valorFormatado}</td><td>${n.chegada}</td><td>${n.saida}</td><td>${n.temp}</td><td>${n.conferente}</td><td>${n.prev}</td><td><span class="status-badge ${statusClass}">${n.status}</span></td><td>-</td></tr>`;
-                        
-                        mobile.innerHTML += `
-                        <div class="card-mobile">
-                            <div class="card-header-mobile">
-                                <div>
-                                    <div class="card-title">${n.fornecedor}</div>
-                                    <div class="card-nf">NF ${n.nf}</div>
-                                </div>
-                                <span class="status-badge ${statusClass}">${n.status}</span>
+                if ((fData === "" || n.data === fData) &&
+                    (fStatus === "Todos" || n.status === fStatus) && 
+                    atendeFornecedor && 
+                    nfUpper.includes(fNF)) {
+                    
+                    const statusClass = n.status === 'ACATADA' ? 'status-acatada' : 'status-nao-acatada';
+                    const valorFormatado = formatarMoeda(n.valor);
+
+                    htmlTabela += `<tr><td>${n.data}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>${valorFormatado}</td><td>${n.chegada}</td><td>${n.saida}</td><td>${n.temp}</td><td>${n.conferente}</td><td>${n.prev}</td><td><span class="status-badge ${statusClass}">${n.status}</span></td><td>-</td></tr>`;
+                    
+                    htmlMobile += `
+                    <div class="card-mobile">
+                        <div class="card-header-mobile">
+                            <div>
+                                <div class="card-title">${n.fornecedor}</div>
+                                <div class="card-nf">NF ${n.nf}</div>
                             </div>
-                            <div class="card-body-mobile">
-                                <div><span class="label-mobile">Data</span><span class="value-mobile">${n.data}</span></div>
-                                <div><span class="label-mobile">Valor</span><span class="value-mobile">${valorFormatado}</span></div>
-                                <div><span class="label-mobile">Chegada</span><span class="value-mobile">${n.chegada}</span></div>
-                                <div><span class="label-mobile">Saída</span><span class="value-mobile">${n.saida}</span></div>
-                            </div>
-                        </div>`;
-                        
-                        let valNumerico = parseFloat(String(n.valor).replace(',', '.')) || 0;
-                        totalV += valNumerico; 
-                        n.status === 'ACATADA' ? cat++ : naoCat++;
-                    }
-                });
-                document.getElementById('totalNotas').innerText = notas.length;
-                document.getElementById('valorTotal').innerText = formatarMoeda(totalV);
-                document.getElementById('acatadas').innerText = cat;
-                document.getElementById('naoAcatadas').innerText = naoCat;
-            } catch (error) { console.error("Erro ao renderizar:", error); }
+                            <span class="status-badge ${statusClass}">${n.status}</span>
+                        </div>
+                        <div class="card-body-mobile">
+                            <div><span class="label-mobile">Data</span><span class="value-mobile">${n.data}</span></div>
+                            <div><span class="label-mobile">Valor</span><span class="value-mobile">${valorFormatado}</span></div>
+                            <div><span class="label-mobile">Chegada</span><span class="value-mobile">${n.chegada}</span></div>
+                            <div><span class="label-mobile">Saída</span><span class="value-mobile">${n.saida}</span></div>
+                        </div>
+                    </div>`;
+                    
+                    let valNumerico = parseFloat(String(n.valor).replace(',', '.')) || 0;
+                    totalV += valNumerico; 
+                    n.status === 'ACATADA' ? cat++ : naoCat++;
+                }
+            });
+
+            tbody.innerHTML = htmlTabela;
+            mobile.innerHTML = htmlMobile;
+            
+            document.getElementById('totalNotas').innerText = cacheNotas.length;
+            document.getElementById('valorTotal').innerText = formatarMoeda(totalV);
+            document.getElementById('acatadas').innerText = cat;
+            document.getElementById('naoAcatadas').innerText = naoCat;
+        }
+
+        // Debounce para digitação fluida em mobile e desktop
+        function debouncedFiltrar() {
+            clearTimeout(timeoutFiltro);
+            timeoutFiltro = setTimeout(aplicarFiltros, 250);
         }
 
         async function salvarNota() {
@@ -309,21 +327,13 @@
 
             const nfInput = document.getElementById('nf').value.toUpperCase();
 
-            try {
-                const response = await fetch(URL_GOOGLE);
-                const dados = await response.json();
-                const listaNotas = dados.slice(1);
-                
-                const duplicada = listaNotas.some(n => String(n[2]).toUpperCase() === nfInput);
-                
-                if (duplicada) {
-                    alert("Atenção: Esta Nota Fiscal já foi cadastrada!");
-                    btnSalvar.disabled = false;
-                    btnSalvar.style.opacity = '1';
-                    return; 
-                }
-            } catch (e) {
-                console.error("Erro ao validar duplicidade:", e);
+            // Validação de duplicidade direto no cache local (muito mais rápido!)
+            const duplicada = cacheNotas.some(n => String(n.nf).toUpperCase() === nfInput);
+            if (duplicada) {
+                alert("Atenção: Esta Nota Fiscal já foi cadastrada!");
+                btnSalvar.disabled = false;
+                btnSalvar.style.opacity = '1';
+                return; 
             }
 
             const valorFormatadoInput = document.getElementById('valor').value;
@@ -346,7 +356,7 @@
                 await fetch(URL_GOOGLE, { method: 'POST', mode: 'no-cors', body: JSON.stringify(nota) });
                 document.getElementById('formNota').reset();
                 fecharModal();
-                setTimeout(renderizar, 1500);
+                setTimeout(() => carregarDados(false), 1500); // Recarrega os dados da planilha atualizados
             } catch (err) {
                 console.error("Erro ao salvar:", err);
             } finally {
@@ -357,7 +367,9 @@
 
         function abrirModal() { document.getElementById('modal').style.display = 'flex'; }
         function fecharModal() { document.getElementById('modal').style.display = 'none'; }
-        renderizar();
+        
+        // Inicialização
+        carregarDados();
     </script>
 </body>
 </html>
