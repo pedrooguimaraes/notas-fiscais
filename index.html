@@ -125,7 +125,18 @@
                     <div><label>Valor (R$)</label><input type="text" id="valor" placeholder="0,00" required oninput="mascaraMoeda(this)"></div>
                     <div><label>Chegada</label><input type="time" id="chegada"></div>
                     <div><label>Saída</label><input type="time" id="saida"></div>
-                    <div><label>Temp.</label><input type="text" id="temp"></div>
+                    
+                    <div>
+                        <label>Temp.</label>
+                        <select id="temp">
+                            <option value="">Selecione...</option>
+                            <script>
+                                for (let i = -30; i <= 30; i++) {
+                                    document.write(`<option value="${i}°C">${i}°C</option>`);
+                                }
+                            </script>
+                        </select>
+                    </div>
                     
                     <div>
                         <label>Conferente</label>
@@ -279,7 +290,7 @@
                 valor: valorNumerico,
                 chegada: "'" + document.getElementById('chegada').value,
                 saida: "'" + document.getElementById('saida').value,
-                temp: document.getElementById('temp').value.toUpperCase(),
+                temp: document.getElementById('temp').value,
                 conferente: document.getElementById('conferente').value,
                 prev: document.getElementById('prev').value,
                 status: document.getElementById('status').value
