@@ -7,13 +7,14 @@
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f7f7f7; padding: 15px; color: #333; margin: 0; }
         .container { max-width: 1400px; margin: auto; padding-bottom: 30px; }
+        
+        /* Rodapé superior acima do título */
+        .top-footer { text-align: center; margin-bottom: 10px; font-size: 11px; color: #777; }
+
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 10px; }
         .header-main { display: flex; flex-direction: column; }
         .header h1 { font-size: 1.1rem; margin: 0; }
         .subtitle { font-size: 0.85rem; color: #555; margin: 5px 0 0 0; font-weight: normal; }
-        
-        /* Estilo para exibir a versão no cabeçalho (centralizado e idêntico ao rodapé) */
-        .header-version { text-align: center; font-size: 11px; color: #777; margin-top: 5px; }
 
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
         .card { background: white; padding: 12px; border-radius: 8px; border: 1px solid #e0e0e0; }
@@ -50,7 +51,7 @@
         .footer { text-align: center; margin-top: 25px; padding-top: 15px; border-top: 1px solid #e0e0e0; font-size: 11px; color: #777; }
 
         @media print { 
-            .header, .stats-grid, .filters, .btn, .card-mobile, .footer { display: none !important; } 
+            .top-footer, .header, .stats-grid, .filters, .btn, .card-mobile, .footer { display: none !important; } 
             body { background: white; padding: 0; margin: 0; } 
             .container { width: 100%; padding: 0; margin: 0; } 
             table { display: table !important; width: 100%; border-collapse: collapse; font-size: 10px; } 
@@ -74,12 +75,15 @@
 </head>
 <body>
     <div class="container">
+        <!-- Rodapé superior centralizado posicionado acima do título -->
+        <div class="top-footer">
+            Versão: 26.07.03
+        </div>
+
         <div class="header">
             <div class="header-main">
                 <h1>📋 CONTROLE DE NFs. e TEMPERATURA°C</h1>
                 <p class="subtitle">Resfriados: 0°C a 15°C / Congelados: -18°C a -22°C</p>
-                <!-- Versão no cabeçalho centralizada e igual ao rodapé -->
-                <div class="header-version">Versão: 26.07.03</div>
             </div>
             <div class="header-actions">
                 <button class="btn" onclick="window.print()">Gerar PDF/Salvar</button>
