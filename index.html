@@ -149,7 +149,6 @@
                             <option value="MARCOS">MARCOS</option>
                             <option value="MILENA">MILENA</option>
                             <option value="PEDRO">PEDRO</option>
-
                         </select>
                     </div>
 
@@ -167,7 +166,8 @@
         const URL_GOOGLE = 'https://script.google.com/macros/s/AKfycbxJNhi1AY83G_AFdS1psw9g8wFe2BLS_AFU-8tZetXkMaTRnO81G5HV6RF1udYIrpBw/exec'; 
 
         function formatarMoeda(valor) {
-            return Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            let numero = parseFloat(String(valor).replace(',', '.')) || 0;
+            return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         }
 
         function mascaraMoeda(i) {
@@ -233,7 +233,8 @@
                             </div>
                         </div>`;
                         
-                        totalV += parseFloat(n.valor) || 0; 
+                        let valNumerico = parseFloat(String(n.valor).replace(',', '.')) || 0;
+                        totalV += valNumerico; 
                         n.status === 'ACATADA' ? cat++ : naoCat++;
                     }
                 });
