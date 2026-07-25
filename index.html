@@ -120,7 +120,53 @@
             <form id="formNota">
                 <div class="form-grid">
                     <div><label>Data</label><input type="date" id="data" required></div>
-                    <div><label>Fornecedor</label><input type="text" id="fornecedor" required></div>
+                    
+                    <div>
+                        <label>Fornecedor</label>
+                        <select id="fornecedor" required>
+                            <option value="">Selecione...</option>
+                            <option value="ALEXANDRE BOLDRIM">ALEXANDRE BOLDRIM</option>
+                            <option value="ALIMENTARE (PULLMAN)">ALIMENTARE (PULLMAN)</option>
+                            <option value="APOL">APOL</option>
+                            <option value="AROSCO">AROSCO</option>
+                            <option value="BETTER BEEF">BETTER BEEF</option>
+                            <option value="CD FLV">CD FLV</option>
+                            <option value="CD FRIOS">CD FRIOS</option>
+                            <option value="CD PANIFICAÇÃO">CD PANIFICAÇÃO</option>
+                            <option value="CD SECOS">CD SECOS</option>
+                            <option value="CIA. NATURAL (YAKULT)">CIA. NATURAL (YAKULT)</option>
+                            <option value="DANONE">DANONE</option>
+                            <option value="DFOODS">DFOODS</option>
+                            <option value="DISTRIBUIDORA IKEDA">DISTRIBUIDORA IKEDA</option>
+                            <option value="FÁBRICA E.M.A.">FÁBRICA E.M.A.</option>
+                            <option value="FRONERI (NESTLE)">FRONERI (NESTLE)</option>
+                            <option value="ITAMBÉ">ITAMBÉ</option>
+                            <option value="JOVI">JOVI</option>
+                            <option value="JRP - MORANGO">JRP - MORANGO</option>
+                            <option value="JTI - CIGARROS">JTI - CIGARROS</option>
+                            <option value="KELECK">KELECK</option>
+                            <option value="LA VITTA">LA VITTA</option>
+                            <option value="LACTALIS">LACTALIS</option>
+                            <option value="LIFE SUCOS">LIFE SUCOS</option>
+                            <option value="LONDRISAUDE HUSKER (YAKULT)">LONDRISAUDE HUSKER (YAKULT)</option>
+                            <option value="LUA NOVA (PANCO)">LUA NOVA (PANCO)</option>
+                            <option value="MAGÁRIO">MAGÁRIO</option>
+                            <option value="MARQUESPAN">MARQUESPAN</option>
+                            <option value="NUTRI E EQUILÍBRIO (PANUTRIR)">NUTRI E EQUILÍBRIO (PANUTRIR)</option>
+                            <option value="PEPSICO">PEPSICO</option>
+                            <option value="PRODUTOS CEFER (SANTA MASSA)">PRODUTOS CEFER (SANTA MASSA)</option>
+                            <option value="PROMILEITE">PROMILEITE</option>
+                            <option value="PROMISSÃO (QUEIJO)">PROMISSÃO (QUEIJO)</option>
+                            <option value="REAL ALIMENTOS">REAL ALIMENTOS</option>
+                            <option value="RONCOLETA">RONCOLETA</option>
+                            <option value="RUFINI">RUFINI</option>
+                            <option value="SPAL (COCA COLA)">SPAL (COCA COLA)</option>
+                            <option value="SOUZA CRUZ - CIGARROS">SOUZA CRUZ - CIGARROS</option>
+                            <option value="VALTER RIZZO">VALTER RIZZO</option>
+                            <option value="VIGOR">VIGOR</option>
+                        </select>
+                    </div>
+
                     <div><label>NF</label><input type="text" id="nf" required></div>
                     <div><label>Valor (R$)</label><input type="text" id="valor" placeholder="0,00" required oninput="mascaraMoeda(this)"></div>
                     <div><label>Chegada</label><input type="time" id="chegada"></div>
@@ -285,7 +331,7 @@
 
             const nota = {
                 data: "'" + document.getElementById('data').value,
-                fornecedor: document.getElementById('fornecedor').value.toUpperCase(),
+                fornecedor: document.getElementById('fornecedor').value,
                 nf: nfInput,
                 valor: valorNumerico,
                 chegada: "'" + document.getElementById('chegada').value,
