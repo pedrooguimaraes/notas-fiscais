@@ -12,7 +12,8 @@
         .header h1 { font-size: 1.1rem; margin: 0; }
         .subtitle { font-size: 0.85rem; color: #555; margin: 5px 0 0 0; font-weight: normal; }
         
-        .header-version { font-size: 11px; color: #777; font-weight: bold; margin-top: 3px; }
+        /* Estilo para exibir a versão no cabeçalho (centralizado e idêntico ao rodapé) */
+        .header-version { text-align: center; font-size: 11px; color: #777; margin-top: 5px; }
 
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
         .card { background: white; padding: 12px; border-radius: 8px; border: 1px solid #e0e0e0; }
@@ -77,6 +78,7 @@
             <div class="header-main">
                 <h1>📋 CONTROLE DE NFs. e TEMPERATURA°C</h1>
                 <p class="subtitle">Resfriados: 0°C a 15°C / Congelados: -18°C a -22°C</p>
+                <!-- Versão no cabeçalho centralizada e igual ao rodapé -->
                 <div class="header-version">Versão: 26.07.03</div>
             </div>
             <div class="header-actions">
@@ -228,7 +230,6 @@
             i.value = v;
         }
 
-        // Carrega os dados da planilha e guarda em cache local
         async function carregarDados(forcarAtualizacao = false) {
             try {
                 const tbody = document.getElementById('corpoTabela');
@@ -251,7 +252,6 @@
             }
         }
 
-        // Aplica os filtros localmente em milissegundos, sem gastar requisição de rede
         function aplicarFiltros() {
             const fData = document.getElementById('fData').value;
             const fStatus = document.getElementById('fStatus').value;
@@ -314,7 +314,6 @@
             document.getElementById('naoAcatadas').innerText = naoCat;
         }
 
-        // Debounce para digitação fluida em mobile e desktop
         function debouncedFiltrar() {
             clearTimeout(timeoutFiltro);
             timeoutFiltro = setTimeout(aplicarFiltros, 250);
@@ -327,7 +326,6 @@
 
             const nfInput = document.getElementById('nf').value.toUpperCase();
 
-            // Validação de duplicidade direto no cache local (muito mais rápido!)
             const duplicada = cacheNotas.some(n => String(n.nf).toUpperCase() === nfInput);
             if (duplicada) {
                 alert("Atenção: Esta Nota Fiscal já foi cadastrada!");
@@ -356,7 +354,7 @@
                 await fetch(URL_GOOGLE, { method: 'POST', mode: 'no-cors', body: JSON.stringify(nota) });
                 document.getElementById('formNota').reset();
                 fecharModal();
-                setTimeout(() => carregarDados(false), 1500); // Recarrega os dados da planilha atualizados
+                setTimeout(() => carregarDados(false), 1500);
             } catch (err) {
                 console.error("Erro ao salvar:", err);
             } finally {
@@ -368,7 +366,6 @@
         function abrirModal() { document.getElementById('modal').style.display = 'flex'; }
         function fecharModal() { document.getElementById('modal').style.display = 'none'; }
         
-        // Inicialização
         carregarDados();
     </script>
 </body>
