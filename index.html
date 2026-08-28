@@ -11,10 +11,11 @@
         /* Rodapé superior acima do título */
         .top-footer { text-align: center; margin-bottom: 10px; font-size: 11px; color: #777; }
 
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 10px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 10px; flex-wrap: wrap; }
         .header-main { display: flex; flex-direction: column; }
         .header h1 { font-size: 1.1rem; margin: 0; }
         .subtitle { font-size: 0.85rem; color: #555; margin: 5px 0 0 0; font-weight: normal; }
+        .header-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
         .card { background: white; padding: 12px; border-radius: 8px; border: 1px solid #e0e0e0; }
@@ -22,11 +23,11 @@
         .card h2 { margin: 4px 0 0 0; font-size: 18px; }
         
         .filters { background: white; padding: 15px; border-radius: 8px; border: 1px solid #e0e0e0; margin-bottom: 15px; }
-        .filter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .filter-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
         
         table { width: 100%; border-collapse: collapse; background: white; border: 1px solid #e0e0e0; }
-        th, td { padding: 8px 5px; text-align: left; border-bottom: 1px solid #eee; font-size: 12px; }
-        th { background-color: #215598; color: white; }
+        th, td { padding: 4px 5px; text-align: left; border-bottom: 1px solid #eee; font-size: 12px; line-height: 1.2; }
+        th { background-color: #215598; color: white; padding: 6px 5px; }
         
         .status-badge { padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; text-transform: uppercase; display: inline-block; }
         .status-acatada { color: green; background-color: #e8f5e9; }
@@ -38,6 +39,7 @@
         input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; margin-top: 5px; }
         .btn { padding: 8px 12px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; font-size: 12px; }
         .btn-add { background-color: #215598; color: white; }
+        .btn-whatsapp { background-color: #25d366; color: white; }
         
         #corpoMobile { display: none; }
         .card-mobile { background: white; border: 1px solid #e0e0e0; padding: 16px; border-radius: 12px; margin-bottom: 12px; }
@@ -55,7 +57,7 @@
             body { background: white; padding: 0; margin: 0; } 
             .container { width: 100%; padding: 0; margin: 0; } 
             table { display: table !important; width: 100%; border-collapse: collapse; font-size: 10px; } 
-            th, td { border: 1px solid #ddd; padding: 4px 3px !important; } 
+            th, td { border: 1px solid #ddd; padding: 2px 3px !important; line-height: 1.1; } 
             th { background-color: #215598 !important; color: white !important; -webkit-print-color-adjust: exact; } 
             .status-badge { color: inherit; background-color: transparent; border: 1px solid #999; padding: 1px 3px; font-size: 9px; } 
             .status-acatada { color: green !important; -webkit-print-color-adjust: exact; } 
@@ -86,6 +88,7 @@
                 <p class="subtitle">Resfriados: 0°C a 15°C / Congelados: -18°C a -22°C</p>
             </div>
             <div class="header-actions">
+                <button class="btn btn-whatsapp" onclick="gerarRelatorioWhatsApp()">💬 WhatsApp</button>
                 <button class="btn" onclick="window.print()">Gerar PDF/Salvar</button>
                 <button class="btn btn-add" onclick="abrirModal()">+ Nova Nota Fiscal</button>
                 <button class="btn" onclick="carregarDados(true)" title="Atualizar dados da planilha">🔄 Atualizar</button>
@@ -103,6 +106,8 @@
                 <select id="fStatus" onchange="aplicarFiltros()"><option value="Todos">Status: Todos</option><option value="ACATADA">ACATADA</option><option value="NÃO ACATADA">NÃO ACATADA</option></select>
                 <input type="text" id="fFornecedor" placeholder="Fornecedor (use ; para vários)" oninput="debouncedFiltrar()">
                 <input type="text" id="fNF" placeholder="Buscar NF" oninput="debouncedFiltrar()">
+                <input type="text" id="fNotaFiltro" placeholder="Filtrar Nota" oninput="debouncedFiltrar()">
+                <input type="text" id="fValor" placeholder="Filtrar Valor (R$)" oninput="debouncedFiltrar()">
             </div>
         </div>
         <table>
@@ -224,7 +229,7 @@
                             <option value="MARCOS">MARCOS</option>
                             <option value="MILENA">MILENA</option>
                             <option value="PEDRO">PEDRO</option>
-                             <option value="THIAGO">THIAGO</option>
+                            <option value="THIAGO">THIAGO</option>
                         </select>
                     </div>
                     <div><label>Status</label><select id="status"><option>NÃO ACATADA</option><option>ACATADA</option></select></div>
@@ -283,6 +288,8 @@
             const fFornInput = document.getElementById('fFornecedor').value.toUpperCase();
             const fFornArray = fFornInput.split(';').map(item => item.trim()).filter(item => item !== "");
             const fNF = document.getElementById('fNF').value.toUpperCase();
+            const fNotaFiltro = document.getElementById('fNotaFiltro').value.toUpperCase();
+            const fValor = document.getElementById('fValor').value.toLowerCase().replace('r$', '').trim();
             
             const tbody = document.getElementById('corpoTabela');
             const mobile = document.getElementById('corpoMobile');
@@ -295,12 +302,19 @@
             cacheNotas.forEach(n => {
                 const fornecedorUpper = (n.fornecedor || "").toUpperCase();
                 const nfUpper = (n.nf || "").toUpperCase();
+                const valorStr = String(n.valor || "").toLowerCase();
+                const valorFormatadoStr = formatarMoeda(n.valor).toLowerCase();
+                
                 const atendeFornecedor = fFornArray.length === 0 || fFornArray.some(termo => fornecedorUpper.includes(termo));
+                const atendeNotaFiltro = fNotaFiltro === "" || nfUpper.includes(fNotaFiltro);
+                const atendeValor = fValor === "" || valorStr.includes(fValor) || valorFormatadoStr.includes(fValor);
 
                 if ((fData === "" || n.data === fData) &&
                     (fStatus === "Todos" || n.status === fStatus) && 
                     atendeFornecedor && 
-                    nfUpper.includes(fNF)) {
+                    nfUpper.includes(fNF) &&
+                    atendeNotaFiltro &&
+                    atendeValor) {
                     
                     const statusClass = n.status === 'ACATADA' ? 'status-acatada' : 'status-nao-acatada';
                     const valorFormatado = formatarMoeda(n.valor);
@@ -342,6 +356,23 @@
         function debouncedFiltrar() {
             clearTimeout(timeoutFiltro);
             timeoutFiltro = setTimeout(aplicarFiltros, 250);
+        }
+
+        function gerarRelatorioWhatsApp() {
+            const total = document.getElementById('totalNotas').innerText;
+            const valorTotal = document.getElementById('valorTotal').innerText;
+            const acatadas = document.getElementById('acatadas').innerText;
+            const naoAcatadas = document.getElementById('naoAcatadas').innerText;
+
+            let texto = `📋 *RELATÓRIO RESUMIDO - NOTAS FISCAIS*\n\n`;
+            texto += `• *Total de Notas:* ${total}\n`;
+            texto += `• *Valor Total:* ${valorTotal}\n`;
+            texto += `• *Acatadas:* ${acatadas}\n`;
+            texto += `• *Não Acatadas:* ${naoAcatadas}\n\n`;
+            texto += `_Gerado pelo Sistema de Controle de NFs_`;
+
+            const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(texto)}`;
+            window.open(url, '_blank');
         }
 
         async function salvarNota() {
