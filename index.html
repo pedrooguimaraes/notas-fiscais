@@ -23,7 +23,7 @@
         .card h2 { margin: 4px 0 0 0; font-size: 18px; }
         
         .filters { background: white; padding: 15px; border-radius: 8px; border: 1px solid #e0e0e0; margin-bottom: 15px; }
-        .filter-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+        .filter-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
         
         table { width: 100%; border-collapse: collapse; background: white; border: 1px solid #e0e0e0; }
         th, td { padding: 4px 5px; text-align: left; border-bottom: 1px solid #eee; font-size: 12px; line-height: 1.2; }
@@ -106,7 +106,6 @@
                 <select id="fStatus" onchange="aplicarFiltros()"><option value="Todos">Status: Todos</option><option value="ACATADA">ACATADA</option><option value="NÃO ACATADA">NÃO ACATADA</option></select>
                 <input type="text" id="fFornecedor" placeholder="Fornecedor (use ; para vários)" oninput="debouncedFiltrar()">
                 <input type="text" id="fNF" placeholder="Buscar NF" oninput="debouncedFiltrar()">
-                <input type="text" id="fNotaFiltro" placeholder="Filtrar Nota" oninput="debouncedFiltrar()">
                 <input type="text" id="fValor" placeholder="Filtrar Valor (R$)" oninput="debouncedFiltrar()">
             </div>
         </div>
@@ -288,7 +287,6 @@
             const fFornInput = document.getElementById('fFornecedor').value.toUpperCase();
             const fFornArray = fFornInput.split(';').map(item => item.trim()).filter(item => item !== "");
             const fNF = document.getElementById('fNF').value.toUpperCase();
-            const fNotaFiltro = document.getElementById('fNotaFiltro').value.toUpperCase();
             const fValor = document.getElementById('fValor').value.toLowerCase().replace('r$', '').trim();
             
             const tbody = document.getElementById('corpoTabela');
@@ -306,14 +304,12 @@
                 const valorFormatadoStr = formatarMoeda(n.valor).toLowerCase();
                 
                 const atendeFornecedor = fFornArray.length === 0 || fFornArray.some(termo => fornecedorUpper.includes(termo));
-                const atendeNotaFiltro = fNotaFiltro === "" || nfUpper.includes(fNotaFiltro);
                 const atendeValor = fValor === "" || valorStr.includes(fValor) || valorFormatadoStr.includes(fValor);
 
                 if ((fData === "" || n.data === fData) &&
                     (fStatus === "Todos" || n.status === fStatus) && 
                     atendeFornecedor && 
                     nfUpper.includes(fNF) &&
-                    atendeNotaFiltro &&
                     atendeValor) {
                     
                     const statusClass = n.status === 'ACATADA' ? 'status-acatada' : 'status-nao-acatada';
