@@ -365,12 +365,44 @@
             const acatadas = document.getElementById('acatadas').innerText;
             const naoAcatadas = document.getElementById('naoAcatadas').innerText;
 
-            let texto = `📋 *RELATÓRIO RESUMIDO - NOTAS FISCAIS*\n\n`;
+            // Obtém a data atual formatada (dd/mm/aaaa)
+            const hoje = new Date();
+            const dataAtual = hoje.toLocaleDateString('pt-BR');
+
+            // Calcula notas não acatadas agrupadas por dia com base nos dados carregados
+            const naoAcatadasPorDia = {};
+            cacheNotas.forEach(n => {
+                if (n.status === 'NÃO ACATADA' && n.data) {
+                    let dataFormatada = n.data;
+                    // Se estiver no formato AAAA-MM-DD, converte para DD/MM/AAAA para padronizar
+                    if (n.data.includes('-')) {
+                        const partes = n.data.split('-');
+                        if (partes.length === 3) {
+                            dataFormatada = `${partes[2]}/${partes[1]}/${partes[0]}`;
+                        }
+                    }
+                    naoAcatadasPorDia[dataFormatada] = (naoAcatadasPorDia[dataFormatada] || 0) + 1;
+                }
+            });
+
+            let texto = `📋 *RELATÓRIO RESUMIDO - NOTAS FISCAIS*\n`;
+            texto += `📅 *Data:* ${dataAtual}\n\n`;
             texto += `• *Total de Notas:* ${total}\n`;
             texto += `• *Valor Total:* ${valorTotal}\n`;
             texto += `• *Acatadas:* ${acatadas}\n`;
-            texto += `• *Não Acatadas:* ${naoAcatadas}\n\n`;
-            texto += `_Gerado pelo Sistema de Controle de NFs_`;
+            texto += `• *Não Acatadas (Geral):* ${naoAcatadas}\n\n`;
+            
+            texto += `❌ *Não Acatadas por Dia:*\n`;
+            const diasOrdenados = Object.keys(naoAcatadasPorDia).sort();
+            if (diasOrdenados.length > 0) {
+                diasOrdenados.forEach(dia => {
+                    texto += `  - ${dia}: ${naoAcatadasPorDia[dia]} nota(s)\n`;
+                });
+            } else {
+                texto += `  - Nenhum registro encontrado\n`;
+            }
+
+            texto += `\n_Gerado pelo Sistema de Controle de NFs_`;
 
             const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(texto)}`;
             window.open(url, '_blank');
