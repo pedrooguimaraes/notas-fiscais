@@ -79,7 +79,7 @@
     <div class="container">
         <!-- Rodapé superior centralizado posicionado acima do título -->
         <div class="top-footer">
-            Versão: 28.08.26/005
+            Versão: 26.07.03
         </div>
 
         <div class="header">
@@ -96,7 +96,7 @@
                 </button>
                 <button class="btn" onclick="window.print()">Gerar PDF/Salvar</button>
                 <button class="btn btn-add" onclick="abrirModal()">+ Nova Nota Fiscal</button>
-                <button class="btn" onclick="carregarDados(true)" title="Atualizar dados da planilha">🔄</button>
+                <button class="btn" onclick="carregarDados(true)" title="Atualizar dados da planilha">🔄 Atualizar</button>
             </div>
         </div>
         <div class="stats-grid">
@@ -121,7 +121,7 @@
         <div id="corpoMobile"></div>
 
         <footer class="footer">
-            Versão: 28.08.26/005
+            Versão: 26.07.03
         </footer>
     </div>
 
@@ -192,7 +192,7 @@
                             <option value="VIGOR">VIGOR</option>
                         </select>
                     </div>
-                    <div><label>Nota Fiscal</label><input type="text" id="Nota Fiscal" required></div>
+                    <div><label>Nota Fiscal</label><input type="text" id="nf" required></div>
                     <div><label>Valor (R$)</label><input type="text" id="valor" placeholder="0,00" required oninput="mascaraMoeda(this)"></div>
                     <div><label>Chegada</label><input type="time" id="chegada"></div>
                     <div><label>Saída</label><input type="time" id="saida"></div>
@@ -221,7 +221,6 @@
                             <option value="MICHELLE (Encarregada Frios)">MICHELLE (Encarregada Frios)</option>
                             <option value="PEDRO (Encarregado Prevenção)">PEDRO (Encarregado Prevenção)</option>
                             <option value="RODRIGO (Encarregado Depósito)">RODRIGO (Encarregado Depósito)</option>
-                            
                         </select>
                     </div>
                     <div>
@@ -365,16 +364,13 @@
             const acatadas = document.getElementById('acatadas').innerText;
             const naoAcatadas = document.getElementById('naoAcatadas').innerText;
 
-            // Obtém a data atual formatada (dd/mm/aaaa)
             const hoje = new Date();
             const dataAtual = hoje.toLocaleDateString('pt-BR');
 
-            // Calcula notas não acatadas agrupadas por dia com base nos dados carregados
             const naoAcatadasPorDia = {};
             cacheNotas.forEach(n => {
                 if (n.status === 'NÃO ACATADA' && n.data) {
                     let dataFormatada = n.data;
-                    // Se estiver no formato AAAA-MM-DD, converte para DD/MM/AAAA para padronizar
                     if (n.data.includes('-')) {
                         const partes = n.data.split('-');
                         if (partes.length === 3) {
@@ -402,7 +398,7 @@
                 texto += `  - Nenhum registro encontrado\n`;
             }
 
-            texto += `\n_Loja 047 - Amigão Lins Junqueira_`;
+            texto += `\n_Gerado pelo Sistema de Controle de NFs_`;
 
             const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(texto)}`;
             window.open(url, '_blank');
@@ -410,11 +406,21 @@
 
         async function salvarNota() {
             const btnSalvar = document.querySelector('.modal-content .btn-add');
+            
+            const nfInputVal = document.getElementById('nf').value.trim();
+            const dataVal = document.getElementById('data').value;
+            const fornVal = document.getElementById('fornecedor').value;
+            const valVal = document.getElementById('valor').value;
+
+            if(!nfInputVal || !dataVal || !fornVal || !valVal) {
+                alert("Por favor, preencha todos os campos obrigatórios.");
+                return;
+            }
+
             btnSalvar.disabled = true;
             btnSalvar.style.opacity = '0.6';
 
-            const nfInput = document.getElementById('nf').value.toUpperCase();
-
+            const nfInput = nfInputVal.toUpperCase();
             const duplicada = cacheNotas.some(n => String(n.nf).toUpperCase() === nfInput);
             if (duplicada) {
                 alert("Atenção: Esta Nota Fiscal já foi cadastrada!");
@@ -423,12 +429,11 @@
                 return; 
             }
 
-            const valorFormatadoInput = document.getElementById('valor').value;
-            const valorNumerico = valorFormatadoInput.replace(/\./g, '').replace(',', '.');
+            const valorNumerico = valVal.replace(/\./g, '').replace(',', '.');
 
             const nota = {
-                data: "'" + document.getElementById('data').value,
-                fornecedor: document.getElementById('fornecedor').value,
+                data: "'" + dataVal,
+                fornecedor: fornVal,
                 nf: nfInput,
                 valor: valorNumerico,
                 chegada: "'" + document.getElementById('chegada').value,
@@ -446,6 +451,7 @@
                 setTimeout(() => carregarDados(false), 1500);
             } catch (err) {
                 console.error("Erro ao salvar:", err);
+                alert("Erro ao conectar com a planilha.");
             } finally {
                 btnSalvar.disabled = false;
                 btnSalvar.style.opacity = '1';
