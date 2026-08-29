@@ -114,7 +114,7 @@
             </div>
         </div>
         <table>
-            <thead><tr><th>Data</th><th>Fornecedor</th><th>NF</th><th>Valor</th><th>Chegada</th><th>Saída</th><th>Temp.</th><th>Conferente</th><th>Prevenção</th><th>Status</th><th>Ações</th></tr></thead>
+            <thead><tr><th>Data</th><th>Fornecedor</th><th>NF</th><th>Valor</th><th>Chegada</th><th>Saída</th><th>Temp.</th><th>Conferente</th><th>Prevenção</th><th>Status</th></tr></thead>
             <tbody id="corpoTabela"></tbody>
         </table>
         <div id="corpoMobile"></div>
@@ -265,7 +265,7 @@
         async function carregarDados(forcarAtualizacao = false) {
             try {
                 const tbody = document.getElementById('corpoTabela');
-                tbody.innerHTML = `<tr><td colspan="11" style="text-align:center; padding: 20px;">Carregando dados...</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; padding: 20px;">Carregando dados...</td></tr>`;
                 
                 const response = await fetch(URL_GOOGLE);
                 const dados = await response.json();
@@ -280,7 +280,7 @@
                 if(forcarAtualizacao) alert("Dados atualizados com sucesso!");
             } catch (error) { 
                 console.error("Erro ao carregar dados:", error);
-                document.getElementById('corpoTabela').innerHTML = `<tr><td colspan="11" style="text-align:center; color:red; padding: 20px;">Erro ao carregar dados. Tente atualizar.</td></tr>`;
+                document.getElementById('corpoTabela').innerHTML = `<tr><td colspan="10" style="text-align:center; color:red; padding: 20px;">Erro ao carregar dados. Tente atualizar.</td></tr>`;
             }
         }
 
@@ -320,7 +320,7 @@
                     const statusClass = n.status === 'ACATADA' ? 'status-acatada' : 'status-nao-acatada';
                     const valorFormatado = formatarMoeda(n.valor);
 
-                    htmlTabela += `<tr><td>${n.data}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>${valorFormatado}</td><td>${n.chegada}</td><td>${n.saida}</td><td>${n.temp}</td><td>${n.conferente}</td><td>${n.prev}</td><td><span class="status-badge ${statusClass}">${n.status}</span></td><td>-</td></tr>`;
+                    htmlTabela += `<tr><td>${n.data}</td><td>${n.fornecedor}</td><td>${n.nf}</td><td>${valorFormatado}</td><td>${n.chegada}</td><td>${n.saida}</td><td>${n.temp}</td><td>${n.conferente}</td><td>${n.prev}</td><td><span class="status-badge ${statusClass}">${n.status}</span></td></tr>`;
                     
                     htmlMobile += `
                     <div class="card-mobile">
