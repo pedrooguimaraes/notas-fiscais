@@ -299,6 +299,7 @@
             let htmlMobile = '';
             
             let totalV = 0, cat = 0, naoCat = 0;
+            let contadorNotasExibidas = 0;
             
             cacheNotas.forEach(n => {
                 const fornecedorUpper = (n.fornecedor || "").toUpperCase();
@@ -315,6 +316,7 @@
                     nfUpper.includes(fNF) &&
                     atendeValor) {
                     
+                    contadorNotasExibidas++;
                     const statusClass = n.status === 'ACATADA' ? 'status-acatada' : 'status-nao-acatada';
                     const valorFormatado = formatarMoeda(n.valor);
 
@@ -346,7 +348,7 @@
             tbody.innerHTML = htmlTabela;
             mobile.innerHTML = htmlMobile;
             
-            document.getElementById('totalNotas').innerText = cacheNotas.length;
+            document.getElementById('totalNotas').innerText = contadorNotasExibidas;
             document.getElementById('valorTotal').innerText = formatarMoeda(totalV);
             document.getElementById('acatadas').innerText = cat;
             document.getElementById('naoAcatadas').innerText = naoCat;
@@ -358,36 +360,89 @@
         }
 
         function gerarRelatorioWhatsApp() {
-            const total = document.getElementById('totalNotas').innerText;
-            const valorTotal = document.getElementById('valorTotal').innerText;
-            const acatadas = document.getElementById('acatadas').innerText;
-            const naoAcatadas = document.getElementById('naoAcatadas').innerText;
+            const fData = document.getElementById('fData').value;
+            const fStatus = document.getElementById('fStatus').value;
+            const fFornInput = document.getElementById('fFornecedor').value.toUpperCase();
+            const fFornArray = fFornInput.split(';').map(item => item.trim()).filter(item => item !== "");
+            const fNF = document.getElementById('fNF').value.toUpperCase();
+            const fValor = document.getElementById('fValor').value.toLowerCase().replace('r$', '').trim();
 
             const hoje = new Date();
             const dataGeracao = hoje.toLocaleDateString('pt-BR');
 
+            let totalFiltrado = 0;
+            let valorTotalFiltrado = 0;
+            let acatadasFiltradas = 0;
+            let naoAcatadasFiltradas = 0;
             const naoAcatadasPorDia = {};
-            let todasAsDatas = new Set();
+            let datasFiltradasSet = new Set();
             
             cacheNotas.forEach(n => {
-                if (n.data) {
-                    let dataFormatada = n.data;
-                    if (n.data.includes('-')) {
-                        const partes = n.data.split('-');
-                        if (partes.length === 3) {
-                            dataFormatada = `${partes[2]}/${partes[1]}/${partes[0]}`;
-                        }
+                const fornecedorUpper = (n.fornecedor || "").toUpperCase();
+                const nfUpper = (n.nf || "").toUpperCase();
+                const valorStr = String(n.valor || "").toLowerCase();
+                const valorFormatadoStr = formatarMoeda(n.valor).toLowerCase();
+                
+                const atendeFornecedor = fFornArray.length === 0 || fFornArray.some(termo => fornecedorUpper.includes(termo));
+                const atendeValor = fValor === "" || valorStr.includes(fValor) || valorFormatadoStr.includes(fValor);
+
+                if ((fData === "" || n.data === fData) &&
+                    (fStatus === "Todos" || n.status === fStatus) && 
+                    atendeFornecedor && 
+                    nfUpper.includes(fNF) &&
+                    atendeValor) {
+                    
+                    totalFiltrado++;
+                    let valNumerico = parseFloat(String(n.valor).replace(',', '.')) || 0;
+                    valorTotalFiltrado += valNumerico;
+
+                    if (n.status === 'ACATADA') {
+                        acatadasFiltradas++;
+                    } else {
+                        naoAcatadasFiltradas++;
                     }
-                    todasAsDatas.add(dataFormatada);
-                    if (n.status === 'NÃO ACATADA') {
-                        naoAcatadasPorDia[dataFormatada] = (naoAcatadasPorDia[dataFormatada] || 0) + 1;
+
+                    if (n.data) {
+                        let dataFormatada = n.data;
+                        let anoValido = true;
+
+                        if (n.data.includes('-')) {
+                            const partes = n.data.split('-');
+                            if (partes.length === 3) {
+                                // Valida se o ano é razoável (ex: entre 2020 e 2050) para evitar bugs de datas corrompidas na planilha
+                                const ano = parseInt(partes[0]);
+                                if (ano < 2020 || ano > 2050) anoValido = false;
+                                else dataFormatada = `${partes[2]}/${partes[1]}/${partes[0]}`;
+                            }
+                        } else if (n.data.includes('/')) {
+                            const partes = n.data.split('/');
+                            if (partes.length === 3) {
+                                const ano = parseInt(partes[2]);
+                                if (ano < 2020 || ano > 2050) anoValido = false;
+                            }
+                        }
+
+                        if (anoValido) {
+                            datasFiltradasSet.add(dataFormatada);
+                            if (n.status === 'NÃO ACATADA') {
+                                naoAcatadasPorDia[dataFormatada] = (naoAcatadasPorDia[dataFormatada] || 0) + 1;
+                            }
+                        }
                     }
                 }
             });
 
-            const diasOrdenados = Array.from(todasAsDatas).sort();
+            const diasOrdenados = Array.from(datasFiltradasSet).sort();
             let periodoTexto = "Geral";
-            if (diasOrdenados.length > 0) {
+            
+            if (fData !== "") {
+                const partesFiltro = fData.split('-');
+                if (partesFiltro.length === 3) {
+                    periodoTexto = `${partesFiltro[2]}/${partesFiltro[1]}/${partesFiltro[0]}`;
+                } else {
+                    periodoTexto = fData;
+                }
+            } else if (diasOrdenados.length > 0) {
                 if (diasOrdenados.length === 1) {
                     periodoTexto = diasOrdenados[0];
                 } else {
@@ -398,10 +453,10 @@
             let texto = `📊 *RESUMO - RELATÓRIO ENTRADA DE NFS.*\n`;
             texto += `📅 *Gerado em:* ${dataGeracao}\n\n`;
             texto += `• *📆 Período:* ${periodoTexto}\n`;
-            texto += `• *📦 Total de Entradas:* ${total}\n`;
-            texto += `• *💰 Valor Total:* ${valorTotal}\n`;
-            texto += `• *✅ Acatadas:* ${acatadas}\n`;
-            texto += `• *❌ Não Acatadas (Geral):* ${naoAcatadas}\n\n`;
+            texto += `• *📦 Total de Entradas:* ${totalFiltrado}\n`;
+            texto += `• *💰 Valor Total:* ${formatarMoeda(valorTotalFiltrado)}\n`;
+            texto += `• *✅ Acatadas:* ${acatadasFiltradas}\n`;
+            texto += `• *❌ Não Acatadas (Geral):* ${naoAcatadasFiltradas}\n\n`;
             
             texto += `❌ *Não Acatadas por Dia:*\n`;
             const diasNaoAcatadosOrdenados = Object.keys(naoAcatadasPorDia).sort();
