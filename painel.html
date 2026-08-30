@@ -10,7 +10,7 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f9fafb; /* Cor de fundo bem suave */
+            background-color: #f9fafb;
             color: #333;
             line-height: 1.6;
             display: flex;
@@ -51,7 +51,7 @@
 
         .logout-btn {
             font-size: 0.85rem;
-            color: #dc2626; /* Vermelho para ação de sair */
+            color: #dc2626;
             text-decoration: none;
             font-weight: 600;
             padding: 6px 12px;
@@ -67,7 +67,7 @@
         main {
             flex: 1;
             padding: 40px 20px;
-            max-width: 800px; /* Largura reduzida para melhor visualização em linha única */
+            max-width: 1200px; /* Aumentado para acomodar os cards lado a lado */
             margin: 0 auto;
             width: 100%;
         }
@@ -89,23 +89,28 @@
             color: #6b7280;
         }
 
-        /* Grade em Coluna Única (Linha Única por card) */
+        /* Grade em Uma Única Linha (Horizontal com Scroll se necessário) */
         .slim-grid {
-            display: grid;
-            grid-template-columns: 1fr; /* Força uma única coluna empilhada em linha */
-            gap: 14px; /* Espaçamento compacto entre as linhas */
+            display: flex;
+            flex-direction: row; /* Força todos os cards em uma linha */
+            gap: 16px;
+            overflow-x: auto; /* Permite rolar para o lado caso a tela seja menor */
+            padding-bottom: 10px; /* Espaço para a barra de rolagem */
         }
 
         .slim-card {
             background-color: #fff;
             border: 1px solid #e5e7eb;
-            border-radius: 8px; /* Bordas levemente arredondadas */
-            padding: 16px 20px;
+            border-radius: 8px;
+            padding: 16px;
             text-decoration: none;
             color: #333;
             display: flex;
-            align-items: center; /* Alinha ícone e texto verticalmente */
-            gap: 16px; /* Espaçamento entre ícone e texto */
+            flex-direction: column; /* Conteúdo empilhado dentro do card vertical */
+            align-items: flex-start;
+            gap: 12px;
+            min-width: 220px; /* Largura mínima para manter o design slim vertical */
+            flex: 1; /* Distribui o espaço igualmente */
             transition: all 0.2s ease, box-shadow 0.2s ease;
             position: relative;
         }
@@ -113,53 +118,50 @@
         .slim-card:hover {
             border-color: #d1d5db;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            transform: translateY(-2px); /* Pequeno efeito de elevação */
+            transform: translateY(-2px);
         }
 
         /* Ícone Mais Slim e Discreto */
         .card-icon {
-            font-size: 1.2rem; /* Ícones menores e mais leves */
-            flex-shrink: 0; /* Não deixa o ícone diminuir */
+            font-size: 1.3rem;
             opacity: 0.8;
-            width: 24px;
-            text-align: center;
         }
         
-        /* Efeito de cor no ícone ao passar o mouse */
         .slim-card:hover .card-icon {
-            color: #2563eb; /* Azul padrão */
+            color: #2563eb;
             opacity: 1;
         }
 
         .card-content {
-            flex: 1;
+            width: 100%;
         }
 
         .card-title {
             font-size: 0.95rem;
             font-weight: 600;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
             color: #111;
         }
 
         .card-desc {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #6b7280;
             line-height: 1.4;
         }
 
-        /* Indicador de seta sutil à direita */
+        /* Indicador de seta discreto no rodapé do card */
         .card-arrow {
-            margin-left: auto;
+            margin-top: auto;
             color: #d1d5db;
             font-size: 0.9rem;
-            opacity: 0; /* Escondido por padrão */
+            opacity: 0;
             transition: opacity 0.2s, transform 0.2s;
+            align-self: flex-end;
         }
 
         .slim-card:hover .card-arrow {
             opacity: 1;
-            transform: translateX(4px); /* Move a seta levemente para a direita */
+            transform: translateX(4px);
         }
 
         /* Rodapé */
