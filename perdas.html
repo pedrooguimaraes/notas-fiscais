@@ -13,7 +13,7 @@
             padding: 10px;
         }
         .sheet-container {
-            max-width: 1550px;
+            max-width: 1650px;
             margin: 0 auto;
             background: #fff;
             border: 2px solid #1e3a8a;
@@ -100,17 +100,6 @@
             background-color: #f8fafc;
             cursor: pointer;
         }
-
-        /* Grade Inferior */
-        .grid-sections {
-            display: grid;
-            grid-template-columns: 1fr 1.4fr;
-            gap: 8px;
-            margin-top: 8px;
-        }
-        @media (max-width: 1100px) {
-            .grid-sections { grid-template-columns: 1fr; }
-        }
     </style>
 </head>
 <body>
@@ -140,8 +129,8 @@
             </tr>
         </table>
 
-        <!-- Grade de Lados -->
-        <div style="display: grid; grid-template-columns: 1.1fr 1.6fr; gap: 8px;">
+        <!-- Grade de Lados (Largura ajustada para dar espaço à descrição) -->
+        <div style="display: grid; grid-template-columns: 1fr 1.9fr; gap: 8px;">
             
             <!-- Departamentos -->
             <div>
@@ -185,41 +174,41 @@
                 </table>
             </div>
 
-            <!-- TOP Itens -->
+            <!-- TOP Itens (Com colunas com larguras ajustadas: Descrição maior) -->
             <div>
-                <table class="excel-table">
+                <table class="excel-table" id="tabela-top-itens">
                     <thead>
                         <tr>
-                            <th class="text-center">Código</th>
-                            <th>Descrição</th>
-                            <th>Departamento</th>
-                            <th>Espécie</th>
-                            <th class="text-center">Quantidade</th>
-                            <th class="text-right">Valor</th>
+                            <th class="text-center" style="width: 10%;">Código</th>
+                            <th style="width: 38%;">Descrição</th>
+                            <th style="width: 18%;">Departamento</th>
+                            <th style="width: 16%;">Espécie</th>
+                            <th class="text-center" style="width: 9%;">Qtd</th>
+                            <th class="text-right" style="width: 9%;">Valor</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="4624017"></td><td class="editable-cell"><input type="text" class="editable-input" value="Bife Ancho Bov Pul Selection Resfr Vacuo"></td><td class="editable-cell"><input type="text" class="editable-input" value="Açougue"></td><td class="editable-cell"><input type="text" class="editable-input" value="Produção"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="2,550"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right" value="R$ 107,94"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="147770"></td><td class="editable-cell"><input type="text" class="editable-input" value="Rabo Bov Resfr Bdj Kg"></td><td class="editable-cell"><input type="text" class="editable-input" value="Açougue"></td><td class="editable-cell"><input type="text" class="editable-input" value="Produção"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="1,966"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right" value="R$ 58,86"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="147630"></td><td class="editable-cell"><input type="text" class="editable-input" value="Contra file bov resfr bife bdj"></td><td class="editable-cell"><input type="text" class="editable-input" value="Açougue"></td><td class="editable-cell"><input type="text" class="editable-input" value="Produção"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="1,212"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right" value="R$ 48,88"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="4436180"></td><td class="editable-cell"><input type="text" class="editable-input" value="Kit Feijoada Pamplona"></td><td class="editable-cell"><input type="text" class="editable-input" value="Frios, Pas e Peixaria"></td><td class="editable-cell"><input type="text" class="editable-input" value="Perdas Por Vencimento"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="9,000"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right" value="R$ 152,64"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="4342151"></td><td class="editable-cell"><input type="text" class="editable-input" value="Queijo Prato Tirolez lanche fatiado"></td><td class="editable-cell"><input type="text" class="editable-input" value="Frios, Pas e Peixaria"></td><td class="editable-cell"><input type="text" class="editable-input" value="Produção"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="0,316"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right" value="R$ 16,84"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="590860"></td><td class="editable-cell"><input type="text" class="editable-input" value="Zznhoque massaleve 500g"></td><td class="editable-cell"><input type="text" class="editable-input" value="Frios, Pas e Peixaria"></td><td class="editable-cell"><input type="text" class="editable-input" value="Perdas Por Vencimento"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="2,000"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right" value="R$ 14,74"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="117250"></td><td class="editable-cell"><input type="text" class="editable-input" value="Limão"></td><td class="editable-cell"><input type="text" class="editable-input" value="Hortifruti"></td><td class="editable-cell"><input type="text" class="editable-input" value="Maturação/Sem Frescor"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="12,790"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right" value="R$ 102,19"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="783005"></td><td class="editable-cell"><input type="text" class="editable-input" value="Flor Roseira Pote 13"></td><td class="editable-cell"><input type="text" class="editable-input" value="Hortifruti"></td><td class="editable-cell"><input type="text" class="editable-input" value="Maturação/Sem Frescor"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="4,000"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right" value="R$ 72,24"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="118095"></td><td class="editable-cell"><input type="text" class="editable-input" value="Inhame"></td><td class="editable-cell"><input type="text" class="editable-input" value="Hortifruti"></td><td class="editable-cell"><input type="text" class="editable-input" value="Maturação/Sem Frescor"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="7,500"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right" value="R$ 45,83"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="612570"></td><td class="editable-cell"><input type="text" class="editable-input" value="Sanduiche Metro"></td><td class="editable-cell"><input type="text" class="editable-input" value="Rotisserie"></td><td class="editable-cell"><input type="text" class="editable-input" value="Produção"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="0,658"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right" value="R$ 15,75"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="2740320"></td><td class="editable-cell"><input type="text" class="editable-input" value="Salgado Assado Grande 90g"></td><td class="editable-cell"><input type="text" class="editable-input" value="Rotisserie"></td><td class="editable-cell"><input type="text" class="editable-input" value="Produção"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="3,000"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right" value="R$ 8,79"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="1453718"></td><td class="editable-cell"><input type="text" class="editable-input" value="Sanduiche Pao Curitibano 150g"></td><td class="editable-cell"><input type="text" class="editable-input" value="Rotisserie"></td><td class="editable-cell"><input type="text" class="editable-input" value="Produção"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="2,000"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right" value="R$ 7,98"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="2796031"></td><td class="editable-cell"><input type="text" class="editable-input" value="Bolinho Bauducco 27g Duo Chocolate"></td><td class="editable-cell"><input type="text" class="editable-input" value="Padaria e Confeitaria"></td><td class="editable-cell"><input type="text" class="editable-input" value="Perdas Por Vencimento"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="58,000"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right" value="R$ 70,76"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="990590"></td><td class="editable-cell"><input type="text" class="editable-input" value="Bolinho Chuva"></td><td class="editable-cell"><input type="text" class="editable-input" value="Padaria e Confeitaria"></td><td class="editable-cell"><input type="text" class="editable-input" value="Produção"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="0,326"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right" value="R$ 1,35"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="1580019"></td><td class="editable-cell"><input type="text" class="editable-input" value="Bolinho Espera Marido"></td><td class="editable-cell"><input type="text" class="editable-input" value="Padaria e Confeitaria"></td><td class="editable-cell"><input type="text" class="editable-input" value="Produção"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="0,466"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right" value="R$ 5,63"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="1614797"></td><td class="editable-cell"><input type="text" class="editable-input" value="Arroz Solito 5kg t1 Premium"></td><td class="editable-cell"><input type="text" class="editable-input" value="Mercearia"></td><td class="editable-cell"><input type="text" class="editable-input" value="Avaria"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="1,000"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right" value="R$ 19,22"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="4623444"></td><td class="editable-cell"><input type="text" class="editable-input" value="Bebida Energetica Red Bull 473ml trop"></td><td class="editable-cell"><input type="text" class="editable-input" value="Mercearia"></td><td class="editable-cell"><input type="text" class="editable-input" value="Avaria"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="1,000"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right" value="R$ 14,95"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="2740125"></td><td class="editable-cell"><input type="text" class="editable-input" value="Arroz Coroa 5kg"></td><td class="editable-cell"><input type="text" class="editable-input" value="Avaria"></td><td class="editable-cell"><input type="text" class="editable-input" value="Avaria"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="1,000"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right" value="R$ 11,85"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="4624017"></td><td class="editable-cell"><input type="text" class="editable-input" value="Bife Ancho Bov Pul Selection Resfr Vacuo"></td><td class="editable-cell"><input type="text" class="editable-input" value="Açougue"></td><td class="editable-cell"><input type="text" class="editable-input" value="Produção"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="2,550"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 107,94"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="147770"></td><td class="editable-cell"><input type="text" class="editable-input" value="Rabo Bov Resfr Bdj Kg"></td><td class="editable-cell"><input type="text" class="editable-input" value="Açougue"></td><td class="editable-cell"><input type="text" class="editable-input" value="Produção"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="1,966"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 58,86"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="147630"></td><td class="editable-cell"><input type="text" class="editable-input" value="Contra file bov resfr bife bdj"></td><td class="editable-cell"><input type="text" class="editable-input" value="Açougue"></td><td class="editable-cell"><input type="text" class="editable-input" value="Produção"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="1,212"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 48,88"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="4436180"></td><td class="editable-cell"><input type="text" class="editable-input" value="Kit Feijoada Pamplona"></td><td class="editable-cell"><input type="text" class="editable-input" value="Frios, Pas e Peixaria"></td><td class="editable-cell"><input type="text" class="editable-input" value="Perdas Por Vencimento"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="9,000"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 152,64"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="4342151"></td><td class="editable-cell"><input type="text" class="editable-input" value="Queijo Prato Tirolez lanche fatiado"></td><td class="editable-cell"><input type="text" class="editable-input" value="Frios, Pas e Peixaria"></td><td class="editable-cell"><input type="text" class="editable-input" value="Produção"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="0,316"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 16,84"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="590860"></td><td class="editable-cell"><input type="text" class="editable-input" value="Zznhoque massaleve 500g"></td><td class="editable-cell"><input type="text" class="editable-input" value="Frios, Pas e Peixaria"></td><td class="editable-cell"><input type="text" class="editable-input" value="Perdas Por Vencimento"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="2,000"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 14,74"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="117250"></td><td class="editable-cell"><input type="text" class="editable-input" value="Limão"></td><td class="editable-cell"><input type="text" class="editable-input" value="Hortifruti"></td><td class="editable-cell"><input type="text" class="editable-input" value="Maturação/Sem Frescor"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="12,790"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 102,19"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="783005"></td><td class="editable-cell"><input type="text" class="editable-input" value="Flor Roseira Pote 13"></td><td class="editable-cell"><input type="text" class="editable-input" value="Hortifruti"></td><td class="editable-cell"><input type="text" class="editable-input" value="Maturação/Sem Frescor"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="4,000"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 72,24"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="118095"></td><td class="editable-cell"><input type="text" class="editable-input" value="Inhame"></td><td class="editable-cell"><input type="text" class="editable-input" value="Hortifruti"></td><td class="editable-cell"><input type="text" class="editable-input" value="Maturação/Sem Frescor"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="7,500"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 45,83"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="612570"></td><td class="editable-cell"><input type="text" class="editable-input" value="Sanduiche Metro"></td><td class="editable-cell"><input type="text" class="editable-input" value="Rotisserie"></td><td class="editable-cell"><input type="text" class="editable-input" value="Produção"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="0,658"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 15,75"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="2740320"></td><td class="editable-cell"><input type="text" class="editable-input" value="Salgado Assado Grande 90g"></td><td class="editable-cell"><input type="text" class="editable-input" value="Rotisserie"></td><td class="editable-cell"><input type="text" class="editable-input" value="Produção"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="3,000"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 8,79"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="1453718"></td><td class="editable-cell"><input type="text" class="editable-input" value="Sanduiche Pao Curitibano 150g"></td><td class="editable-cell"><input type="text" class="editable-input" value="Rotisserie"></td><td class="editable-cell"><input type="text" class="editable-input" value="Produção"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="2,000"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 7,98"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="2796031"></td><td class="editable-cell"><input type="text" class="editable-input" value="Bolinho Bauducco 27g Duo Chocolate"></td><td class="editable-cell"><input type="text" class="editable-input" value="Padaria e Confeitaria"></td><td class="editable-cell"><input type="text" class="editable-input" value="Perdas Por Vencimento"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="58,000"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 70,76"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="990590"></td><td class="editable-cell"><input type="text" class="editable-input" value="Bolinho Chuva"></td><td class="editable-cell"><input type="text" class="editable-input" value="Padaria e Confeitaria"></td><td class="editable-cell"><input type="text" class="editable-input" value="Produção"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="0,326"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 1,35"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="1580019"></td><td class="editable-cell"><input type="text" class="editable-input" value="Bolinho Espera Marido"></td><td class="editable-cell"><input type="text" class="editable-input" value="Padaria e Confeitaria"></td><td class="editable-cell"><input type="text" class="editable-input" value="Produção"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="0,466"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 5,63"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="1614797"></td><td class="editable-cell"><input type="text" class="editable-input" value="Arroz Solito 5kg t1 Premium"></td><td class="editable-cell"><input type="text" class="editable-input" value="Mercearia"></td><td class="editable-cell"><input type="text" class="editable-input" value="Avaria"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="1,000"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 19,22"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="4623444"></td><td class="editable-cell"><input type="text" class="editable-input" value="Bebida Energetica Red Bull 473ml trop"></td><td class="editable-cell"><input type="text" class="editable-input" value="Mercearia"></td><td class="editable-cell"><input type="text" class="editable-input" value="Avaria"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="1,000"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 14,95"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="2740125"></td><td class="editable-cell"><input type="text" class="editable-input" value="Arroz Coroa 5kg"></td><td class="editable-cell"><input type="text" class="editable-input" value="Avaria"></td><td class="editable-cell"><input type="text" class="editable-input" value="Avaria"></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="1,000"></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 11,85"></td></tr>
                         <tr class="bg-total">
-                            <td colspan="5" style="text-align: right;">Top 03 (Dptos.) - Representa da perda diária =</td>
-                            <td class="text-right editable-cell"><input type="text" class="editable-input text-right" value="38%   R$ 776,44" style="font-weight: bold;"></td>
+                            <td colspan="5" style="text-align: right;">Total / Soma da Coluna Valor =</td>
+                            <td class="text-right editable-cell"><input type="text" id="total-top-valor" class="editable-input text-right" value="R$ 776,44" style="font-weight: bold;" readonly></td>
                         </tr>
                     </tbody>
                 </table>
@@ -227,10 +216,10 @@
 
         </div>
 
-        <!-- Seção Inferior -->
-        <div class="grid-sections">
+        <!-- Seção Inferior (Ajustada para 18 linhas correspondentes aos 18 departamentos) -->
+        <div style="display: grid; grid-template-columns: 1fr 1.9fr; gap: 8px; margin-top: 8px;">
             
-            <!-- Tabela Inferior Esquerda -->
+            <!-- Tabela Inferior Esquerda (18 linhas) -->
             <div>
                 <table class="excel-table">
                     <thead>
@@ -240,31 +229,55 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="30"></td><td class="editable-cell"><input type="text" class="editable-input" value="Higiene e Beleza - Item 1"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="31"></td><td class="editable-cell"><input type="text" class="editable-input" value="Limpeza - Item 1"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="32"></td><td class="editable-cell"><input type="text" class="editable-input" value="Descartáveis - Item 1"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="33"></td><td class="editable-cell"><input type="text" class="editable-input" value="Bazar e Têxtil - Item 1"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="34"></td><td class="editable-cell"><input type="text" class="editable-input" value="Pet Shop - Item 1"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="36"></td><td class="editable-cell"><input type="text" class="editable-input" value="Tabacaria - Item 1"></td></tr>
                         <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="4624017"></td><td class="editable-cell"><input type="text" class="editable-input" value="Bife Ancho Bov Pul Selection Resfr Vacuo Kg"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="147770"></td><td class="editable-cell"><input type="text" class="editable-input" value="Rabo Bov Resfr Bdj Kg"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="147630"></td><td class="editable-cell"><input type="text" class="editable-input" value="Contra file bov resfr bife bdj"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="38"></td><td class="editable-cell"><input type="text" class="editable-input" value="Pas Congelados - Item 1"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="39"></td><td class="editable-cell"><input type="text" class="editable-input" value="Pas Refrigerados - Item 1"></td></tr>
                         <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="4436180"></td><td class="editable-cell"><input type="text" class="editable-input" value="Kit Feijoada Pamplona"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="4342151"></td><td class="editable-cell"><input type="text" class="editable-input" value="Queijo Prato Tirolez lanche fatiado"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="590860"></td><td class="editable-cell"><input type="text" class="editable-input" value="Zznhoque massaleve 500g"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="42"></td><td class="editable-cell"><input type="text" class="editable-input" value="Commodities - Item 1"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="43"></td><td class="editable-cell"><input type="text" class="editable-input" value="Bebidas - Item 1"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="117250"></td><td class="editable-cell"><input type="text" class="editable-input" value="Limão"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="612570"></td><td class="editable-cell"><input type="text" class="editable-input" value="Sanduiche Metro"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="47"></td><td class="editable-cell"><input type="text" class="editable-input" value="Mercearia Salgada - Item 1"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="49"></td><td class="editable-cell"><input type="text" class="editable-input" value="Mercearia Doce - Item 1"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="56"></td><td class="editable-cell"><input type="text" class="editable-input" value="Peixaria - Item 1"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="2796031"></td><td class="editable-cell"><input type="text" class="editable-input" value="Bolinho Bauducco 27g Duo Chocolate"></td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- Tabela Inferior Direita (Justificativas) -->
+            <!-- Tabela Inferior Direita (Justificativas - 18 linhas correspondentes aos 18 departamentos) -->
             <div>
                 <table class="excel-table">
                     <thead>
                         <tr>
-                            <th>Justificativas / Plano de Ação</th>
+                            <th>Justificativas / Plano de Ação por Setor</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Higiene e Beleza: Controle de estoque e conferência no recebimento de avarias."></td></tr>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Limpeza: Monitoramento de produtos danificados na exposição."></td></tr>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Descartáveis: Atenção ao manuseio e rompimento de embalagens."></td></tr>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Bazar e Têxtil: Revisão preventiva de itens expostos e controle de quebras."></td></tr>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Pet Shop: Verificação periódica de validade e integridade dos pacotes."></td></tr>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Tabacaria: Rotação adequada de estoque e conferência de inventário."></td></tr>
                         <tr><td class="editable-cell"><input type="text" class="editable-input" value="Açougue: Ajuste de produção e controle no fracionamento de carnes."></td></tr>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Pas Congelados: Monitoramento de temperatura e quebra por validade curta."></td></tr>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Pas Refrigerados: Controle severo de ruptura e margem de vencimento."></td></tr>
                         <tr><td class="editable-cell"><input type="text" class="editable-input" value="Frios: Monitoramento rigoroso do prazo de validade (curto prazo)."></td></tr>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Padaria: Adequação da fornada noturna para evitar sobras excessivas."></td></tr>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Commodities: Cuidado no transporte interno e prevenção de avarias de sacas/caixas."></td></tr>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Bebidas: Atenção redobrada ao descarregar e expor vasilhames e garrafas."></td></tr>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Hortifruti (FLV): Reposição orientada e retirada preventiva de itens sem frescor."></td></tr>
                         <tr><td class="editable-cell"><input type="text" class="editable-input" value="Rotisserie: Atenção redobrada na exposição e armazenamento dos lanches."></td></tr>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Hortifruti: Reposição orientada e retirada preventiva de itens sem frescor."></td></tr>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Geral: Acompanhamento diário com os líderes de cada setor crítico."></td></tr>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Mercearia Salgada: Checagem de itens amassados ou com embalagens rompidas."></td></tr>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Mercearia Doce: Controle de estoque avançado para itens de giro rápido e sazonal."></td></tr>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Peixaria: Rigor na conservação em gelo e prazos curtos de exposição."></td></tr>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Padaria e Confeitaria: Adequação da fornada noturna para evitar sobras excessivas."></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -343,9 +356,17 @@
                 celulaTotalDesvio.classList.add('val-red');
                 inputTotalDesvio.classList.add('val-red');
             }
+
+            // Recalcular a soma da coluna Valor da tabela TOP Itens
+            const inputsValoresTop = document.querySelectorAll('.item-valor');
+            let somaTopValores = 0;
+            inputsValoresTop.forEach(input => {
+                somaTopValores += parseMoeda(input.value);
+            });
+            document.getElementById('total-top-valor').value = formatarMoeda(somaTopValores);
         }
 
-        document.querySelectorAll('#tabela-departamentos input').forEach(input => {
+        document.querySelectorAll('input').forEach(input => {
             input.addEventListener('input', recalcularTabela);
         });
 
