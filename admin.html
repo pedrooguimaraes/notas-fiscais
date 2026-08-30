@@ -67,46 +67,43 @@
             margin-top: 10px;
             display: none;
         }
-        .public-link {
-            display: block;
-            margin-top: 15px;
-            font-size: 12px;
-            color: #666;
-            text-decoration: none;
-        }
-        .public-link:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
 
     <div class="login-card">
         <h1>🔒 Área do Administrador</h1>
-        <p>Digite a senha de acesso:</p>
+        <p>Digite a senha de acesso para gerenciar o sistema:</p>
         
         <form onsubmit="validarSenha(event)">
             <input type="password" id="senhaAdmin" placeholder="Senha" required>
             <button type="submit" class="btn-login">Entrar</button>
             <div id="erro" class="error-msg">Senha incorreta!</div>
         </form>
-
-        <a href="index.html" class="public-link">← Voltar para a página de Notas Fiscais</a>
+        <!-- O link de voltar foi removido daqui para garantir a segurança -->
     </div>
 
     <script>
         function validarSenha(event) {
+            // Impede que a página recarregue ao enviar o formulário
             event.preventDefault();
+            
+            // Pega o valor digitado no campo de senha
             const senhaDigitada = document.getElementById('senhaAdmin').value;
             
-            // 🔑 Defina aqui a senha do administrador que preferir:
+            // 🔑 CAMPO DE CONFIGURAÇÃO DA SENHA
+            // Altere "123456" abaixo para a senha que você desejar.
             const senhaCorreta = "123456"; 
 
+            // Compara a senha digitada com a senha configurada
             if (senhaDigitada === senhaCorreta) {
-                // Aqui você pode redirecionar para a mesma tela de notas ou para um painel gerencial exclusivo
+                // Se a senha estiver correta, redireciona para a página principal (index.html)
                 window.location.href = "index.html"; 
             } else {
+                // Se a senha estiver incorreta, mostra a mensagem de erro
                 document.getElementById('erro').style.display = 'block';
+                // Limpa o campo de senha
+                document.getElementById('senhaAdmin').value = '';
             }
         }
     </script>
