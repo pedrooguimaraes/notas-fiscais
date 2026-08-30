@@ -67,14 +67,14 @@
         main {
             flex: 1;
             padding: 40px 20px;
-            max-width: 900px; /* Largura máxima para manter o aspecto slim */
+            max-width: 800px; /* Largura reduzida para melhor visualização em linha única */
             margin: 0 auto;
             width: 100%;
         }
 
         .welcome-section {
             text-align: center;
-            margin-bottom: 48px;
+            margin-bottom: 40px;
         }
 
         .welcome-section h2 {
@@ -89,24 +89,24 @@
             color: #6b7280;
         }
 
-        /* Grade Horizontal (Slim) */
+        /* Grade em Coluna Única (Linha Única por card) */
         .slim-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Blocos médios que quebram linha se necessário */
-            gap: 20px; /* Espaçamento menor entre os itens */
+            grid-template-columns: 1fr; /* Força uma única coluna empilhada em linha */
+            gap: 14px; /* Espaçamento compacto entre as linhas */
         }
 
         .slim-card {
             background-color: #fff;
             border: 1px solid #e5e7eb;
             border-radius: 8px; /* Bordas levemente arredondadas */
-            padding: 20px;
+            padding: 16px 20px;
             text-decoration: none;
             color: #333;
             display: flex;
             align-items: center; /* Alinha ícone e texto verticalmente */
             gap: 16px; /* Espaçamento entre ícone e texto */
-            transition:all 0.2s ease, box-shadow 0.2s ease;
+            transition: all 0.2s ease, box-shadow 0.2s ease;
             position: relative;
         }
 
@@ -116,16 +116,19 @@
             transform: translateY(-2px); /* Pequeno efeito de elevação */
         }
 
-        /* Ícone Menor e Slim */
+        /* Ícone Mais Slim e Discreto */
         .card-icon {
-            font-size: 1.5rem; /* Ícones menores (eram 2.5rem) */
+            font-size: 1.2rem; /* Ícones menores e mais leves */
             flex-shrink: 0; /* Não deixa o ícone diminuir */
-            opacity: 0.9;
+            opacity: 0.8;
+            width: 24px;
+            text-align: center;
         }
         
         /* Efeito de cor no ícone ao passar o mouse */
         .slim-card:hover .card-icon {
             color: #2563eb; /* Azul padrão */
+            opacity: 1;
         }
 
         .card-content {
@@ -133,23 +136,23 @@
         }
 
         .card-title {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
             color: #111;
         }
 
         .card-desc {
             font-size: 0.8rem;
             color: #6b7280;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         /* Indicador de seta sutil à direita */
         .card-arrow {
             margin-left: auto;
             color: #d1d5db;
-            font-size: 1rem;
+            font-size: 0.9rem;
             opacity: 0; /* Escondido por padrão */
             transition: opacity 0.2s, transform 0.2s;
         }
@@ -210,7 +213,6 @@
             </a>
 
             <!-- 03. Gerenciamento de Inventários Geral Lojas -->
-            <a href="#" class="card-item"></a> <!-- Placeholder -->
             <a href="#" class="slim-card">
                 <div class="card-icon">🏪</div>
                 <div class="card-content">
