@@ -227,12 +227,55 @@
 
         </div>
 
+        <!-- Seção Inferior -->
+        <div class="grid-sections">
+            
+            <!-- Tabela Inferior Esquerda -->
+            <div>
+                <table class="excel-table">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="width: 25%;">Código</th>
+                            <th>Descrição</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="4624017"></td><td class="editable-cell"><input type="text" class="editable-input" value="Bife Ancho Bov Pul Selection Resfr Vacuo Kg"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="147770"></td><td class="editable-cell"><input type="text" class="editable-input" value="Rabo Bov Resfr Bdj Kg"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="147630"></td><td class="editable-cell"><input type="text" class="editable-input" value="Contra file bov resfr bife bdj"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="4436180"></td><td class="editable-cell"><input type="text" class="editable-input" value="Kit Feijoada Pamplona"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="4342151"></td><td class="editable-cell"><input type="text" class="editable-input" value="Queijo Prato Tirolez lanche fatiado"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value="590860"></td><td class="editable-cell"><input type="text" class="editable-input" value="Zznhoque massaleve 500g"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tabela Inferior Direita (Justificativas) -->
+            <div>
+                <table class="excel-table">
+                    <thead>
+                        <tr>
+                            <th>Justificativas / Plano de Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Açougue: Ajuste de produção e controle no fracionamento de carnes."></td></tr>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Frios: Monitoramento rigoroso do prazo de validade (curto prazo)."></td></tr>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Padaria: Adequação da fornada noturna para evitar sobras excessivas."></td></tr>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Rotisserie: Atenção redobrada na exposição e armazenamento dos lanches."></td></tr>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Hortifruti: Reposição orientada e retirada preventiva de itens sem frescor."></td></tr>
+                        <tr><td class="editable-cell"><input type="text" class="editable-input" value="Geral: Acompanhamento diário com os líderes de cada setor crítico."></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
     </div>
 
     <script>
         function parseMoeda(valorStr) {
             if (!valorStr) return 0;
-            // Remove 'R$', espaços, troca pontos de milhar por vazio e vírgula por ponto
             let limpo = valorStr.replace('R$', '').trim().replaceAll('.', '').replace(',', '.');
             let num = parseFloat(limpo);
             return isNaN(num) ? 0 : num;
@@ -250,7 +293,6 @@
             let somaMeta = 0;
             let somaRealizado = 0;
 
-            // Percorre todas as linhas exceto a última (que é o total)
             for (let i = 0; i < linhas.length - 1; i++) {
                 let linha = linhas[i];
                 let inputs = linha.querySelectorAll('input');
@@ -258,7 +300,6 @@
                     let inputMeta = inputs[2];
                     let inputRealizado = inputs[3];
                     let inputDesvio = inputs[4];
-                    let tdDesvio = linha.rows ? null : inputDesvio.closest('td');
 
                     let valMeta = parseMoeda(inputMeta.value);
                     let valRealizado = parseMoeda(inputRealizado.value);
@@ -266,12 +307,9 @@
                     somaMeta += valMeta;
                     somaRealizado += valRealizado;
 
-                    // Desvio = Meta - Realizado (ou Realizado - Meta dependendo da regra de negócio de perda: aqui a lógica anterior era Meta - Realizado resultando positivo se dentro da meta e negativo se excedido)
-                    // Conforme padrão do código original: Desvio positivo é verde, negativo é vermelho.
                     let valDesvio = valMeta - valRealizado;
                     inputDesvio.value = formatarMoeda(valDesvio);
 
-                    // Ajusta classes de cor da célula de desvio
                     let celulaPai = inputDesvio.closest('td');
                     celulaPai.classList.remove('val-green', 'val-red');
                     inputDesvio.classList.remove('val-green', 'val-red');
@@ -286,7 +324,6 @@
                 }
             }
 
-            // Atualiza a linha de total
             document.getElementById('total-meta').value = formatarMoeda(somaMeta);
             document.getElementById('total-realizado').value = formatarMoeda(somaRealizado);
 
@@ -308,12 +345,10 @@
             }
         }
 
-        // Adiciona escuta de eventos em todos os inputs da tabela de departamentos para atualizar ao digitar
         document.querySelectorAll('#tabela-departamentos input').forEach(input => {
             input.addEventListener('input', recalcularTabela);
         });
 
-        // Executa o cálculo na carga inicial para garantir formatação correta
         recalcularTabela();
     </script>
 </body>
