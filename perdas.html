@@ -100,6 +100,19 @@
             background-color: #f8fafc;
             cursor: pointer;
         }
+
+        /* Botão de Salvar */
+        .btn-salvar {
+            background-color: #16a34a;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+        .btn-salvar:hover { background-color: #15803d; }
     </style>
 </head>
 <body>
@@ -108,7 +121,10 @@
         <!-- Barra de Navegação -->
         <div class="nav-bar">
             <a href="painel.html">← Voltar ao Painel Administrativo</a>
-            <span style="font-size: 0.75rem; color: #334155;">✏️ <strong>Modo Planilha Ativado:</strong>Versão: 30.08.2026/001</span>
+            <div>
+                <span style="font-size: 0.75rem; color: #334155; margin-right: 15px;">✏️ <strong>Modo Planilha Ativado</strong></span>
+                <button class="btn-salvar" onclick="salvarDados()">💾 Salvar Alterações</button>
+            </div>
         </div>
 
         <!-- Título -->
@@ -120,10 +136,10 @@
         <table class="excel-table" style="margin-bottom: 8px;">
             <tr>
                 <td style="width: 10%; background: #bfdbfe; font-weight: bold; text-align: center;">Loja</td>
-                <td style="width: 25%; font-weight: bold; text-align: center;" class="editable-cell"><input type="text" class="editable-input text-center" value="Lins Junqueira"></td>
+                <td style="width: 25%; font-weight: bold; text-align: center;" class="editable-cell"><input type="text" id="loja-nome" class="editable-input text-center" value="Lins Junqueira"></td>
                 <td style="width: 8%; background: #bfdbfe; font-weight: bold; text-align: center;">Data</td>
                 <td style="width: 15%; text-align: center;" class="bg-header-yellow editable-cell">
-                    <input type="text" class="editable-input text-center" value="" style="font-weight: bold;">
+                    <input type="date" id="data-registro" class="editable-input text-center" style="font-weight: bold;">
                 </td>
                 <td style="background: #bfdbfe; font-weight: bold; text-align: center;" colspan="5">TOP Itens</td>
             </tr>
@@ -188,24 +204,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" data-index="0" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" data-index="0" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Açougue"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" data-index="1" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" data-index="1" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Açougue"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" data-index="2" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" data-index="2" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Açougue"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" data-index="3" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" data-index="3" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Frios, Pas e Peixaria"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" data-index="4" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" data-index="4" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Frios, Pas e Peixaria"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" data-index="5" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" data-index="5" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Frios, Pas e Peixaria"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" data-index="6" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" data-index="6" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Hortifruti"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" data-index="7" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" data-index="7" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Hortifruti"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" data-index="8" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" data-index="8" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Hortifruti"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" data-index="9" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" data-index="9" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Rotisserie"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" data-index="10" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" data-index="10" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Rotisserie"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" data-index="11" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" data-index="11" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Rotisserie"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" data-index="12" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" data-index="12" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Padaria e Confeitaria"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" data-index="13" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" data-index="13" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Padaria e Confeitaria"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" data-index="14" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" data-index="14" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Padaria e Confeitaria"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" data-index="15" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" data-index="15" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Mercearia"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" data-index="16" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" data-index="16" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Mercearia"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
-                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" data-index="17" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" data-index="17" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Mercearia"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Açougue"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Açougue"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Açougue"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Frios, Pas e Peixaria"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Frios, Pas e Peixaria"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Frios, Pas e Peixaria"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Hortifruti"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Hortifruti"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Hortifruti"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Rotisserie"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Rotisserie"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Rotisserie"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Padaria e Confeitaria"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Padaria e Confeitaria"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Padaria e Confeitaria"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Mercearia"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Mercearia"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
+                        <tr><td class="text-center editable-cell"><input type="text" class="editable-input text-center top-codigo" value=""></td><td class="editable-cell"><input type="text" class="editable-input top-descricao" value=""></td><td class="editable-cell"><input type="text" class="editable-input" value="Mercearia"></td><td class="editable-cell"><input type="text" class="editable-input" value=""></td><td class="text-center editable-cell"><input type="text" class="editable-input text-center" value=""></td><td class="text-right editable-cell"><input type="text" class="editable-input text-right item-valor" value="R$ 0,00"></td></tr>
                         <tr class="bg-total">
                             <td colspan="5" style="text-align: right;">Total / Soma da Coluna Valor =</td>
                             <td class="text-right editable-cell"><input type="text" id="total-top-valor" class="editable-input text-right" value="R$ 0,00" style="font-weight: bold;" readonly></td>
@@ -216,185 +232,81 @@
 
         </div>
 
-        <!-- Seção Inferior (Espelhada automaticamente com a tabela TOP Itens) -->
-        <div style="display: grid; grid-template-columns: 1fr 1.9fr; gap: 8px; margin-top: 8px;">
-            
-            <!-- Tabela Inferior Esquerda (18 linhas espelhadas) -->
-            <div>
-                <table class="excel-table">
-                    <thead>
-                        <tr>
-                            <th class="text-center" style="width: 25%;">Código</th>
-                            <th>Descrição</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td class="text-center"><input type="text" class="editable-input text-center bottom-codigo" data-index="0" value="" readonly style="background: #f8fafc;"></td><td><input type="text" class="editable-input bottom-descricao" data-index="0" value="" readonly style="background: #f8fafc;"></td></tr>
-                        <tr><td class="text-center"><input type="text" class="editable-input text-center bottom-codigo" data-index="1" value="" readonly style="background: #f8fafc;"></td><td><input type="text" class="editable-input bottom-descricao" data-index="1" value="" readonly style="background: #f8fafc;"></td></tr>
-                        <tr><td class="text-center"><input type="text" class="editable-input text-center bottom-codigo" data-index="2" value="" readonly style="background: #f8fafc;"></td><td><input type="text" class="editable-input bottom-descricao" data-index="2" value="" readonly style="background: #f8fafc;"></td></tr>
-                        <tr><td class="text-center"><input type="text" class="editable-input text-center bottom-codigo" data-index="3" value="" readonly style="background: #f8fafc;"></td><td><input type="text" class="editable-input bottom-descricao" data-index="3" value="" readonly style="background: #f8fafc;"></td></tr>
-                        <tr><td class="text-center"><input type="text" class="editable-input text-center bottom-codigo" data-index="4" value="" readonly style="background: #f8fafc;"></td><td><input type="text" class="editable-input bottom-descricao" data-index="4" value="" readonly style="background: #f8fafc;"></td></tr>
-                        <tr><td class="text-center"><input type="text" class="editable-input text-center bottom-codigo" data-index="5" value="" readonly style="background: #f8fafc;"></td><td><input type="text" class="editable-input bottom-descricao" data-index="5" value="" readonly style="background: #f8fafc;"></td></tr>
-                        <tr><td class="text-center"><input type="text" class="editable-input text-center bottom-codigo" data-index="6" value="" readonly style="background: #f8fafc;"></td><td><input type="text" class="editable-input bottom-descricao" data-index="6" value="" readonly style="background: #f8fafc;"></td></tr>
-                        <tr><td class="text-center"><input type="text" class="editable-input text-center bottom-codigo" data-index="7" value="" readonly style="background: #f8fafc;"></td><td><input type="text" class="editable-input bottom-descricao" data-index="7" value="" readonly style="background: #f8fafc;"></td></tr>
-                        <tr><td class="text-center"><input type="text" class="editable-input text-center bottom-codigo" data-index="8" value="" readonly style="background: #f8fafc;"></td><td><input type="text" class="editable-input bottom-descricao" data-index="8" value="" readonly style="background: #f8fafc;"></td></tr>
-                        <tr><td class="text-center"><input type="text" class="editable-input text-center bottom-codigo" data-index="9" value="" readonly style="background: #f8fafc;"></td><td><input type="text" class="editable-input bottom-descricao" data-index="9" value="" readonly style="background: #f8fafc;"></td></tr>
-                        <tr><td class="text-center"><input type="text" class="editable-input text-center bottom-codigo" data-index="10" value="" readonly style="background: #f8fafc;"></td><td><input type="text" class="editable-input bottom-descricao" data-index="10" value="" readonly style="background: #f8fafc;"></td></tr>
-                        <tr><td class="text-center"><input type="text" class="editable-input text-center bottom-codigo" data-index="11" value="" readonly style="background: #f8fafc;"></td><td><input type="text" class="editable-input bottom-descricao" data-index="11" value="" readonly style="background: #f8fafc;"></td></tr>
-                        <tr><td class="text-center"><input type="text" class="editable-input text-center bottom-codigo" data-index="12" value="" readonly style="background: #f8fafc;"></td><td><input type="text" class="editable-input bottom-descricao" data-index="12" value="" readonly style="background: #f8fafc;"></td></tr>
-                        <tr><td class="text-center"><input type="text" class="editable-input text-center bottom-codigo" data-index="13" value="" readonly style="background: #f8fafc;"></td><td><input type="text" class="editable-input bottom-descricao" data-index="13" value="" readonly style="background: #f8fafc;"></td></tr>
-                        <tr><td class="text-center"><input type="text" class="editable-input text-center bottom-codigo" data-index="14" value="" readonly style="background: #f8fafc;"></td><td><input type="text" class="editable-input bottom-descricao" data-index="14" value="" readonly style="background: #f8fafc;"></td></tr>
-                        <tr><td class="text-center"><input type="text" class="editable-input text-center bottom-codigo" data-index="15" value="" readonly style="background: #f8fafc;"></td><td><input type="text" class="editable-input bottom-descricao" data-index="15" value="" readonly style="background: #f8fafc;"></td></tr>
-                        <tr><td class="text-center"><input type="text" class="editable-input text-center bottom-codigo" data-index="16" value="" readonly style="background: #f8fafc;"></td><td><input type="text" class="editable-input bottom-descricao" data-index="16" value="" readonly style="background: #f8fafc;"></td></tr>
-                        <tr><td class="text-center"><input type="text" class="editable-input text-center bottom-codigo" data-index="17" value="" readonly style="background: #f8fafc;"></td><td><input type="text" class="editable-input bottom-descricao" data-index="17" value="" readonly style="background: #f8fafc;"></td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Tabela Inferior Direita (Justificativas) -->
-            <div>
-                <table class="excel-table">
-                    <thead>
-                        <tr>
-                            <th>Justificativas / Plano de Ação por Setor</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value=""></td></tr>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value=""></td></tr>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value=""></td></tr>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value=""></td></tr>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value=""></td></tr>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value=""></td></tr>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value=""></td></tr>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value=""></td></tr>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value=""></td></tr>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value=""></td></tr>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value=""></td></tr>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value=""></td></tr>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value=""></td></tr>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value=""></td></tr>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value=""></td></tr>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value=""></td></tr>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value=""></td></tr>
-                        <tr><td class="editable-cell"><input type="text" class="editable-input" value=""></td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-
     </div>
 
     <script>
-        function parseMoeda(valorStr) {
-            if (!valorStr) return 0;
-            let limpo = valorStr.replace('R$', '').trim().replaceAll('.', '').replace(',', '.');
-            let num = parseFloat(limpo);
-            return isNaN(num) ? 0 : num;
+        // COLE AQUI A URL DO SEU GOOGLE APPS SCRIPT (Web App):
+        const URL_API = "https://script.google.com/macros/s/AKfycbyQk4UZSj0qLj4aXuVd-qNKfZbNpUNFgqoC592s5CSjgd1MH5HBSpuOoJHvyoPqoigZ/exec";
+
+        // Função para Salvar os Dados na Planilha do Google
+        function salvarDados() {
+            const botao = document.querySelector('.btn-salvar');
+            botao.innerText = "Salvando...";
+            botao.disabled = true;
+
+            let dadosParaSalvar = {};
+            
+            // Coleta dados principais
+            dadosParaSalvar['loja_nome'] = document.getElementById('loja-nome').value;
+            dadosParaSalvar['data_registro'] = document.getElementById('data-registro').value;
+
+            // Coleta todos os inputs da página de forma dinâmica
+            const inputs = document.querySelectorAll('.editable-input');
+            inputs.forEach((input, index) => {
+                dadosParaSalvar['input_' + index] = input.value;
+            });
+
+            // Envia para o Google Apps Script via POST
+            fetch(URL_API, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dadosParaSalvar)
+            })
+            .then(() => {
+                alert('Dados salvos com sucesso na nuvem!');
+                botao.innerText = "💾 Salvar Alterações";
+                botao.disabled = false;
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao salvar os dados.');
+                botao.innerText = "💾 Salvar Alterações";
+                botao.disabled = false;
+            });
         }
 
-        function formatarMoeda(valor) {
-            let negativo = valor < 0;
-            let absVal = Math.abs(valor);
-            let formatado = absVal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            return (negativo ? '-R$ ' : 'R$ ') + formatado;
+        // Função para Carregar os Dados automaticamente da Nuvem
+        function carregarDados() {
+            if (!URL_API || URL_API.includes("COLE_AQUI")) return;
+
+            fetch(URL_API)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "sucesso" && data.dados) {
+                    let salvos = typeof data.dados === 'string' ? JSON.parse(data.dados) : data.dados;
+                    
+                    if (salvos['loja_nome']) document.getElementById('loja-nome').value = salvos['loja_nome'];
+                    if (salvos['data_registro']) document.getElementById('data-registro').value = salvos['data_registro'];
+
+                    // Restaura os valores de todos os inputs
+                    const inputs = document.querySelectorAll('.editable-input');
+                    inputs.forEach((input, index) => {
+                        if (salvos['input_' + index] !== undefined) {
+                            input.value = salvos['input_' + index];
+                        }
+                    });
+                }
+            })
+            .catch(error => console.log('Ainda não há dados salvos ou ocorreu um erro ao carregar:', error));
         }
 
-        function recalcularTabela() {
-            const linhas = document.querySelectorAll('#tabela-departamentos tbody tr');
-            let somaMeta = 0;
-            let somaRealizado = 0;
-
-            for (let i = 0; i < linhas.length - 1; i++) {
-                let linha = linhas[i];
-                let inputs = linha.querySelectorAll('input');
-                if (inputs.length >= 4) {
-                    let inputMeta = inputs[2];
-                    let inputRealizado = inputs[3];
-                    let inputDesvio = inputs[4];
-
-                    let valMeta = parseMoeda(inputMeta.value);
-                    let valRealizado = parseMoeda(inputRealizado.value);
-
-                    somaMeta += valMeta;
-                    somaRealizado += valRealizado;
-
-                    let valDesvio = valMeta - valRealizado;
-                    inputDesvio.value = formatarMoeda(valDesvio);
-
-                    let celulaPai = inputDesvio.closest('td');
-                    celulaPai.classList.remove('val-green', 'val-red');
-                    inputDesvio.classList.remove('val-green', 'val-red');
-
-                    if (valDesvio >= 0) {
-                        celulaPai.classList.add('val-green');
-                        inputDesvio.classList.add('val-green');
-                    } else {
-                        celulaPai.classList.add('val-red');
-                        inputDesvio.classList.add('val-red');
-                    }
-                }
-            }
-
-            document.getElementById('total-meta').value = formatarMoeda(somaMeta);
-            document.getElementById('total-realizado').value = formatarMoeda(somaRealizado);
-
-            let totalDesvioVal = somaMeta - somaRealizado;
-            let inputTotalDesvio = document.getElementById('total-desvio');
-            let celulaTotalDesvio = document.getElementById('total-desvio-cell');
-
-            inputTotalDesvio.value = formatarMoeda(totalDesvioVal);
-
-            celulaTotalDesvio.classList.remove('val-green', 'val-red');
-            inputTotalDesvio.classList.remove('val-green', 'val-red');
-
-            if (totalDesvioVal >= 0) {
-                celulaTotalDesvio.classList.add('val-green');
-                inputTotalDesvio.classList.add('val-green');
-            } else {
-                celulaTotalDesvio.classList.add('val-red');
-                inputTotalDesvio.classList.add('val-red');
-            }
-
-            // Recalcular a soma da coluna Valor da tabela TOP Itens
-            const inputsValoresTop = document.querySelectorAll('.item-valor');
-            let somaTopValores = 0;
-            inputsValoresTop.forEach(input => {
-                somaTopValores += parseMoeda(input.value);
-            });
-            document.getElementById('total-top-valor').value = formatarMoeda(somaTopValores);
-        }
-
-        // Lógica para espelhar código e descrição automaticamente na tabela inferior
-        const topCodigos = document.querySelectorAll('.top-codigo');
-        const topDescricoes = document.querySelectorAll('.top-descricao');
-        const bottomCodigos = document.querySelectorAll('.bottom-codigo');
-        const bottomDescricoes = document.querySelectorAll('.bottom-descricao');
-
-        topCodigos.forEach(inputTop => {
-            inputTop.addEventListener('input', (e) => {
-                let idx = e.target.getAttribute('data-index');
-                if (bottomCodigos[idx]) {
-                    bottomCodigos[idx].value = e.target.value;
-                }
-            });
-        });
-
-        topDescricoes.forEach(inputTop => {
-            inputTop.addEventListener('input', (e) => {
-                let idx = e.target.getAttribute('data-index');
-                if (bottomDescricoes[idx]) {
-                    bottomDescricoes[idx].value = e.target.value;
-                }
-            });
-        });
-
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('input', recalcularTabela);
-        });
-
-        recalcularTabela();
+        // Executa o carregamento assim que a página é aberta em qualquer computador
+        window.onload = function() {
+            carregarDados();
+        };
     </script>
 </body>
 </html>
