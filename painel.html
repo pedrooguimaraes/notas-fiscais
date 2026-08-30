@@ -3,200 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Controle - Administrador</title>
+    <title>Painel Administrativo - Loja 047</title>
     <style>
+        /* Reset Básico */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f7f7f7;
-            margin: 0;
-            padding: 0;
+            background-color: #f9fafb; /* Cor de fundo bem suave */
+            color: #333;
+            line-height: 1.6;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
         }
 
-        /* Cabeçalho */
-        .header {
-            background-color: white;
-            padding: 15px 30px;
-            border-bottom: 1px solid #e0e0e0;
+        /* Barra Superior (Header) */
+        header {
+            background-color: #fff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 16px 32px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 1.2rem;
-            color: #333;
-        }
-        .logout-btn {
-            color: #d9534f;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-        .logout-btn:hover {
-            text-decoration: underline;
-        }
-
-        /* Área Principal */
-        .container {
-            flex: 1;
-            max-width: 1200px;
-            margin: 40px auto;
-            text-align: center;
-            padding: 0 20px;
-        }
-        .welcome-title {
-            font-size: 1.8rem;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        .subtitle {
-            color: #666;
-            margin-bottom: 50px;
-            font-size: 1rem;
-        }
-
-        /* Grade de Ícones (Cards) */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            padding: 0 10px;
-        }
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            border: 1px solid #e0e0e0;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            text-decoration: none;
-            color: #333;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-        .card:hover {
-            transform: translateY(-7px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            border-color: #215598;
-        }
-        .card::before {
-            content: '';
-            position: absolute;
+            position: sticky;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background-color: #e0e0e0;
-            transition: background-color 0.3s ease;
-        }
-        .card:hover::before {
-            background-color: #215598;
+            z-index: 100;
         }
 
-        .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            color: #555;
-            transition: color 0.3s ease;
+        header h1 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #111;
         }
-        .card:hover .card-icon {
-            color: #215598;
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .admin-label {
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            font-size: 0.85rem;
+            color: #dc2626; /* Vermelho para ação de sair */
+            text-decoration: none;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .logout-btn:hover {
+            background-color: #fee2e2;
+        }
+
+        /* Área Principal (Conteúdo) */
+        main {
+            flex: 1;
+            padding: 40px 20px;
+            max-width: 900px; /* Largura máxima para manter o aspecto slim */
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .welcome-section h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 8px;
+        }
+
+        .welcome-section p {
+            font-size: 1rem;
+            color: #6b7280;
+        }
+
+        /* Grade Horizontal (Slim) */
+        .slim-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Blocos médios que quebram linha se necessário */
+            gap: 20px; /* Espaçamento menor entre os itens */
+        }
+
+        .slim-card {
+            background-color: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px; /* Bordas levemente arredondadas */
+            padding: 20px;
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            align-items: center; /* Alinha ícone e texto verticalmente */
+            gap: 16px; /* Espaçamento entre ícone e texto */
+            transition:all 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+
+        .slim-card:hover {
+            border-color: #d1d5db;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transform: translateY(-2px); /* Pequeno efeito de elevação */
+        }
+
+        /* Ícone Menor e Slim */
+        .card-icon {
+            font-size: 1.5rem; /* Ícones menores (eram 2.5rem) */
+            flex-shrink: 0; /* Não deixa o ícone diminuir */
+            opacity: 0.9;
+        }
+        
+        /* Efeito de cor no ícone ao passar o mouse */
+        .slim-card:hover .card-icon {
+            color: #2563eb; /* Azul padrão */
+        }
+
+        .card-content {
+            flex: 1;
         }
 
         .card-title {
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-            color: #333;
-        }
-        .card-desc {
-            font-size: 0.85rem;
-            color: #777;
-            line-height: 1.4;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #111;
         }
 
-        /* Rodapé Simples */
-        .footer {
-            text-align: center;
-            padding: 20px;
+        .card-desc {
             font-size: 0.8rem;
-            color: #aaa;
-            border-top: 1px solid #eee;
-            background-color: white;
+            color: #6b7280;
+            line-height: 1.5;
         }
+
+        /* Indicador de seta sutil à direita */
+        .card-arrow {
+            margin-left: auto;
+            color: #d1d5db;
+            font-size: 1rem;
+            opacity: 0; /* Escondido por padrão */
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .slim-card:hover .card-arrow {
+            opacity: 1;
+            transform: translateX(4px); /* Move a seta levemente para a direita */
+        }
+
+        /* Rodapé */
+        footer {
+            text-align: center;
+            padding: 24px;
+            font-size: 0.75rem;
+            color: #9ca3af;
+            background-color: #fff;
+            border-top: 1px solid #e5e7eb;
+            margin-top: auto;
+        }
+
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>Administração Local</h1>
-        <a href="admin.html" class="logout-btn">Sair</a>
-    </div>
-
-    <div class="container">
-        <h2 class="welcome-title">Bem-vindo, Administrador</h2>
-        <p class="subtitle">Selecione o sistema ou relatório que deseja acessar.</p>
-
-        <div class="grid-container">
-            <!-- 01. Controle de NFs e Temperatura -->
-            <a href="index.html" class="card">
-                <div class="card-icon">📋</div>
-                <div class="card-title">Controle de NFs e Temp.</div>
-                <div class="card-desc">Sistema de entrada de mercadorias (Resfriados/Congelados).</div>
-            </a>
-
-            <!-- 02. Controle de Estoque Insuficiente (NOVO) -->
-            <!-- Substitua '#' pelo link do seu sistema quando tiver -->
-            <a href="#" class="card">
-                <div class="card-icon">📉</div>
-                <div class="card-title">Controle de Estoque Insuficiente</div>
-                <div class="card-desc">Monitoramento de itens com ruptura ou abaixo do mínimo.</div>
-            </a>
-
-            <!-- 03. Gerenciamento de Inventários Geral Lojas (NOVO) -->
-            <a href="#" class="card">
-                <div class="card-icon">🏪</div>
-                <div class="card-title">Gerenciamento de Inventários Geral Lojas</div>
-                <div class="card-desc">Acompanhamento e auditoria de inventários rotativos e anuais.</div>
-            </a>
-
-            <!-- 04. Gerenciamento de Chamados-Deskmanagers (NOVO) -->
-            <a href="#" class="card">
-                <div class="card-icon">🛠️</div>
-                <div class="card-title">Gerenciamento de Chamados-Deskmanagers</div>
-                <div class="card-icon-sub"></div>
-                <div class="card-desc">Central de suporte técnico e manutenção (TI/Infraestrutura).</div>
-            </a>
-
-            <!-- 05. Acompanhamento Diário de Perdas (NOVO) -->
-            <a href="#" class="card">
-                <div class="card-icon">🗑️</div>
-                <div class="card-title">Acompanhamento Diário de Perdas</div>
-                <div class="card-desc">Registro e análise de quebras, avarias e furtos operacionais.</div>
-            </a>
-
-            <!-- Espaço para futuros links -->
-             <!-- 
-            <a href="#" class="card">
-                <div class="card-icon">➕</div>
-                <div class="card-title">Novo Sistema</div>
-                <div class="card-desc">Em breve...</div>
-            </a>
-            -->
+    <header>
+        <h1>Painel Administrativo - Loja 047</h1>
+        <div class="user-info">
+            <span class="admin-label">Administrador</span>
+            <a href="admin.html" class="logout-btn">Sair</a>
         </div>
-    </div>
+    </header>
 
-    <div class="footer">
+    <main>
+        <div class="welcome-section">
+            <h2>Bem-vindo</h2>
+            <p>Selecione o sistema ou relatório que deseja acessar</p>
+        </div>
+
+        <div class="slim-grid">
+            <!-- 01. Controle de NFs e Temperatura -->
+            <a href="index.html" class="slim-card">
+                <div class="card-icon">📋</div>
+                <div class="card-content">
+                    <div class="card-title">Controle de NFs e Temp.</div>
+                    <div class="card-desc">Entrada de mercadorias (Resfriados/Congelados).</div>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+
+            <!-- 02. Controle de Estoque Insuficiente -->
+            <a href="#" class="slim-card">
+                <div class="card-icon">📉</div>
+                <div class="card-content">
+                    <div class="card-title">Controle de Estoque Insuficiente</div>
+                    <div class="card-desc">Itens com ruptura ou abaixo do mínimo.</div>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+
+            <!-- 03. Gerenciamento de Inventários Geral Lojas -->
+            <a href="#" class="card-item"></a> <!-- Placeholder -->
+            <a href="#" class="slim-card">
+                <div class="card-icon">🏪</div>
+                <div class="card-content">
+                    <div class="card-title">Gerenciamento de Inventários Geral Lojas</div>
+                    <div class="card-desc">Acompanhamento e auditoria de inventários.</div>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+
+            <!-- 04. Gerenciamento de Chamados-Deskmanagers -->
+            <a href="#" class="slim-card">
+                <div class="card-icon">🛠️</div>
+                <div class="card-content">
+                    <div class="card-title">Gerenciamento de Chamados-Deskmanagers</div>
+                    <div class="card-desc">Central de suporte técnico e manutenção.</div>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+
+            <!-- 05. Acompanhamento Diário de Perdas -->
+            <a href="#" class="slim-card">
+                <div class="card-icon">🗑️</div>
+                <div class="card-content">
+                    <div class="card-title">Acompanhamento Diário de Perdas</div>
+                    <div class="card-desc">Registro e análise de quebras e avarias.</div>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+        </div>
+    </main>
+
+    <footer>
         Loja 047 - Amigão Lins Junqueira
-    </div>
+    </footer>
 
 </body>
 </html>
