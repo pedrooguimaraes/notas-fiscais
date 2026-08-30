@@ -3,390 +3,287 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acompanhamento Diário de Perdas - Loja 047</title>
+    <title>Acompanhamento Diário de Perdas - Loja 47</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f6f9;
-            color: #333;
-            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #e2e8f0;
+            color: #000;
+            padding: 15px;
         }
-        .container {
-            max-width: 1400px;
+        .sheet-container {
+            max-width: 1500px;
             margin: 0 auto;
-        }
-        /* Top Header Bar */
-        .top-bar {
-            background: white;
-            padding: 20px 25px;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-        .app-title-area {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .app-icon {
-            font-size: 2rem;
-            background: #eef2f6;
+            background: #fff;
+            border: 2px solid #1e3a8a;
             padding: 10px;
-            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        .app-title h1 {
-            font-size: 1.25rem;
-            color: #1e293b;
-            font-weight: 700;
-        }
-        .app-title p {
-            font-size: 0.75rem;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-        }
-        .actions-right {
-            display: flex;
-            gap: 12px;
-        }
-        .btn {
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: background 0.2s;
-            text-decoration: none;
-        }
-        .btn-back { background-color: #f1f5f9; color: #0f172a; border: 1px solid #cbd5e1; }
-        .btn-back:hover { background-color: #e2e8f0; }
-        .btn-add { background-color: #2563eb; color: white; }
-        .btn-add:hover { background-color: #1d4ed8; }
 
-        /* Seções e Tabelas */
-        .card-section {
-            background: white;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
-        }
-        .section-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 15px;
+        /* Top Bar de Navegação */
+        .nav-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 10px;
+            background: #f8fafc;
+            padding: 8px 15px;
+            border: 1px solid #cbd5e1;
         }
-        table {
+        .nav-bar a {
+            text-decoration: none;
+            color: #1e3a8a;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .nav-bar a:hover { text-decoration: underline; }
+
+        /* Título Principal Estilo Planilha */
+        .main-title {
+            background-color: #1e3a8a;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 8px;
+            border: 1px solid #0f172a;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Estrutura de Tabelas Estilo Excel */
+        .excel-table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 0.8rem;
+            background-color: #fff;
+        }
+        .excel-table th, .excel-table td {
+            border: 1px solid #94a3b8;
+            padding: 4px 6px;
             text-align: left;
+        }
+        .excel-table th {
+            background-color: #bfdbfe;
+            color: #0f172a;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Alinhamentos e Cores de Células Específicas */
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        
+        .bg-header-yellow { background-color: #fde047 !important; color: #000; font-weight: bold; text-align: center; }
+        .bg-total { background-color: #e2e8f0; font-weight: bold; }
+        
+        .val-green { color: #15803d; background-color: #dcfce7; text-align: right; font-weight: bold; }
+        .val-red { color: #b91c1c; background-color: #fee2e2; text-align: right; font-weight: bold; }
+
+        /* Layout em Grade para as Tabelas Inferiores */
+        .grid-sections {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr;
+            gap: 10px;
             margin-top: 10px;
         }
-        th {
-            background-color: #1e293b;
-            color: white;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            padding: 12px 14px;
-            font-weight: 600;
+        @media (max-width: 1100px) {
+            .grid-sections { grid-template-columns: 1fr; }
         }
-        td {
-            padding: 12px 14px;
-            font-size: 0.85rem;
-            border-bottom: 1px solid #f1f5f9;
-            color: #334155;
-        }
-        tr:hover { background-color: #f8fafc; }
-        
-        .text-right { text-align: right; }
-        .text-center { text-align: center; }
-        
-        .badge-red { color: #dc2626; background: #fee2e2; padding: 4px 8px; border-radius: 4px; font-weight: 600; }
-        .badge-green { color: #16a34a; background: #dcfce7; padding: 4px 8px; border-radius: 4px; font-weight: 600; }
 
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
+        /* Campos Editáveis (Inputs dentro da tabela) */
+        .editable-input {
+            width: 100%;
+            border: 1px solid transparent;
+            background: transparent;
+            font-size: 0.8rem;
+            font-family: Arial, sans-serif;
+            padding: 2px;
         }
-        @media (max-width: 900px) {
-            .grid-2 { grid-template-columns: 1fr; }
+        .editable-input:focus {
+            background: #fff;
+            border-color: #2563eb;
+            outline: none;
+        }
+        .editable-cell:hover {
+            background-color: #f1f5f9;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="top-bar">
-            <div class="app-title-area">
-                <div class="app-icon">🗑️</div>
-                <div class="app-title">
-                    <p>Loja 047 - Lins Junqueira</p>
-                    <h1>Acompanhamento Diário de Perdas</h1>
-                </div>
-            </div>
-            <div class="actions-right">
-                <a href="painel.html" class="btn btn-back">← Voltar ao Painel</a>
-                <button class="btn btn-add" onclick="alert('Função para novo lançamento em desenvolvimento.')">➕ Novo Lançamento</button>
-            </div>
+    <div class="sheet-container">
+        <div class="nav-bar">
+            <a href="painel.html">← Voltar ao Painel Administrativo</a>
+            <span style="font-size: 0.8rem; color: #64748b;">💡 Dica: Você pode clicar nas caixas abaixo para editar os dados diretamente.</span>
         </div>
 
-        <div class="card-section">
-            <div class="section-title">
-                <span>📊 Desempenho por Departamento (Data: 27/08/2026)</span>
-            </div>
-            <div style="overflow-x: auto;">
-                <table>
+        <div class="main-title">
+            ACOMPANHAMENTO DIÁRIO DE PERDAS IDENTIFICADAS - LOJA 47
+        </div>
+
+        <table class="excel-table" style="margin-bottom: 10px;">
+            <tr>
+                <td style="width: 15%; background: #bfdbfe; font-weight: bold; text-align: center;">Loja</td>
+                <td style="width: 25%; font-weight: bold; text-align: center;">Lins Junqueira</td>
+                <td style="width: 10%; background: #bfdbfe; font-weight: bold; text-align: center;">Data</td>
+                <td style="width: 15%; text-align: center;" class="bg-header-yellow">
+                    <input type="text" class="editable-input text-center" value="28/08/26" style="font-weight: bold;">
+                </td>
+                <td style="background: #bfdbfe; font-weight: bold; text-align: center;" colspan="5">TOP Itens</td>
+            </tr>
+        </table>
+
+        <div style="display: grid; grid-template-columns: 1.1fr 1.6fr; gap: 10px;">
+            
+            <div>
+                <table class="excel-table">
                     <thead>
                         <tr>
                             <th>Departamento</th>
-                            <th class="text-right">Cód.</th>
-                            <th class="text-right">Meta (R$)</th>
-                            <th class="text-right">Realizado (R$)</th>
-                            <th class="text-right">Desvio (R$)</th>
+                            <th class="text-center">Cód.</th>
+                            <th class="text-right">Meta</th>
+                            <th class="text-right">Realizado</th>
+                            <th class="text-right">Desvio</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><b>Higiene e Beleza</b></td>
-                            <td class="text-right">30</td>
-                            <td class="text-right">R$ 6,00</td>
-                            <td class="text-right">R$ 0,00</td>
-                            <td class="text-right"><span class="badge-green">R$ 6,00</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>Limpeza</b></td>
-                            <td class="text-right">31</td>
-                            <td class="text-right">R$ 7,00</td>
-                            <td class="text-right">R$ 24,67</td>
-                            <td class="text-right"><span class="badge-red">-R$ 17,67</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>Descartáveis</b></td>
-                            <td class="text-right">32</td>
-                            <td class="text-right">R$ 2,00</td>
-                            <td class="text-right">R$ 2,00</td>
-                            <td class="text-right"><span class="badge-green">R$ 0,00</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>Bazar e Têxtil</b></td>
-                            <td class="text-right">33</td>
-                            <td class="text-right">R$ 1,00</td>
-                            <td class="text-right">R$ 0,00</td>
-                            <td class="text-right"><span class="badge-green">R$ 1,00</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>Pet Shop</b></td>
-                            <td class="text-right">34</td>
-                            <td class="text-right">R$ 4,00</td>
-                            <td class="text-right">R$ 0,00</td>
-                            <td class="text-right"><span class="badge-green">R$ 4,00</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>Tabacaria</b></td>
-                            <td class="text-right">36</td>
-                            <td class="text-right">R$ 0,00</td>
-                            <td class="text-right">R$ 0,00</td>
-                            <td class="text-right"><span class="badge-green">R$ 0,00</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>Açougue</b></td>
-                            <td class="text-right">37</td>
-                            <td class="text-right">R$ 211,00</td>
-                            <td class="text-right">R$ 196,78</td>
-                            <td class="text-right"><span class="badge-green">R$ 14,22</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>Pas Congelados</b></td>
-                            <td class="text-right">38</td>
-                            <td class="text-right">R$ 13,00</td>
-                            <td class="text-right">R$ 0,00</td>
-                            <td class="text-right"><span class="badge-green">R$ 13,00</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>Pas Refrigerados</b></td>
-                            <td class="text-right">39</td>
-                            <td class="text-right">R$ 20,00</td>
-                            <td class="text-right">R$ 33,77</td>
-                            <td class="text-right"><span class="badge-red">-R$ 13,77</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>Frios</b></td>
-                            <td class="text-right">40</td>
-                            <td class="text-right">R$ 84,00</td>
-                            <td class="text-right">R$ 303,73</td>
-                            <td class="text-right"><span class="badge-red">-R$ 219,73</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>Commodities</b></td>
-                            <td class="text-right">42</td>
-                            <td class="text-right">R$ 19,00</td>
-                            <td class="text-right">R$ 25,12</td>
-                            <td class="text-right"><span class="badge-red">-R$ 6,12</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>Bebidas</b></td>
-                            <td class="text-right">43</td>
-                            <td class="text-right">R$ 43,00</td>
-                            <td class="text-right">R$ 12,32</td>
-                            <td class="text-right"><span class="badge-green">R$ 30,68</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>Hortifruti (FLV)</b></td>
-                            <td class="text-right">44</td>
-                            <td class="text-right">R$ 366,00</td>
-                            <td class="text-right">R$ 574,29</td>
-                            <td class="text-right"><span class="badge-red">-R$ 208,29</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>Rotisserie</b></td>
-                            <td class="text-right">46</td>
-                            <td class="text-right">R$ 44,00</td>
-                            <td class="text-right">R$ 282,58</td>
-                            <td class="text-right"><span class="badge-red">-R$ 238,58</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>Mercearia Salgada</b></td>
-                            <td class="text-right">47</td>
-                            <td class="text-right">R$ 26,00</td>
-                            <td class="text-right">R$ 6,93</td>
-                            <td class="text-right"><span class="badge-green">R$ 19,07</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>Mercearia Doce</b></td>
-                            <td class="text-right">49</td>
-                            <td class="text-right">R$ 47,00</td>
-                            <td class="text-right">R$ 13,17</td>
-                            <td class="text-right"><span class="badge-green">R$ 33,83</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>Peixaria</b></td>
-                            <td class="text-right">56</td>
-                            <td class="text-right">R$ 0,00</td>
-                            <td class="text-right">R$ 0,00</td>
-                            <td class="text-right"><span class="badge-green">R$ 0,00</span></td>
-                        </tr>
-                        <tr>
-                            <td><b>Padaria e Confeitaria</b></td>
-                            <td class="text-right">65</td>
-                            <td class="text-right">R$ 102,00</td>
-                            <td class="text-right">R$ 441,72</td>
-                            <td class="text-right"><span class="badge-red">-R$ 339,72</span></td>
-                        </tr>
-                        <tr style="background-color: #f1f5f9; font-weight: bold;">
-                            <td>Total Geral</td>
-                            <td>-</td>
-                            <td class="text-right">R$ 996,00</td>
-                            <td class="text-right">R$ 1.915,08</td>
-                            <td class="text-right"><span class="badge-red">-R$ 919,08</span></td>
+                        <tr><td>Higiene e Beleza</td><td class="text-center">30</td><td class="text-right">R$ 11.00</td><td class="text-right">R$ 0.00</td><td class="val-green">R$ 11.00</td></tr>
+                        <tr><td>Limpeza</td><td class="text-center">31</td><td class="text-right">R$ 12.00</td><td class="text-right">R$ 0.00</td><td class="val-green">R$ 12.00</td></tr>
+                        <tr><td>Descartáveis</td><td class="text-center">32</td><td class="text-right">R$ 4.00</td><td class="text-right">R$ 0.00</td><td class="val-green">R$ 4.00</td></tr>
+                        <tr><td>Bazar e Têxtil</td><td class="text-center">33</td><td class="text-right">R$ 2.00</td><td class="text-right">R$ 10.30</td><td class="val-red">-R$ 8.30</td></tr>
+                        <tr><td>Pet Shop</td><td class="text-center">34</td><td class="text-right">R$ 5.00</td><td class="text-right">R$ 0.00</td><td class="val-green">R$ 5.00</td></tr>
+                        <tr><td>Tabacaria</td><td class="text-center">36</td><td class="text-right">R$ 0.00</td><td class="text-right">R$ 0.00</td><td class="val-green">R$ 0.00</td></tr>
+                        <tr><td>Açougue</td><td class="text-center">37</td><td class="text-right">R$ 428.00</td><td class="text-right">R$ 688.56</td><td class="val-red">-R$ 260.56</td></tr>
+                        <tr><td>Pas Congelados</td><td class="text-center">38</td><td class="text-right">R$ 23.00</td><td class="text-right">R$ 0.00</td><td class="val-green">R$ 23.00</td></tr>
+                        <tr><td>Pas Refrigerados</td><td class="text-center">39</td><td class="text-right">R$ 31.00</td><td class="text-right">R$ 25.44</td><td class="val-green">R$ 5.56</td></tr>
+                        <tr><td>Frios</td><td class="text-center">40</td><td class="text-right">R$ 161.00</td><td class="text-right">R$ 247.74</td><td class="val-red">-R$ 86.74</td></tr>
+                        <tr><td>Commodities</td><td class="text-center">42</td><td class="text-right">R$ 64.00</td><td class="text-right">R$ 39.14</td><td class="val-green">R$ 24.86</td></tr>
+                        <tr><td>Bebidas</td><td class="text-center">43</td><td class="text-right">R$ 94.00</td><td class="text-right">R$ 29.68</td><td class="val-green">R$ 64.32</td></tr>
+                        <tr><td>Hortifruti (FLV)</td><td class="text-center">44</td><td class="text-right">R$ 634.00</td><td class="text-right">R$ 575.72</td><td class="val-green">R$ 58.28</td></tr>
+                        <tr><td>Rotisserie</td><td class="text-center">46</td><td class="text-right">R$ 60.00</td><td class="text-right">R$ 98.45</td><td class="val-red">-R$ 38.45</td></tr>
+                        <tr><td>Mercearia Salgada</td><td class="text-center">47</td><td class="text-right">R$ 48.00</td><td class="text-right">R$ 11.03</td><td class="val-green">R$ 36.97</td></tr>
+                        <tr><td>Mercearia Doce</td><td class="text-center">49</td><td class="text-right">R$ 82.00</td><td class="text-right">R$ 15.61</td><td class="val-green">R$ 66.39</td></tr>
+                        <tr><td>Peixaria</td><td class="text-center">56</td><td class="text-right">R$ 0.00</td><td class="text-right">R$ 0.00</td><td class="val-green">R$ 0.00</td></tr>
+                        <tr><td>Padaria e Confeitaria</td><td class="text-center">65</td><td class="text-right">R$ 152.00</td><td class="text-right">R$ 308.66</td><td class="val-red">-R$ 156.66</td></tr>
+                        <tr class="bg-total">
+                            <td>Total</td>
+                            <td class="text-center">-</td>
+                            <td class="text-right">R$ 1,811.00</td>
+                            <td class="text-right">R$ 2,050.33</td>
+                            <td class="val-red">-R$ 239.33</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-        </div>
 
-        <div class="grid-2">
-            <div class="card-section" style="margin-bottom: 0;">
-                <div class="section-title"><span>🛒 Top Itens Perdas</span></div>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Cód</th>
-                                <th>Descrição</th>
-                                <th>Qtd</th>
-                                <th class="text-right">Valor (R$)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>954438</td>
-                                <td>Miolo Alcatra Bov Resfr Peca/Pedaco K</td>
-                                <td>0.908</td>
-                                <td class="text-right">R$ 32,82</td>
-                            </tr>
-                            <tr>
-                                <td>581747</td>
-                                <td>Contra File Bov Resfr Pedaco Kg</td>
-                                <td>0.776</td>
-                                <td class="text-right">R$ 31.30</td>
-                            </tr>
-                            <tr>
-                                <td>315303</td>
-                                <td>Coxao Mole Bov Resfr/Pedaco Kg</td>
-                                <td>0.800</td>
-                                <td class="text-right">R$ 38.65</td>
-                            </tr>
-                            <tr>
-                                <td>4072898</td>
-                                <td>Requeijao Hebrom Kg Barra</td>
-                                <td>1.266</td>
-                                <td class="text-right">R$ 79.78</td>
-                            </tr>
-                            <tr>
-                                <td>4436210</td>
-                                <td>Zzqueijo Mussarela Melincue Importad</td>
-                                <td>2.340</td>
-                                <td class="text-right">R$ 69.01</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div>
+                <table class="excel-table">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Código</th>
+                            <th>Descrição</th>
+                            <th>Departamento</th>
+                            <th>Espécie</th>
+                            <th class="text-center">Quantidade</th>
+                            <th class="text-right">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="text-center">4624017</td><td class="editable-cell"><input type="text" class="editable-input" value="Bife Ancho Bov Pul Selection Resfr Vacuo"></td><td>Açougue</td><td>Produção</td><td class="text-center">2.550</td><td class="text-right">R$ 107.94</td></tr>
+                        <tr><td class="text-center">147770</td><td class="editable-cell"><input type="text" class="editable-input" value="Rabo Bov Resfr Bdj Kg"></td><td>Açougue</td><td>Produção</td><td class="text-center">1.966</td><td class="text-right">R$ 58.86</td></tr>
+                        <tr><td class="text-center">147630</td><td class="editable-cell"><input type="text" class="editable-input" value="Contra file bov resfr bife bdj"></td><td>Açougue</td><td>Produção</td><td class="text-center">1.212</td><td class="text-right">R$ 48.88</td></tr>
+                        <tr><td class="text-center">4436180</td><td class="editable-cell"><input type="text" class="editable-input" value="Kit Feijoada Pamplona"></td><td>Frios, Pas e Peixaria</td><td>Perdas Por Vencimento</td><td class="text-center">9.000</td><td class="text-right">R$ 152.64</td></tr>
+                        <tr><td class="text-center">4342151</td><td class="editable-cell"><input type="text" class="editable-input" value="Queijo Prato Tirolez lanche fatiado"></td><td>Frios, Pas e Peixaria</td><td>Produção</td><td class="text-center">0.316</td><td class="text-right">R$ 16.84</td></tr>
+                        <tr><td class="text-center">590860</td><td class="editable-cell"><input type="text" class="editable-input" value="Zznhoque massaleve 500g"></td><td>Frios, Pas e Peixaria</td><td>Perdas Por Vencimento</td><td class="text-center">2.000</td><td class="text-right">R$ 14.74</td></tr>
+                        <tr><td class="text-center">117250</td><td class="editable-cell"><input type="text" class="editable-input" value="Limão"></td><td>Hortifruti</td><td>Maturação/Sem Frescor</td><td class="text-center">12.790</td><td class="text-right">R$ 102.19</td></tr>
+                        <tr><td class="text-center">783005</td><td class="editable-cell"><input type="text" class="editable-input" value="Flor Roseira Pote 13"></td><td>Hortifruti</td><td>Maturação/Sem Frescor</td><td class="text-center">4.000</td><td class="text-right">R$ 72.24</td></tr>
+                        <tr><td class="text-center">118095</td><td class="editable-cell"><input type="text" class="editable-input" value="Inhame"></td><td>Hortifruti</td><td>Maturação/Sem Frescor</td><td class="text-center">7.500</td><td class="text-right">R$ 45.83</td></tr>
+                        <tr><td class="text-center">612570</td><td class="editable-cell"><input type="text" class="editable-input" value="Sanduiche Metro"></td><td>Rotisserie</td><td>Produção</td><td class="text-center">0.658</td><td class="text-right">R$ 15.75</td></tr>
+                        <tr><td class="text-center">2740320</td><td class="editable-cell"><input type="text" class="editable-input" value="Salgado Assado Grande 90g"></td><td>Rotisserie</td><td>Produção</td><td class="text-center">3.000</td><td class="text-right">R$ 8.79</td></tr>
+                        <tr><td class="text-center">1453718</td><td class="editable-cell"><input type="text" class="editable-input" value="Sanduiche Pao Curitibano 150g"></td><td>Rotisserie</td><td>Produção</td><td class="text-center">2.000</td><td class="text-right">R$ 7.98</td></tr>
+                        <tr><td class="text-center">2796031</td><td class="editable-cell"><input type="text" class="editable-input" value="Bolinho Bauducco 27g Duo Chocolate"></td><td>Padaria e Confeitaria</td><td>Perdas Por Vencimento</td><td class="text-center">58.000</td><td class="text-right">R$ 70.76</td></tr>
+                        <tr><td class="text-center">990590</td><td class="editable-cell"><input type="text" class="editable-input" value="Bolinho Chuva"></td><td>Padaria e Confeitaria</td><td>Produção</td><td class="text-center">0.326</td><td class="text-right">R$ 1.35</td></tr>
+                        <tr><td class="text-center">1580019</td><td class="editable-cell"><input type="text" class="editable-input" value="Bolinho Espera Marido"></td><td>Padaria e Confeitaria</td><td>Produção</td><td class="text-center">0.466</td><td class="text-right">R$ 5.63</td></tr>
+                        <tr><td class="text-center">1614797</td><td class="editable-cell"><input type="text" class="editable-input" value="Arroz Solito 5kg t1 Premium"></td><td>Mercearia</td><td>Avaria</td><td class="text-center">1.000</td><td class="text-right">R$ 19.22</td></tr>
+                        <tr><td class="text-center">4623444</td><td class="editable-cell"><input type="text" class="editable-input" value="Bebida Energetica Red Bull 473ml trop"></td><td>Mercearia</td><td>Avaria</td><td class="text-center">1.000</td><td class="text-right">R$ 14.95</td></tr>
+                        <tr><td class="text-center">2740125</td><td class="editable-cell"><input type="text" class="editable-input" value="Arroz Coroa 5kg"></td><td>Mercearia</td><td>Avaria</td><td class="text-center">1.000</td><td class="text-right">R$ 11.85</td></tr>
+                        <tr class="bg-total">
+                            <td colspan="5" style="text-align: right;">Top 03 (Dptos.) - Representa da perda diária =</td>
+                            <td class="text-right">38% &nbsp;&nbsp;&nbsp; R$ 776.44</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <div class="card-section" style="margin-bottom: 0;">
-                <div class="section-title"><span>📝 Justificativas dos Encarregados</span></div>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Código / Produto</th>
-                                <th>Justificativa</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><b>954438</b></td>
-                                <td>Limpeza para produção de autosserviço e atendimento ao cliente.</td>
-                            </tr>
-                            <tr>
-                                <td><b>581747</b></td>
-                                <td>Limpeza para produção de autosserviço e atendimento ao cliente.</td>
-                            </tr>
-                            <tr>
-                                <td><b>315303</b></td>
-                                <td>Limpeza para produção de autosserviço e atendimento ao cliente.</td>
-                            </tr>
-                            <tr>
-                                <td><b>4072898</b></td>
-                                <td>Hebrom barra foi pedido ação.</td>
-                            </tr>
-                            <tr>
-                                <td><b>4436210</b></td>
-                                <td>Mussarela e apetitivo qualidade.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
         </div>
 
+        <div class="grid-sections">
+            
+            <div>
+                <table class="excel-table">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="width: 30%;">Código</th>
+                            <th>Descrição</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="text-center">4624017</td><td>Bife Ancho Bov Pul Selection Resfr Vacuo Kg</td></tr>
+                        <tr><td class="text-center">147770</td><td>Rabo Bov Resfr Bdj Kg</td></tr>
+                        <tr><td class="text-center">147630</td><td>Contra file bov resfr bife bdj</td></tr>
+                        <tr><td class="text-center">4436180</td><td>Kit Feijoada Pamplona</td></tr>
+                        <tr><td class="text-center">4342151</td><td>Queijo Prato Tirolez lanche fatiado</td></tr>
+                        <tr><td class="text-center">590860</td><td>Zznhoque massaleve 500g</td></tr>
+                        <tr><td class="text-center">117250</td><td>Limão</td></tr>
+                        <tr><td class="text-center">783005</td><td>Flor Roseira Pote 13</td></tr>
+                        <tr><td class="text-center">118095</td><td>Inhame</td></tr>
+                        <tr><td class="text-center">612570</td><td>Sanduiche Metro</td></tr>
+                        <tr><td class="text-center">2740320</td><td>Salgado Assado Grande 90g</td></tr>
+                        <tr><td class="text-center">1453718</td><td>Sanduiche Pao Curitibano 150g</td></tr>
+                        <tr><td class="text-center">2796031</td><td>Bolinho Bauducco 27g Duo Chocolate</td></tr>
+                        <tr><td class="text-center">990590</td><td>Bolinho Chuva</td></tr>
+                        <tr><td class="text-center">1580019</td><td>Bolinho Espera Marido</td></tr>
+                        <tr><td class="text-center">1614797</td><td>Arroz Solito 5kg t1 Premium</td></tr>
+                        <tr><td class="text-center">4623444</td><td>Bebida Energetica Red Bull 473ml tropical ed</td></tr>
+                        <tr><td class="text-center">2740125</td><td>Arroz Coroa 5kg</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                <table class="excel-table">
+                    <thead>
+                        <tr>
+                            <th>Justificativas dos Encarregados (Clique para editar)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><input type="text" class="editable-input" value="Ancho.... vácuo com mau odor."></td></tr>
+                        <tr><td><input type="text" class="editable-input" value="Rabo... vencimento autosserviço."></td></tr>
+                        <tr><td><input type="text" class="editable-input" value="Contra... vencimento autosserviço."></td></tr>
+                        <tr><td><input type="text" class="editable-input" value=""></td></tr>
+                        <tr><td><input type="text" class="editable-input" value=""></td></tr>
+                        <tr><td><input type="text" class="editable-input" value="Não ultrapassou a meta de perda diária."></td></tr>
+                        <tr><td><input type="text" class="editable-input" value="Não ultrapassou a meta de perda diária."></td></tr>
+                        <tr><td><input type="text" class="editable-input" value="Não ultrapassou a meta de perda diária."></td></tr>
+                        <tr><td><input type="text" class="editable-input" value="Mix de sortimento."></td></tr>
+                        <tr><td><input type="text" class="editable-input" value="Mix de sortimento."></td></tr>
+                        <tr><td><input type="text" class="editable-input" value="Mix de sortimento."></td></tr>
+                        <tr><td><input type="text" class="editable-input" value=""></td></tr>
+                        <tr><td><input type="text" class="editable-input" value="Mix de sortimento."></td></tr>
+                        <tr><td><input type="text" class="editable-input" value="Mix de sortimento."></td></tr>
+                        <tr><td><input type="text" class="editable-input" value="Mix de sortimento."></td></tr>
+                        <tr><td><input type="text" class="editable-input" value="Avaria"></td></tr>
+                        <tr><td><input type="text" class="editable-input" value="Avaria"></td></tr>
+                        <tr><td><input type="text" class="editable-input" value="Avaria"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
     </div>
 
 </body>
