@@ -74,7 +74,7 @@
         }
     </style>
 </head>
-<body>
+<body onload="carregarDados()">
     <div class="container">
         <!-- Rodapé superior centralizado posicionado acima do título -->
         <div class="top-footer">
@@ -128,7 +128,7 @@
     <div id="modal" class="modal">
         <div class="modal-content">
             <h3>Nova Nota Fiscal</h3>
-            <form id="formNota">
+            <form id="formNota" onsubmit="salvarNota(event)">
                 <div class="form-grid">
                     <div><label>Data</label><input type="date" id="data" required></div>
                     <div>
@@ -197,11 +197,11 @@
                     </div>
                     <div><label>Nota Fiscal</label><input type="text" id="nf" required></div>
                     <div><label>Valor (R$)</label><input type="text" id="valor" placeholder="0,00" required oninput="mascaraMoeda(this)"></div>
-                    <div><label>Chegada</label><input type="time" id="chegada"></div>
-                    <div><label>Saída</label><input type="time" id="saida"></div>
+                    <div><label>Chegada</label><input type="time" id="chegada" required></div>
+                    <div><label>Saída</label><input type="time" id="saida" required></div>
                     <div>
                         <label>Temp.</label>
-                        <select id="temp">
+                        <select id="temp" required>
                             <option value="">Selecione...</option>
                             <script>
                                 for (let i = -30; i <= 30; i++) {
@@ -212,7 +212,7 @@
                     </div>
                     <div>
                         <label>Conferente</label>
-                        <select id="conferente">
+                        <select id="conferente" required>
                             <option value="">Selecione...</option>
                             <option value="AMANDA (Conferente)">AMANDA (Conferente)</option>
                             <option value="GUSTAVO (Conferente)🦾">GUSTAVO (Conferente)🦾</option>
@@ -228,7 +228,7 @@
                     </div>
                     <div>
                         <label>Prevenção</label>
-                        <select id="prev">
+                        <select id="prev" required>
                             <option value="">Selecione...</option>
                             <option value="DAVID">DAVID</option>
                             <option value="LUCAS">LUCAS</option>
@@ -238,13 +238,20 @@
                             <option value="THIAGO">THIAGO</option>
                         </select>
                     </div>
-                    <div><label>Status</label><select id="status"><option>NÃO ACATADA</option><option>ACATADA</option></select></div>
+                    <div>
+                        <label>Status</label>
+                        <select id="status" required>
+                            <option value="">Selecione...</option>
+                            <option value="NÃO ACATADA">NÃO ACATADA</option>
+                            <option value="ACATADA">ACATADA</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; text-align: right;">
+                    <button type="button" class="btn" onclick="fecharModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-add">Salvar</button>
                 </div>
             </form>
-            <div style="margin-top: 20px; text-align: right;">
-                <button class="btn" onclick="fecharModal()">Cancelar</button>
-                <button class="btn btn-add" onclick="salvarNota()">Salvar</button>
-            </div>
         </div>
     </div>
 
@@ -493,16 +500,25 @@
             window.open(url, '_blank');
         }
 
-        async function salvarNota() {
+        async function salvarNota(event) {
+            event.preventDefault(); // Impede o recarregamento padrão da página
+
             const btnSalvar = document.querySelector('.modal-content .btn-add');
             
+            const dataVal = document.getElementById('data').value.trim();
+            const fornVal = document.getElementById('fornecedor').value.trim();
             const nfInputVal = document.getElementById('nf').value.trim();
-            const dataVal = document.getElementById('data').value;
-            const fornVal = document.getElementById('fornecedor').value;
-            const valVal = document.getElementById('valor').value;
+            const valVal = document.getElementById('valor').value.trim();
+            const chegadaVal = document.getElementById('chegada').value.trim();
+            const saidaVal = document.getElementById('saida').value.trim();
+            const tempVal = document.getElementById('temp').value.trim();
+            const conferenteVal = document.getElementById('conferente').value.trim();
+            const prevVal = document.getElementById('prev').value.trim();
+            const statusVal = document.getElementById('status').value.trim();
 
-            if(!nfInputVal || !dataVal || !fornVal || !valVal) {
-                alert("Por favor, preencha todos os campos obrigatórios.");
+            // Validação de segurança: verifica se TODOS os campos estão preenchidos
+            if (!dataVal || !fornVal || !nfInputVal || !valVal || !chegadaVal || !saidaVal || !tempVal || !conferenteVal || !prevVal || !statusVal) {
+                alert("Por favor, preencha TODOS os campos antes de salvar!");
                 return;
             }
 
@@ -525,12 +541,12 @@
                 fornecedor: fornVal,
                 nf: nfInput,
                 valor: valorNumerico,
-                chegada: "'" + document.getElementById('chegada').value,
-                saida: "'" + document.getElementById('saida').value,
-                temp: document.getElementById('temp').value,
-                conferente: document.getElementById('conferente').value,
-                prev: document.getElementById('prev').value,
-                status: document.getElementById('status').value
+                chegada: "'" + chegadaVal,
+                saida: "'" + saidaVal,
+                temp: tempVal,
+                conferente: conferenteVal,
+                prev: prevVal,
+                status: statusVal
             };
             
             try {
@@ -548,9 +564,10 @@
         }
 
         function abrirModal() { document.getElementById('modal').style.display = 'flex'; }
-        function fecharModal() { document.getElementById('modal').style.display = 'none'; }
-        
-        carregarDados();
+        function fecharModal() { 
+            document.getElementById('formNota').reset();
+            document.getElementById('modal').style.display = 'none'; 
+        }
     </script>
 </body>
 </html>
