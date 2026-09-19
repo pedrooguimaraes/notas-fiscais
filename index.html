@@ -78,7 +78,7 @@
     <div class="container">
         <!-- Rodapé superior centralizado posicionado acima do título -->
         <div class="top-footer">
-            Versão: 30.08.26/001
+            Versão: 19.09.26/005
         </div>
 
         <div class="header">
@@ -120,7 +120,7 @@
         <div id="corpoMobile"></div>
 
         <footer class="footer">
-            Versão: 30.08.26/001
+            Versão: 19.09.26/005
         </footer>
     </div>
 
@@ -201,14 +201,22 @@
                     <div><label>Saída</label><input type="time" id="saida" required></div>
                     <div>
                         <label>Temp.</label>
-                        <input type="text" id="temp" placeholder="Ex: 5°C ou -18°C" required>
+                        <select id="temp" required>
+                            <option value="">Selecione...</option>
+                            <option value="não aplica">não aplica</option>
+                            <script>
+                                for (let i = -30; i <= 25; i++) {
+                                    document.write(`<option value="${i}°C">${i}°C</option>`);
+                                }
+                            </script>
+                        </select>
                     </div>
                     <div>
                         <label>Conferente</label>
                         <select id="conferente" required>
                             <option value="">Selecione...</option>
                             <option value="AMANDA (Conferente)">AMANDA (Conferente)</option>
-                            <option value="GUSTAVO (Conferente)🦾">GUSTAVO (Conferente)🦾</option>
+                            <option value="GUSTAVO (Conferente)">GUSTAVO (Conferente)</option>
                             <option value="DENISE (Gerente I)">DENISE (Gerente I)</option>
                             <option value="JONATHAN (Gerente II)">JONATHAN (Gerente II)</option>
                             <option value="EVERTON (Encarregado Açougue)">EVERTON (Encarregado Açougue)</option>
