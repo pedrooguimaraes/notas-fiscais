@@ -201,14 +201,7 @@
                     <div><label>Saída</label><input type="time" id="saida" required></div>
                     <div>
                         <label>Temp.</label>
-                        <select id="temp" required>
-                            <option value="">Selecione...</option>
-                            <script>
-                                for (let i = -30; i <= 30; i++) {
-                                    document.write(`<option value="${i}°C">${i}°C</option>`);
-                                }
-                            </script>
-                        </select>
+                        <input type="text" id="temp" placeholder="Ex: 5°C ou -18°C" required>
                     </div>
                     <div>
                         <label>Conferente</label>
